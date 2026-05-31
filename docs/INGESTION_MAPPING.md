@@ -1,8 +1,11 @@
 # 현장 문서 → saegim 입력 스키마 매핑
 
-기존 civil_engineering_pack 크롤 자산 중 **양식(필드 구조)**은 재활용 가능(구조라 추측 영향 적음), **수치(합격기준)**는 saegim의 권위 재검증 rule 사용(옛 팩 수치는 다수 `domain knowledge`라 신뢰 불가).
+표준 현장 문서(시공일지·검측체크리스트 등)의 필드를 saegim typed 입력으로 옮기는 규칙이다. 두 축으로 나눈다:
 
-이 문서는 표준 현장 문서의 필드를 saegim typed 입력으로 옮기는 규칙이다. ingestion 변환기(향후)가 이 매핑을 따른다.
+- **양식(필드 구조)** — 표준 문서의 필드 구조를 그대로 따른다.
+- **수치(합격기준)** — 권위 있는 공개 표준(KS·KDS·KCS 등)에서 재검증한 값만 쓰고, 출처가 불확실한 값은 채택하지 않는다.
+
+향후 ingestion 변환기가 이 매핑을 따라 현장 문서 텍스트를 typed JSON 으로 옮긴다.
 
 ## 1. 시공일지 양식 → WorkRecord + appointments
 
@@ -38,10 +41,10 @@
 
 ## 자재 합격기준(수치)의 출처 원칙
 
-- 옛 팩 KS 파일 다수 = `domain knowledge`(추측), 일부 구버전(예 SD400 인장 560 = 2016 개정 전).
-- **saegim 은 권위 출처(e나라 표준인증·KATS·ASTM) 재검증값만 사용.** 재료 condition rule(concrete_chloride·concrete_air_ae·hot_weather_pour_temp 등) + 재크롤 결과로 대체.
-- 설계 규격(이 부재 fck·철근규격)은 Drawing/Specification → BuildingComponent.material_summary 로 들어오며, 검측 측정값을 그 설계값과 대조하는 것이 재료 적합성의 마지막 차원(미구현).
+- 자재 합격기준 수치는 **권위 출처(e나라 표준인증·KATS·ASTM 등)에서 재검증한 값만** 쓴다. 출처가 불확실하거나 구버전(예: SD400 인장강도 560 — 2016 개정 전 값)인 수치는 채택하지 않는다.
+- 재료 적합성은 재료 condition rule(concrete_chloride·concrete_air_ae·hot_weather_pour_temp 등)로 판정한다.
+- 설계 규격(부재별 fck·철근규격)은 Drawing/Specification → BuildingComponent.material_summary 로 들어오며, 검측 측정값을 그 설계값과 대조하는 것이 재료 적합성의 마지막 차원(미구현).
 
 ## 미구현 (다음 단계)
-- 변환기: 시공일지/검측서 텍스트 → 위 매핑대로 typed JSON 자동 추출 (civil-ingestion-flow/pipeline.py 를 saegim 스키마로 매핑)
+- 변환기: 시공일지/검측서 텍스트 → 위 매핑대로 typed JSON 자동 추출
 - 설계 규격 대조: Drawing/Specification ↔ 검측 측정값
