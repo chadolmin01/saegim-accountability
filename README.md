@@ -28,6 +28,10 @@
 
 판정은 LLM 추론이 아니라 **계산**. 재현·추적 가능, 근거 법령·별표 인용.
 
+> 검색·LLM 단독과 무엇이 다른지 8개 콘크리트·안전 질문으로 실측 비교 →
+> [`docs/why_ontology.md`](docs/why_ontology.md) (카드 요약 [`docs/why_ontology_cards.html`](docs/why_ontology_cards.html)).
+> 재현: `python docs/why_ontology_demo.py` (키 불필요·결정적).
+
 ## 빠른 시작
 
 ```bash

@@ -6,7 +6,9 @@ __pycache__/
 
 # pyvis 번들 산출물
 lib/
+# 문서용 정적 카드(docs/why_ontology_cards 등)는 추적
 *.html
+!docs/*.html
 
 # OpenCRAB local 그래프(생성물)
 opencrab_data/
