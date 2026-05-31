@@ -64,7 +64,7 @@ python test_rules.py && python test_conditions.py   # 회귀
 ## 구조
 
 ```
-ARCHITECTURE.md DESIGN.md TYPES.md RULES.md   설계·타입·규칙 문서
+docs/                문서 — 아키텍처·설계·타입·규칙 카탈로그·비교 (docs/README.md 인덱스)
 types/               타입 정의 (Project·Person·Organization·Appointment·Incident·Decision·WorkRecord·Location·BuildingComponent …)
 engine/              판정 엔진 (evaluate·audit·trail·conditions·prerequisites·documents·report·maintenance·org_judgment·appropriateness·lifecycle)
 placement_rules/     인적 배치 9역할 (requirement_shape)

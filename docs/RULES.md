@@ -2,7 +2,7 @@
 
 saegim-accountability 의 전체 법정 판정 규칙. 각 규칙은 근거 법령(authority)을 가지며, 미검증은 pending 표기.
 
-## 인적 배치 (rules/) — 11개
+## 인적 배치 (placement_rules/) — 11개
 
 | rule_id | 제목 | 규제 | 근거 | pending |
 |---|---|---|---|---|
