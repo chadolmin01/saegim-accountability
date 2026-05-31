@@ -1,0 +1,33 @@
+# Condition Rule — 폭염 작업중지·휴식 의무
+# 검증: 산안법 안전보건규칙 (2025-07-17 시행). 체감온도 단계별 조치.
+rule_id: heat_work_stoppage__osha
+title: 폭염 체감온도 작업중지·휴식 의무
+dimension: 기상·근로
+regime: 산업안전보건법(안전보건규칙)
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+
+authority:
+  law: 산업안전보건기준에 관한 규칙
+  rule: "체감온도 31℃↑ 조치, 33℃↑ 매 2시간 20분 휴식, 35℃↑ 14~17시 옥외작업 중지"
+  revision: "2025-07-17 시행"
+  source: "정책브리핑·고용부 교차검증 (2026-05). 38℃ 조항은 가이드라인 권고(미명문)."
+
+applies_to_work_kind: 고소작업    # 옥외작업 일반 — 데모는 고소작업 대표 (확장 가능)
+
+# 체감온도 33℃ 이상이면 휴식조치 의무
+applicable_when:
+  apparent_temp_c__gte: 33
+
+requires:
+  measures_any: [폭염휴식_2시간당20분, 옥외작업중지, 작업시간대조정]
+
+evaluation:
+  outputs: [compliant, violated, not_applicable]
+  audit_significance: "체감 33℃↑ 무조치 작업은 온열질환 중대재해 직접 원인. 35℃↑ 14~17시 옥외작업은 중지 의무."
+
+pending:
+  - "31℃(택1 조치)/35℃(시간대 중지)/38℃(가이드라인) 단계 세분화 — 현재 33℃ 휴식의무만 rule화."
+  - "applies_to_work_kind 를 옥외작업 전반으로 일반화 (현재 고소작업 대표)."

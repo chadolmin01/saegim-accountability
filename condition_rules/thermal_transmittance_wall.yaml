@@ -1,0 +1,22 @@
+rule_id: thermal_transmittance_wall__energy
+title: 외벽 열관류율 지역별 한도 (외기직접)
+dimension: 재료
+battery_ref: in_uvalue
+regime: 건축물 에너지절약설계기준
+source_type: 고시·지침   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 건축물
+rule_family: condition
+mode: obligation
+authority:
+  standard: 건축물 에너지절약설계기준 별표1 (국토부고시)
+  rule: "거실 외벽(외기직접) 열관류율 U(W/㎡K) 상한 — 중부1 0.17·중부2 0.24·남부 0.32·제주 0.41 (공동주택 외 기준)"
+  source: "에너지절약설계기준 별표1 (sonnet 크롤 verified 2026-05; 공동주택은 0.15/0.17/0.22/0.29 별도)"
+applies_to_work_kind: 단열
+applicable_when: {test_values.u_value_w_m2k__gte: 0}
+requires:
+  lookup_max:
+    key: test_values.u_value_w_m2k
+    by: climate_region
+    max_table: {중부1: 0.17, 중부2: 0.24, 남부: 0.32, 제주: 0.41}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "열관류율 초과는 에너지절약기준 위반·결로. 사용승인 거부 사유 가능"}
+pending: ["공동주택(0.15/0.17/0.22/0.29)·외기간접·지붕/바닥 매트릭스 분기 미반영"]

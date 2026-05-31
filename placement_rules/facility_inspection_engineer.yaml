@@ -1,0 +1,61 @@
+# Reference Rule — 시설물 안전점검·정밀안전진단 책임기술자 자격 배치 (단계7 유지관리)
+# 검증(딥리서치 2026-05): 시특법 시행령 §9 + 별표5. **핵심: 자격은 점검종류별, 시설등급(1/2/3종)별 차이 없음.**
+# 형식 = qualification (시설물 게이트 + 점검종류별 등급표). FMS 등록·교육이수 전제.
+rule_id: facility_inspection_engineer__siteul
+title: 시설물 안전점검·정밀안전진단 책임기술자 배치 기준
+role: 안전점검책임기술자
+regime: 시설물안전법
+lifecycle_stage: 유지관리   # 단계 게이트 — 유지단계 룰(시공 시나리오엔 비적용)
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 1·2·3종 시설물(건축+토목) — 게이트 전체 (단계7)
+requirement_shape: qualification
+
+authority:
+  law: 시설물의 안전 및 유지관리에 관한 특별법
+  article: 제11조(안전점검)·제12조(정밀안전진단)·제13조(긴급안전점검) · 시행령 제9조 · 별표5
+  table: "별표5 책임기술자 자격 — 점검종류별(시설등급별 아님). 2024.7.17 정기점검 초급→중급 상향"
+  revision: "시행령 대통령령 제35382호(2025.3.12) 기준"
+  source: "딥리서치 2026-05: law.go.kr 시행령 lsId=004083 + 별표5 + FMS 개정안내 교차검증(verified). 정밀점검 고급 경력연수만 unverified."
+
+grade_order: [초급, 중급, 고급, 특급]
+
+# 점검종류별 확정 자격표 (별표5) — 평가기 baseline 은 정기(중급↑); 정밀/진단은 아래 표 기준 별도 판정.
+inspection_grades:
+  정기안전점검:   {min_grade: 중급, or_license: 건축사, education: 정기안전점검교육}
+  정밀안전점검:   {min_grade: 고급, or_license: 건축사, education: 정밀안전점검교육}
+  긴급안전점검:   {min_grade: 고급, or_license: 건축사, education: 긴급안전점검교육}
+  정밀안전진단:   {min_grade: 특급, or_license: 기술사, education: 정밀안전진단교육, extra: "비특급은 정밀점검·진단 2년↑ 경력"}
+  성능평가:       {min_grade: 특급, or_license: 기술사, education: 성능평가교육}
+
+parameters:
+  - {key: is_facility_grade_1_or_2, label: 1·2종 시설물 여부, type: bool, required: false}
+  - {key: is_facility_grade_3, label: 3종 시설물 여부, type: bool, required: false}
+  - {key: assessment_date, label: 판정기준시점, type: date, required: true}
+  - {key: appointed_managers, label: 배치 책임기술자, type: list, required: true,
+     item_fields: [person, license, grade, experience_years, education, start_date, end_date]}
+
+applicability:
+  trigger_when:
+    any: [is_facility_grade_1_or_2, is_facility_grade_3]
+  note: 시특법 대상 시설물(1·2·3종) 아니면 not_required.
+
+# 단일 bracket = 정기안전점검 baseline(모든 시설 공통 최소). 정밀점검/진단 수행 시 inspection_grades 표의 더 높은 등급 필요.
+brackets:
+  - min_krw: 0
+    max_krw: null
+    count: 1
+    accepts:
+      - {min_grade: 중급}      # 정기안전점검 책임기술자 최소 (2024.7.17 상향)
+      - {license: 건축사}
+      - {license: 기술사}      # 정밀안전진단 가능자도 당연 충족
+
+evaluation:
+  steps:
+    - "시특법 대상 시설물 아니면 not_required."
+    - "assessment 시점 유효 배치 중 중급기술인↑(또는 건축사·기술사) >= 1 → compliant(정기 baseline)."
+    - "정밀안전점검(고급↑)·정밀안전진단(특급/기술사)은 inspection_grades 표 기준 별도 정밀판정(점검종류 입력 시)."
+  outputs: [compliant, understaffed, unqualified, not_required]
+  audit_significance: "무자격·미등록 책임기술자의 점검·진단은 시특법 위반. 유지관리 단계 결함 미발견·붕괴 책임."
+
+# 등급표 확정됨(딥리서치). 잔여: 점검종류별 정밀 판정을 평가기에 반영하는 경량 확장.
+pending: ["점검종류(정기/정밀/긴급/진단) 입력에 따른 inspection_grades 기준 정밀 판정 — 평가기 경량 확장", "정밀점검 고급기술인 정확 경력연수(별표5 GIF 원문) 확인"]

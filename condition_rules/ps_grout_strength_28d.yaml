@@ -1,0 +1,20 @@
+# Condition Rule — PS 쉬스 그라우트 28일 압축강도 (KCS 14 20 53)
+# 검증: sonnet 2-vote 2026-05 (28일 ≥20 MPa = 200 kgf/cm²).
+rule_id: ps_grout_strength_28d__kcs142053
+title: PS 그라우트 28일 압축강도 합격
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 53 / KCI-PS102
+  rule: "쉬스 그라우트 28일 압축강도 ≥20 MPa(200 kgf/cm²)"
+  source: "KCS 14 20 53 + 2016 표준시방서 PS챕터 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 프리스트레싱
+applicable_when: {test_values.grout_strength_28d_mpa__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.grout_strength_28d_mpa, min: 20}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "그라우트 강도 미달 → PS강재 정착·보호 부실·부식. KCS 14 20 53 위반"}

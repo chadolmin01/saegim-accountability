@@ -1,0 +1,22 @@
+# Condition Rule — 매스콘크리트 온도균열지수 (KCS 14 20 42)
+# 검증: sonnet 2-vote 2026-05 (Icr 균열방지≥1.5·제한≥1.2). KCS 14 20 42.
+rule_id: mass_concrete_thermal_crack_index__kcs142042
+title: 매스콘크리트 온도균열지수(Icr) 합격
+dimension: 공법
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 42(매스콘크리트)
+  rule: "온도균열지수 Icr — 균열방지 ≥1.5, 균열제한 ≥1.2 (관리수준별). 수화열 내부온도차 제어"
+  source: "KCS 14 20 42 (sonnet 2-vote 교차검증 2026-05, KCSC 원문 최종대조 pending)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.thermal_crack_index__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.thermal_crack_index
+    by: crack_control_level
+    min_table: {균열방지: 1.5, 균열제한: 1.2}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "온도균열지수 미달 → 수화열 온도균열. KCS 14 20 42 위반. 매스(평판≥80cm/벽≥50cm·ΔT≥25℃)"}

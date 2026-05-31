@@ -1,0 +1,23 @@
+rule_id: waterproofing_vs_groundwater__apwg
+title: 지하수위 대비 차수·배수 설계 적절성
+dimension: 의사결정권한
+phase: 조사·설계
+applies_to_facility_class: 전체
+regime: 건설기술진흥법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority:
+  law: 건설기술진흥법 시행규칙
+  article: 별표7
+  related: "총괄안전관리계획 2.나 현장특성분석(지반조건·지하수위) + 공종별 굴착·흙막이 안전성"
+  standard: "KCS 11 10 15 흙막이·차수, KCS 11 20 굴착(지하수 대책)"
+  rule: "지반조사상 지하수위가 굴착저면보다 높으면 차수·배수 대책을 설계에 반영해야 한다"
+  source: "별표7 추출 2026-05"
+# 지하수위가 계획 굴착심도보다 얕다(지표에서 더 가깝다) = 굴착저면이 지하수위 아래
+triggers_when:
+  site:
+    all:
+      - {groundwater_level_m__lt_field: planned_excavation_depth_m}   # 지하수위(m) < 굴착심도(m) → 저면이 수위 아래
+decision_kind: 차수배수설계
+requires_mitigation:
+  any: [차수벽, 지하연속벽, 그라우팅차수, 배수공법, 웰포인트]
+on_violation: "지하수위 굴착저면 상회인데 차수·배수 대책 없음 → 별표7 현장특성분석/굴착안전 의무 미흡 (상류 설계 책임)"

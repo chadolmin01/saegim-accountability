@@ -1,0 +1,18 @@
+rule_id: formwork_striking_strength__kcs
+title: 거푸집 해체(존치기간) 최소강도 기준
+dimension: 공법
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {standard: KCS 14 20 12, name: 거푸집 및 동바리, rule: "슬래브·보 밑면(단층) fck×2/3 또는 최소 14MPa, 기둥·벽·기초 측면 5MPa(내구성중요 10MPa)", source: "KCS 14 20 12:2024 + gigumi 교차검증 2026-05"}
+applies_to_work_kind: 거푸집해체
+applicable_when: {test_values.strength_mpa__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.strength_mpa
+    by: component_category
+    min_table: {슬래브: 14, 보: 14, 기둥: 5, 벽체: 5, 외벽: 5, 기초: 5}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "강도 미달 조기 해체는 처짐·붕괴 직접 원인"}
+pending: ["내구성 중요 측면 10MPa·다층지지 fck 100% 미세분", "기온별 최소재령 표(이미지) 미반영"]

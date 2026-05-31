@@ -1,0 +1,151 @@
+{
+ "nodes": [
+  {
+   "space": "concept",
+   "node_type": "FacilityClass",
+   "node_id": "tomok_siseol",
+   "properties": {
+    "class_id": "tomok_siseol",
+    "name": "토목시설",
+    "discriminator": "지붕+기둥/벽 불충족 — 교량·터널·도로·댐·옹벽 등 공작물",
+    "legal_basis": "건축법 §2 미해당 → 개별 시설법",
+    "governed_regime": "도로법·하천법·국토계획법 등"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "road_construction_permit__dorc",
+   "properties": {
+    "requirement_id": "road_construction_permit__dorc",
+    "document": "도로공사시행허가서",
+    "dimension": "문서제출",
+    "topic": "문서·보고",
+    "regime": "도로법",
+    "facility_subtype": "도로",
+    "applies_to_facility_class": "토목시설",
+    "trigger_summary": "도로관리청이 아닌 자가 도로공사·도로의 유지관리를 하려면 도로관리청의 사전 허가. 대통령령으로 정하는 경미한 경우 예외",
+    "threshold_fields": "is_non_road_authority, performs_road_work",
+    "submit_before": "도로공사 착수 전",
+    "submit_to": "도로관리청",
+    "legal_basis": "도로법 제36조 시행령 제38조"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "Law",
+   "node_id": "law_42e62db942",
+   "properties": {
+    "law_id": "law_42e62db942",
+    "name": "도로법",
+    "scope": "건설공사공통",
+    "authority_basis": "건산법 §2: 건설공사 = 토목+건축+산업설비+조경+환경시설 → 토목 현장에도 적용"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "road_occupancy_permit__dorr",
+   "properties": {
+    "requirement_id": "road_occupancy_permit__dorr",
+    "document": "도로점용허가서",
+    "dimension": "문서제출",
+    "topic": "문서·보고",
+    "regime": "도로법",
+    "facility_subtype": "도로",
+    "applies_to_facility_class": "토목시설",
+    "trigger_summary": "도로에 공작물·물건·시설을 신설·개축·변경·제거하여 도로를 점용하려는 자는 도로관리청 허가. 점용기간 연장·허가사항 변경도 동일",
+    "threshold_fields": "occupies_road",
+    "submit_before": "점용 개시 전",
+    "submit_to": "도로관리청",
+    "legal_basis": "도로법 제61조 시행령 제54조·제55조"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "urban_planning_facility_implementation_plan__nakp",
+   "properties": {
+    "requirement_id": "urban_planning_facility_implementation_plan__nakp",
+    "document": "실시계획인가서",
+    "dimension": "문서제출",
+    "topic": "문서·보고",
+    "regime": "국토계획법",
+    "facility_subtype": "도시계획시설일반",
+    "applies_to_facility_class": "토목시설",
+    "trigger_summary": "도시·군계획시설사업 시행자는 실시계획(설계도서·자금계획·시행기간 포함) 작성 → 국토부장관/시·도지사/대도시 시장 인가. 변경·폐지도 준용",
+    "threshold_fields": "is_urban_planning_facility_project",
+    "submit_before": "사업시행(착공) 전",
+    "submit_to": "국토교통부장관 / 시·도지사 / 대도시 시장",
+    "legal_basis": "국토의 계획 및 이용에 관한 법률 제88조 제43조(시설결정·구조·설치기준), 시행령"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "Law",
+   "node_id": "law_5da6102acb",
+   "properties": {
+    "law_id": "law_5da6102acb",
+    "name": "국토계획법",
+    "scope": "건설공사공통",
+    "authority_basis": "건산법 §2: 건설공사 = 토목+건축+산업설비+조경+환경시설 → 토목 현장에도 적용"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "road_construction_permit__dorc",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_42e62db942"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "road_construction_permit__dorc",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "tomok_siseol"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "road_occupancy_permit__dorr",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_42e62db942"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "road_occupancy_permit__dorr",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "tomok_siseol"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "urban_planning_facility_implementation_plan__nakp",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_5da6102acb"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "urban_planning_facility_implementation_plan__nakp",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "tomok_siseol"
+  }
+ ]
+}

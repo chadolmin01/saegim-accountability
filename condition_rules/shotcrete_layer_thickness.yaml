@@ -1,0 +1,20 @@
+# Condition Rule — 숏크리트 1회 타설 최대두께 (KCS 27 30 00)
+# 검증: sonnet 2-vote 2026-05 (터널 ≤100mm; LHCS 50mm는 적용기준 다름).
+rule_id: shotcrete_layer_thickness__kcs273000
+title: 숏크리트 1회 타설 최대두께
+dimension: 공법
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 27 30 00(터널 숏크리트):2023
+  rule: "1회 타설 두께 ≤100mm (과다 시 흘러내림·박리)"
+  source: "KCS 27 30 00:2023 (sonnet 2-vote 교차검증 2026-05). LHCS 14 20 51은 50mm(적용기준 상이)"
+applies_to_work_kind: 숏크리트
+applicable_when: {test_values.layer_thickness_mm__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.layer_thickness_mm, max: 100}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "1회 과다 타설 → 흘러내림·부착불량·품질저하. KCS 27 30 00 위반"}

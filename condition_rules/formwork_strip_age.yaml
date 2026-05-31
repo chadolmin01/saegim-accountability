@@ -1,0 +1,22 @@
+# Condition Rule — 거푸집 측면 존치기간 재령 기준 (강도시험 미실시) KCS 14 20 12
+# 검증: KCS 14 20 12 표3.3-2. sonnet 3-vote verified 2026-05 (조강2/3·보통4/6일).
+rule_id: formwork_strip_age__kcs142012
+title: 거푸집 측면 존치 재령 기준 (강도시험 미실시)
+dimension: 공법
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 12 표3.3-2
+  rule: "강도시험 미실시 시 기초·벽·기둥 측면 최소 존치 재령 — 조강 20℃↑2일/10~20℃3일, 보통 20℃↑4일/10~20℃6일. 평균기온 10℃ 미만은 강도시험 필수(재령 불가)"
+  source: "KCS 14 20 12 (sonnet 3-vote 교차검증 2026-05, KCSC 원문 최종대조 pending)"
+applies_to_work_kind: 거푸집해체
+applicable_when: {formwork_strip_age_days__gte: 0}
+requires:
+  lookup_bounds:
+    key: formwork_strip_age_days
+    by: formwork_strip_category
+    min_table: {조강_20up: 2, 조강_10to20: 3, 보통_20up: 4, 보통_10to20: 6}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "재령 미달 조기 측면해체 → 초기강도 부족·표면손상. KCS 14 20 12 위반. 10℃미만은 강도시험 필수"}

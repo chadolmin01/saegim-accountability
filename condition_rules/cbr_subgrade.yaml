@@ -1,0 +1,22 @@
+rule_id: cbr_subgrade__ksf2320
+title: 노상·보조기층 CBR 합격
+dimension: 공법
+battery_ref: ec_cbr
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: 건설공사 품질관리 업무지침 별표2 / KCS 44 50 05 / KS F 2320 (CBR 시험)
+  rule: "수정 CBR — 노상 ≥10, 보조기층 ≥30(아스팔트)·≥50(콘크리트포장). 재료 원산지별·물성변경 시 1회"
+  source: "별표2 + 경기도 품질시험편람 (sonnet 크롤 partial-verified 2026-05)"
+applies_to_work_kind: 다짐
+applicable_when: {test_values.cbr_value__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.cbr_value
+    by: fill_layer
+    min_table: {노상: 10, 보조기층: 30}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "CBR 미달은 지지력 부족 → 포장 침하·파손. 별표2 위반"}
+pending: ["콘크리트포장 보조기층 50 분기(포장종류 입력 시)"]

@@ -1,0 +1,21 @@
+# Condition Rule — 고유동 콘크리트 T500 유동시간 (KCS 14 20 32)
+# 검증: sonnet 2-vote 2026-05 (T500 3~20초).
+rule_id: scc_t500__kcs142032
+title: 고유동 콘크리트 T500(슬럼프플로 500mm 도달시간)
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 32(고유동 콘크리트)
+  rule: "T500(슬럼프플로 500mm 도달시간) 3~20초 (점성·재료분리저항 균형)"
+  source: "KCS 14 20 32 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.scc_t500_sec__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.scc_t500_sec, min: 3}
+    - {key: test_values.scc_t500_sec, max: 20}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "T500 범위 이탈 → 점성 부족(재료분리) 또는 과다(충전성 저하). KCS 14 20 32 위반"}

@@ -1,0 +1,17 @@
+rule_id: excavation_slope__osha
+title: 굴착 안전기울기 기준
+dimension: 공법
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, table: 별표11, rule: "지반별 기울기(세로1:가로) 모래1.8 연암풍화암1.0 경암0.5 기타1.2", revision: "2021-11-19 4분류 재편", source: "law.go.kr 별표11 교차검증 2026-05"}
+applies_to_work_kind: 굴착
+applicable_when: {slope_ratio_horizontal__gte: 0}
+requires:
+  lookup_bounds:
+    key: slope_ratio_horizontal
+    by: soil_type
+    min_table: {모래: 1.8, 연암: 1.0, 풍화암: 1.0, 경암: 0.5, 기타: 1.2}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "기울기 미달 급경사 굴착은 토사붕괴 중대재해 직접 원인"}

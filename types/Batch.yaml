@@ -1,0 +1,15 @@
+type: Batch
+version: "0.1"
+space: resource
+description: >
+  레미콘 배치(트럭) 노드 — 사건층. prior-art: BCOM ConcreteDelivery + GS1 EPCIS(5W What/When/Where/Who).
+  "어느 부재에 어느 트럭이 들어갔나"의 역추적 단위. 책임이전(handover): supplied_by(공급자) → delivered_for(부재, 시공자 인수).
+properties:
+  batch_id:        {type: string, required: true,  nullable: false, description: 배치/트럭 식별자 (송장 단위).}
+  mix_design_no:   {type: string, required: false, nullable: true,  description: 배합설계 번호.}
+  delivery_note:   {type: string, required: false, nullable: true,  description: 송장 번호 (BCOM DeliveryNote).}
+  dispatch_time:   {type: string, required: false, nullable: true,  description: 출하 시각 (공장).}
+  arrival_time:    {type: string, required: false, nullable: true,  description: 현장 도착(게이트 통과) 시각.}
+  elapsed_min:     {type: integer, required: false, nullable: true, description: 비빔~타설 경과(분). KS 90분 한도 검증용.}
+  supplier_org_ref: {type: string, required: false, nullable: true, description: 공급자 조직 (Organization 참조 — EPCIS source party).}
+  pour_component_ref: {type: string, required: false, nullable: true, description: 투입 부재 (BuildingComponent 참조).}

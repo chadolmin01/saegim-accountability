@@ -1,0 +1,15 @@
+rule_id: asbestos_survey__osha
+title: 기관석면조사 의무
+dimension: 문서·보고
+regime: 산업안전보건법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 산업안전보건법, article: 제119조, rule: "일반건축물 연면적 50㎡↑ & 해체부분 50㎡↑ 기관석면조사. 주택 200㎡↑", source: "기후에너지환경부 석면관리정보망+KOSHA 교차검증 2026-05"}
+document: 기관석면조사서
+applies_to_facility_class: 건축물   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  all:
+    - is_demolition
+    - {gross_floor_area_m2__gte: 50}
+submit_before: 해체전
+submit_to: 석면조사기관(결과보존)
+evaluation: {steps: ["해체공사+연면적 50㎡↑이면 조사 의무. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "석면조사 없는 해체는 산안법 위반. 석면 노출 직업병·시민재해"}

@@ -1,0 +1,34 @@
+# Condition Rule — 한중콘크리트 시공기준 적용 의무
+# 검증: KCS 14 20 40 (한중콘크리트). 일평균기온 4℃ 이하 시 한중콘크리트 시공.
+rule_id: cold_weather_concrete__kcs
+title: 한중콘크리트 시공기준 적용 의무
+dimension: 온도·기상
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation          # 조건 충족 시 특정 조치가 '의무'
+
+authority:
+  standard: KCS 14 20 40
+  name: 한중콘크리트
+  rule: "일평균기온 4℃ 이하가 예상되는 조건에서 콘크리트 타설 시 한중콘크리트로 시공"
+  source: "KCS 14 20 40 한중콘크리트 (국토교통부 표준시방서). 1차 세션 검증."
+
+applies_to_work_kind: 콘크리트타설
+
+# 이 조건이 참이면 의무 발생
+applicable_when:
+  daily_avg_temp_c__lte: 4
+
+# 의무: applied_measures 에 아래 중 하나 이상 포함돼야 적합
+requires:
+  measures_any: [한중콘크리트_양생, 보온양생, 가열양생, 동결방지제]
+
+evaluation:
+  steps:
+    - "work_kind 가 applies_to_work_kind 아니면 not_applicable."
+    - "applicable_when(일평균기온 ≤ 4) 불충족 → not_applicable."
+    - "충족 시 requires.measures_any 중 하나라도 applied_measures 에 있으면 compliant, 없으면 violated."
+  outputs: [compliant, violated, not_applicable]
+  audit_significance: "한중 조건 미적용 타설은 동결·초기강도 미달 → 구조결함·하자 사고의 직접 원인. KCS 위반."

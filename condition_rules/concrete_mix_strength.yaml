@@ -1,0 +1,19 @@
+rule_id: concrete_mix_strength__kcs142010
+title: 콘크리트 배합강도 fcr 확보 (배합 ≥ 요구 fcr)
+dimension: 재료
+battery_ref: ch_mix
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 10 §2.2 (배합강도)
+  rule: "배합강도 fcr ≥ 요구값. fck≤35: max(fck+1.34s, fck-3.5+2.33s); 14회이하: fck<21→+7·21~35→+8.5·>35→+10 MPa"
+  source: "KCS 14 20 10:2022 §2.2 (sonnet 크롤 verified — 공식·표2.2-3 다출처 일치)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.mix_design_strength_mpa__gte: 0}
+requires:
+  ratio_bound: {key: test_values.mix_design_strength_mpa, of: test_values.required_fcr_mpa, ratio: 1.0}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "배합강도 미확보는 설계강도 미달 확률 증가(불합격률↑). KCS 14 20 10 위반"}
+pending: ["required_fcr_mpa는 s·시험횟수로 산정한 설계값 입력 전제(엔진 내 산정 미구현)"]

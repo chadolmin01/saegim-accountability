@@ -1,0 +1,58 @@
+{
+ "rule_counts": {
+  "condition_rules": 113,
+  "document_rules": 22,
+  "prerequisite_rules": 8,
+  "placement_rules": 11,
+  "appropriateness_rules": 2,
+  "org_rules": 2,
+  "maintenance_rules": 1,
+  "material_specs": 2
+ },
+ "examples": {
+  "examples/incident_graph_demo.yaml": {
+   "nodes": 18,
+   "edges": 24,
+   "by_relation": {
+    "acts_via": 1,
+    "caused_by": 2,
+    "constrained_by": 1,
+    "holds": 3,
+    "in_phase": 5,
+    "performed_by": 4,
+    "responsible_for": 2,
+    "targets": 2,
+    "violates": 4
+   },
+   "violators": [
+    "dd_cure",
+    "wr1"
+   ]
+  },
+  "examples/incident_graph_acceptance.yaml": {
+   "nodes": 14,
+   "edges": 21,
+   "by_relation": {
+    "belongs_to": 1,
+    "caused_by": 1,
+    "custody_from": 1,
+    "custody_to": 1,
+    "delivered_for": 1,
+    "exhibits": 1,
+    "holds": 1,
+    "manifests_in": 1,
+    "performed_by": 2,
+    "responsible_for": 4,
+    "sampled_from": 1,
+    "supplied_by": 1,
+    "targets": 1,
+    "transfers": 1,
+    "violates": 3
+   },
+   "violators": [
+    "smp_01",
+    "wr_accept"
+   ]
+  }
+ }
+}

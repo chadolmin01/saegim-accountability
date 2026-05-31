@@ -1,0 +1,18 @@
+rule_id: urban_planning_facility_implementation_plan__nakp
+title: 도시·군계획시설사업 실시계획 인가
+dimension: 문서·보고
+regime: 국토계획법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 토목시설   # 토목 인프라(도로·터널 등 도시계획시설)의 건축허가 격
+facility_subtype: 도시계획시설일반
+authority: {law: 국토의 계획 및 이용에 관한 법률, article: 제88조, related: "제43조(시설결정·구조·설치기준), 시행령", rule: "도시·군계획시설사업 시행자는 실시계획(설계도서·자금계획·시행기간 포함) 작성 → 국토부장관/시·도지사/대도시 시장 인가. 변경·폐지도 준용", source: "국가법령정보센터+CaseNote 교차검증 2026-05"}
+document: 실시계획인가서
+required_when:
+  any:
+    - is_urban_planning_facility_project   # 도로·터널 등이 도시·군계획시설로 결정된 사업이면 대상
+submit_before: 사업시행(착공) 전
+submit_to: 국토교통부장관 / 시·도지사 / 대도시 시장
+evaluation:
+  steps: ["도시계획시설사업이면 실시계획 인가 의무. submitted_documents 에 '실시계획인가서' 있으면 compliant, 없으면 violated."]
+  outputs: [compliant, violated, not_required]
+  audit_significance: "실시계획 인가 없는 시공은 무단 시행. 토목 인프라 인허가 축의 기초."

@@ -1,0 +1,16 @@
+rule_id: rebar_spacing_tolerance__kds
+title: 철근 배근 간격 허용오차
+dimension: 공법
+regime: KDS 설계기준
+source_type: 설계기준(KDS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {standard: KDS 14 20 50, name: 철근 배근, rule: "철근 간격 설계도서 ±20mm 이내", source: "검측체크리스트(국토부/LH) 인용. KDS 14 20 50 원문 대조 pending"}
+applies_to_work_kind: 철근배근
+applicable_when: {rebar_spacing_dev_mm__gte: 0}
+requires:
+  value_bounds:
+    - {key: rebar_spacing_dev_mm, max: 20}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "배근 간격 오차 초과는 설계 단면성능 미달 → 구조안전 영향"}
+pending: ["KDS 14 20 50 원문 대조", "rebar_spacing_dev_mm = 설계대비 편차 절대값"]

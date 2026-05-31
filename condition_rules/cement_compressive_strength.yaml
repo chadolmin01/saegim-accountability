@@ -1,0 +1,22 @@
+# Condition Rule — 포틀랜드 시멘트 압축강도 28일 (KS L 5201)
+# 검증: KS L 5201 종류별. 2차출처(제조사 규격) 교차검증 2026-05.
+rule_id: cement_compressive_strength__ksl5201
+title: 포틀랜드 시멘트 압축강도(28일) 합격 (종류별)
+dimension: 재료
+regime: KS L 5201
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS L 5201(포틀랜드 시멘트) / 별표2
+  rule: "28일 압축강도 — 1종≥42.5·2종(중용열)≥32.5·3종(조강)≥47.5·4종(저열)≥22.5·5종(내황산염)≥40.0 MPa. 반입 lot마다"
+  source: "KS L 5201 (제조사 규격표 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.cement_str28_mpa__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.cement_str28_mpa
+    by: cement_type
+    min_table: {"1종": 42.5, "2종": 32.5, "3종": 47.5, "4종": 22.5, "5종": 40.0}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "시멘트 강도 미달 → 콘크리트 강도 발현 부족. KS L 5201 위반"}

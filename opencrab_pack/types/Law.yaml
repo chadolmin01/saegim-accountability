@@ -1,0 +1,26 @@
+type: Law
+version: "1.0"
+space: concept
+description: "법령 노드 — 건설 책임추적의 권위 출처. 각 법정요건(LegalRequirement)이 이 법에 귀속(governed_by)된다."
+properties:
+  law_id:
+    type: string
+    required: true
+    nullable: false
+    description: 법령 식별자 (예 sanan_beob).
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 법령 정식 명칭 (예 산업안전보건법).
+  scope:
+    type: string
+    required: true
+    nullable: false
+    description: 적용 범위 축 — 건축물 전용인지 모든 건설공사 공통인지.
+    enum: [건축물전용, 건설공사공통]
+  authority_basis:
+    type: string
+    required: false
+    nullable: true
+    description: 건설공사 공통 적용 근거 (예 "건산법 §2 건설공사 = 토목+건축+산업설비+조경+환경시설").

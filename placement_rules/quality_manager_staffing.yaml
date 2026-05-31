@@ -1,0 +1,139 @@
+# =============================================================================
+# Reference Rule — 건설공사 품질관리 건설기술인(품질관리자) 배치 기준
+# =============================================================================
+# 산출 형태 = "등급별 인원" (안전관리자의 단순 인원수와 다른 shape).
+# 같은 rule 템플릿(authority/parameters/brackets/evaluation)이 이 형태도 담는지 증명.
+#
+# 검증: 건설기술진흥법 시행규칙 별표5 (제50조제4항 관련) + 시행령 제89조 대상공사.
+# 교차검증: kicq.kr(한국건설품질진흥원), safetyman.co.kr 개정비교. HWP 원문 수치 대조.
+# =============================================================================
+
+rule_id: quality_manager_staffing__citp
+title: 건설공사 품질관리 건설기술인(품질관리자) 배치 기준
+role: 품질관리자
+regime: 건설기술진흥법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+
+authority:
+  law: 건설기술진흥법 시행규칙
+  table: "별표 5 (건설공사 품질관리를 위한 시설 및 건설기술인의 배치기준, 제50조제4항 관련)"
+  related: "건설기술진흥법 시행령 제89조 (품질관리계획·품질시험계획 수립 대상)"
+  revision: "2022-12-30 개정 / 2023-12-31 시행 (이후 개정 여부 재확인 필요 — pending)"
+  source: "kicq.kr 한국건설품질진흥원 배치기준표 + 시행령 제89조 원문(lbox.kr) 교차검증 (2026-05 수집)"
+
+requirement_shape: graded_slots   # 등급별 인원 (안전관리자의 simple_count 와 구분)
+
+parameters:
+  - key: contract_amount_krw
+    label: 총공사비(원)
+    type: integer
+    required: true
+  - key: gross_floor_area_m2
+    label: 연면적(㎡)
+    type: float
+    required: false
+    note: 다중이용건축물 등급 판정에 사용.
+  - key: is_multiuse_building
+    label: 다중이용건축물 여부
+    type: bool
+    default: false
+    note: 다중이용건축물이면 연면적 기준 등급 상향 (5만㎡↑ 특급, 3만㎡↑ 고급).
+  # 시간 축 (1급, DESIGN 원칙1)
+  - key: construction_start_date
+    label: 착공일
+    type: date
+    required: true
+  - key: construction_end_date
+    label: 준공예정일
+    type: date
+    required: true
+  - key: assessment_date
+    label: 판정 기준시점
+    type: date
+    required: true
+  - key: appointed_managers
+    label: 선임 품질관리자 목록
+    type: list
+    required: true
+    item_fields: [person, grade, start_date, end_date]
+    note: "grade ∈ {초급,중급,고급,특급}. assessment_date 시점 유효(start~end)한 사람만 카운트."
+
+# --- 등급 사다리 (건진법 시행령 별표1 공통) ---
+grade_order: [초급, 중급, 고급, 특급]   # 낮음 → 높음. 'X급 이상' 판정용.
+
+# --- 등급(현장 등급)별 요구 인원 ---
+# tier = 현장에 부여되는 품질관리 등급. 각 tier 는 required_slots(등급 하한별 인원)를 갖는다.
+# select_when 은 위에서부터 먼저 매칭되는 것 채택 (특급 → 고급 → 중급 → 초급).
+brackets:
+  - tier: 특급
+    select_when:
+      any:
+        - contract_amount_krw__gte: 100000000000     # 1,000억 이상
+        - all: [is_multiuse_building, gross_floor_area_m2__gte: 50000]   # 다중이용 5만㎡↑
+    required_slots:
+      - min_grade: 특급
+        count: 1
+        experience: 품질관리 경력 3년 이상
+      - min_grade: 중급
+        count: 1
+      - min_grade: 초급
+        count: 1
+    lab_area_m2_min: 50
+
+  - tier: 고급
+    select_when:
+      any:
+        - contract_amount_krw__gte: 50000000000      # 500억 이상 (품질관리계획 대상)
+        - all: [is_multiuse_building, gross_floor_area_m2__gte: 30000]   # 다중이용 3만㎡↑
+    required_slots:
+      - min_grade: 고급
+        count: 1
+        experience: 품질관리 경력 2년 이상
+      - min_grade: 중급
+        count: 1
+      - min_grade: 초급
+        count: 1
+    lab_area_m2_min: 50
+
+  - tier: 중급
+    select_when:
+      any:
+        - contract_amount_krw__gte: 10000000000      # 100억 이상
+        - gross_floor_area_m2__gte: 5000             # 5,000㎡ 이상
+    required_slots:
+      - min_grade: 중급
+        count: 1
+        experience: 품질관리 경력 1년 이상
+      - min_grade: 초급
+        count: 1
+    lab_area_m2_min: 18
+
+  - tier: 초급
+    select_when:
+      any:
+        - gross_floor_area_m2__gte: 660              # 건축공사 연면적 660㎡↑ (품질시험계획 대상)
+        - contract_amount_krw__gte: 500000000        # 토목 5억↑ 등 (건축물 외 대비)
+    required_slots:
+      - min_grade: 초급
+        count: 1
+    lab_area_m2_min: 18
+
+# --- 판정 방법 ---
+evaluation:
+  steps:
+    - "1. [등급 선택] brackets 를 위에서부터 검사, select_when 이 처음 참인 tier 채택. 모두 불충족 → not_required."
+    - "2. [유효 선임] appointed_managers 중 start_date <= assessment_date <= (end_date ?? 무한) 인 사람만 effective."
+    - "3. [등급 매칭] required_slots 를 min_grade 높은 순으로 정렬. effective 인원을 grade 높은 순 정렬.
+         각 슬롯에 grade >= slot.min_grade 인 미배정 인원 1명씩 greedy 배정."
+    - "4. [판정] 모든 슬롯 충족 → compliant. 인원 자체 부족 → understaffed.
+         인원은 있으나 등급 미달로 슬롯 못 채움 → unqualified. 부족 슬롯 목록 보고."
+  outputs: [compliant, understaffed, unqualified, not_required]
+  audit_significance: |
+    품질관리자 미달/등급미달은 건설기술진흥법 위반이며, 품질 하자·구조 결함 사고 시
+    품질관리 체계 부재의 직접 증거가 된다. 시공사(원도급) 측 책임.
+
+pending:
+  - "별표5 최신 개정일 재확인 (2023.12.31 이후)."
+  - "lab(시험실) 면적·장비 기준은 인원과 별개 — 본 rule 은 인원만 판정, 시험실은 미반영."
+  - "품질관리계획/품질시험계획 '대상' 판정의 건설사업관리 연계 조건(500억↑ 건사관)은 단순화함."

@@ -1,0 +1,21 @@
+rule_id: concrete_test_frequency__kcs142010
+title: 콘크리트 품질시험 빈도 (타설량 대비)
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 10 (콘크리트공사 표준시방서) / 건설공사 품질관리 업무지침
+  related: ASTM C94 (ready-mixed concrete sampling 대응)
+  rule: "압축강도·슬럼프·공기량 시험 = 1일 1회 또는 타설량 매 120㎥당 1회(2022 강화, 옛 150㎥) 또는 배합변경 시"
+  source: "KCS 14 20 10 + 품질관리 업무지침 개정(150→120㎥) 확인 2026-05. 시방서(2022 프로젝트)는 옛 150㎥ — 현행값 사용"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {pour_volume_m3__gte: 0}   # 타설물량 기록된 경우에만 적용(있으면 시험횟수 대조; 미기록 시 위반)
+requires:
+  frequency_bound:
+    volume: pour_volume_m3          # 해당 타설 물량(㎥)
+    count: strength_tests_count     # 실시한 압축강도 시험 횟수
+    interval_m3: 120
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "시험빈도 미달은 품질확인 공백 — 불량 로트 미검출 위험. KCS·품질관리업무지침 위반"}

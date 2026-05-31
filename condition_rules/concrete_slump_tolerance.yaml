@@ -1,0 +1,25 @@
+rule_id: concrete_slump_tolerance__ksf4009
+title: 콘크리트 슬럼프 허용오차 (지정값 대비)
+dimension: 재료
+regime: KS F 4009
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS F 4009 (레디믹스트 콘크리트) — 슬럼프 허용차
+  test_method: KS F 2402 (슬럼프 시험방법) ≈ ASTM C143
+  related: ASTM C94 (ready-mixed concrete 허용차 대응)
+  rule: "지정 슬럼프 대비 허용오차 — 25mm:±10 / 50·65mm:±15 / 80mm 이상:±25"
+  source: "KS F 4009 표(레미콘협회·gigumi 교차) + KS F 2402 시험방법 확인 2026-05"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {spec_slump_mm__gte: 0}   # 지정 슬럼프가 기록된 타설에만 적용(있으면 측정값 대조; 미측정 시 위반)
+requires:
+  deviation_bound:
+    measured: test_values.slump_mm
+    target: spec_slump_mm           # 설계·배합 지정 슬럼프
+    bands:
+      - {spec_lte: 25, tol: 10}
+      - {spec_lte: 65, tol: 15}     # 50·65mm 구간
+      - {spec_lte: null, tol: 25}   # 80mm 이상
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "슬럼프 허용오차 초과는 시공연도·재료분리·강도저하. KS F 4009 위반(부적합 레미콘)"}

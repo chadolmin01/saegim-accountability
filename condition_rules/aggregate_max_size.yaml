@@ -1,0 +1,21 @@
+# Condition Rule — 굵은골재 최대치수(Gmax) 부재별 제한 (KCS 14 20 10)
+# 검증: sonnet 2-vote 2026-05 (일반RC 25·무근/대단면 40·노출 20·고강도 25mm).
+# 관계식(min(부재최소치수/5, 슬래브두께/3, 철근순간격×3/4))은 부재치수 입력 필요 → 표준 캡으로 판정.
+rule_id: aggregate_max_size__kcs142010
+title: 굵은골재 최대치수(Gmax) 상한 (부재별)
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 10(일반콘크리트)
+  rule: "Gmax 표준 상한 — 일반RC 25, 무근/대단면 40, 노출 20, 고강도 25 mm. (관계식: min(부재최소치수/5, 슬래브두께/3, 철근순간격×3/4))"
+  source: "KCS 14 20 10 + KDS 14 20 (sonnet 2-vote 교차검증 2026-05)"
+  pending: "관계식 기반 정밀판정(부재치수·철근간격 입력)은 표준 캡으로 대체"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.gmax_mm__gte: 0}
+requires:
+  lookup_max: {key: test_values.gmax_mm, by: member_type, max_table: {일반RC: 25, 무근대단면: 40, 노출: 20, 고강도: 25}}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "Gmax 과대 → 충전불량·재료분리·피복부족. KCS 14 20 10 위반"}

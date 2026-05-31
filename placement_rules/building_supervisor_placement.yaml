@@ -1,0 +1,61 @@
+# Reference Rule — 건축법 공사감리자 배치 기준
+# 검증: 건축법 시행령 제19조 + 법제처 유권해석(2016, 15-0712) + 건축공사감리세부기준.
+# 적용대상: 건축허가를 받는 모든 건축물 (공공·민간 무관). 민간 건축물의 '감리'는 이것 (건진법 CM 아님).
+# 산출 형태 = field_slots (상주 대상이면 분야별 건축사보 각 1명).
+rule_id: building_supervisor_placement__bldg
+title: 건축법 공사감리자 배치 기준
+role: 공사감리자
+regime: 건축법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 건축물   # 건축/토목 게이트
+requirement_shape: field_slots
+
+authority:
+  law: 건축법 시행령
+  article: 제19조 (공사감리)
+  related: "법제처 유권해석 2016.10.13 (15-0712) — 분야별 건축사보 각 1명; 건축공사감리세부기준(국토부고시 2024-377호)"
+  revision: "2024-07-10 (세부기준)"
+  source: "법제처 유권해석 + 건축사뉴스 + CODIL 고시 PDF 교차검증 (2026-05)."
+
+parameters:
+  - {key: gross_floor_area_m2, label: 연면적(㎡), type: float, required: true}
+  - {key: floor_count, label: 지상 층수, type: integer, required: false}
+  - {key: is_apartment, label: 아파트 여부, type: bool, default: false}
+  - {key: is_multiuse_building, label: 다중이용건축물 여부, type: bool, default: false}
+  - {key: assessment_date, label: 판정기준시점, type: date, required: true}
+  - {key: construction_end_date, label: 준공예정일, type: date, required: false}
+  - {key: appointed_managers, label: 선임 감리, type: list, required: true,
+     item_fields: [person, field, start_date, end_date],
+     note: "field ∈ {총괄, 건축, 토목, 전기, 기계}. 총괄=공사감리자(건축사), 나머지=분야별 건축사보."}
+
+# 1단계: 모든 건축허가 대상 → 공사감리자(건축사) 1명 (field=총괄).
+# 2단계: 상주감리 대상이면 분야별 건축사보 추가.
+base_requirement:
+  field: 총괄
+  count: 1
+  note: 건축허가 대상 건축물 전체. 공사감리자(건축사) 지정 의무.
+
+residency_trigger:   # 상주감리 대상 조건 (하나라도 참)
+  any:
+    - {gross_floor_area_m2__gte: 5000}
+    - {all: [{floor_count__gte: 5}, {gross_floor_area_m2__gte: 3000}]}
+    - is_apartment
+
+residency_slots:     # 상주 대상일 때 분야별 건축사보 (각 1명)
+  - {field: 건축, count: 1, period: 전체공사기간}
+  - {field: 토목, count: 1, period: 해당공사기간}
+  - {field: 전기, count: 1, period: 해당공사기간}
+  - {field: 기계, count: 1, period: 해당공사기간}
+
+evaluation:
+  steps:
+    - "1. 항상 base_requirement(총괄 1명) 요구. assessment 시점 유효한 field=총괄 선임 >= 1?"
+    - "2. residency_trigger 충족 시 residency_slots 각 분야 1명 추가 요구."
+    - "3. 각 요구 field 마다 effective(유효) 선임 중 해당 field 인원 >= count?"
+    - "4. 모든 슬롯 충족 → compliant. 부족 슬롯 있으면 understaffed (부족 분야 목록)."
+  outputs: [compliant, understaffed, not_required]
+  audit_significance: 감리자/분야별 건축사보 부재는 건축법 위반. 부실시공·붕괴 사고 시 감리 부실 직접 증거.
+
+pending:
+  - "책임상주감리(다중이용건축물) 추가 요건 세부 — 고시 HWP 원문 미확보."
+  - "분야별 건축사보 자격(경력 2년↑)·중복배치 금지 검증 미반영."

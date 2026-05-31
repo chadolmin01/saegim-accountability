@@ -1,0 +1,62 @@
+# 품질시험·검측 master battery (backbone) — 건설공사 품질관리 업무지침 [별표2] + KCS + KS 역산.
+# condition/검측 룰은 이 카탈로그에서 역산(battery_ref). coverage = battery item에 rule이 있나.
+# status: ✅룰있음 · ⚪부분 · ❌gap.  (sonnet×2 크롤 2026-05, references/test_battery_coverage.md)
+meta:
+  source: 건설공사 품질관리 업무지침 [별표2] 품질시험기준 (국토부고시) + KCS + KS
+  principle: 검측·시험 룰은 ad-hoc 아닌 이 master에서 역산. 빈도·기준·근거 명시.
+
+battery:
+  콘크리트_굳지않은:
+    - {id: cc_slump, 종목: 슬럼프, 기준: "KS F 4009 ±밴드", 빈도: 120㎥/회, status: ✅, rule: concrete_slump_tolerance}
+    - {id: cc_air, 종목: 공기량, 기준: "4.5±1.5%", 빈도: 120㎥/회, status: ✅, rule: concrete_air_ae}
+    - {id: cc_chloride, 종목: 염화물, 기준: "≤0.30kg/㎥", 빈도: 120㎥/회, status: ✅, rule: concrete_chloride}
+    - {id: cc_unitwater, 종목: 단위수량, 기준: "≤185kg/㎥(2024 강화)", 빈도: 1일1회·120㎥, status: ✅채움, rule: concrete_unit_water}
+    - {id: cc_temp, 종목: 콘크리트온도, 기준: "한중5~20·서중≤35℃", 빈도: 120㎥/회, status: ⚪, rule: hot_weather_pour_temp}
+    - {id: cc_freq, 종목: 시험빈도, 기준: "120㎥/회", 빈도: "-", status: ✅, rule: concrete_test_frequency}
+  콘크리트_굳은:
+    - {id: ch_strength, 종목: 압축강도, 기준: "1회≥0.85fck·3회평균≥fck", 빈도: 120㎥/회, status: ✅, rule: concrete_strength_acceptance}
+    - {id: ch_form, 종목: 거푸집존치강도, 기준: "부재별", status: ✅, rule: formwork_striking_strength}
+    - {id: ch_core, 종목: 코어강도, 기준: "3개평균≥0.85fck·개별≥0.75fck", 빈도: 강도불합격시, status: ✅채움, rule: concrete_core_strength}
+    - {id: ch_flexure, 종목: 휨강도, 기준: "도로포장 ≥4.5MPa", status: ✅채움, rule: concrete_flexural_strength}
+    - {id: ch_rebound, 종목: 반발경도/초음파, 기준: 비파괴 추정, status: ❌}
+    - {id: ch_mix, 종목: 배합강도 fcr, 기준: "배합≥요구fcr(fck+1.34s 등)", status: ✅채움, rule: concrete_mix_strength}
+  철근_재료:
+    - {id: rb_yield, 종목: 항복강도, 기준: 강종별, 빈도: 50톤/회, status: ✅, rule: rebar_yield_strength}
+    - {id: rb_tensile, 종목: 인장·연신·굽힘, 기준: "인장 항복배수·연신·굽힘 강종별", 빈도: 50톤/회, status: ✅채움, rule: "rebar_tensile_ratio·rebar_elongation·rebar_bend_test"}
+  철근_이음:
+    - {id: rj_gas, 종목: 가스압접 검사, 기준: "외관 돌출1.4d·편심≤d/5·인장≥1.25fy / 초음파", 빈도: "외관 전수·인장 3/200·초음파 30/200", status: ✅채움, rule: rebar_gas_pressure_weld}
+    - {id: rj_mech, 종목: 기계적이음, 기준: "1급 인장≥1.35fy·잔류≤0.1mm(3등급)", status: ✅채움, rule: rebar_mechanical_splice}
+    - {id: rj_weld, 종목: 용접이음, 기준: "인장≥항복×1.25·외관·초음파", status: ✅채움, rule: rebar_welded_splice}
+  철근_배근검측:
+    - {id: rd_cover, 종목: 피복두께, status: ✅, rule: rebar_cover_thickness}
+    - {id: rd_spacing, 종목: 배근간격, status: ✅, rule: rebar_spacing_tolerance}
+    - {id: rd_devel, 종목: 정착·이음길이, 기준: "확보≥요구ld·A급1.0·B급1.3·min300", status: ✅채움, rule: rebar_development_splice}
+  토공_다짐:
+    - {id: ec_slope, 종목: 굴착 안전기울기, status: ✅, rule: excavation_slope}
+    - {id: ec_density, 종목: 현장밀도/다짐도, 기준: "노체90·노상95·보조기층95·되메우기90%", 빈도: 층별 400~450m/㎥, status: ✅채움, rule: compaction_degree}
+    - {id: ec_pbt, 종목: 평판재하 K30, 기준: "노체70·노상110·보조기층190 MN/㎥(KCS 미검증)", status: ✅채움, rule: plate_bearing_test}
+    - {id: ec_proof, 종목: 프루프롤링, 기준: "소성변형 노상≤5·보조기층≤3mm", status: ✅채움, rule: proof_rolling}
+    - {id: ec_cbr, 종목: CBR, 기준: "노상≥10·보조기층≥30", status: ✅채움, rule: cbr_subgrade}
+  터파기_지반_계측:
+    - {id: gw_disp, 종목: 흙막이 수평변위, status: ✅, rule: excavation_displacement}
+    - {id: gw_water, 종목: 지하수위·지보공축력·지표침하 계측, status: ❌}
+    - {id: gw_bearing, 종목: 지내력 평판재하·표준관입, 기준: "측정≥설계지내력(KS F 2444)", status: ⚪, rule: "foundation_bearing_pbt (표준관입 N값 미구현)"}
+  기초_말뚝:
+    - {id: pl_static, 종목: 정재하시험, 기준: "시험하중≥설계×2(KS F 2445)", status: ✅채움, rule: pile_static_load}
+    - {id: pl_dynamic, 종목: 동재하 PDA·건전도 PIT, 기준: "동재하≥전체1%·지지력≥설계", status: ✅채움, rule: pile_dynamic_integrity}
+    - {id: pl_material, 종목: 말뚝재료(강관·현장타설), 빈도: 제조사·200개/회, status: ⚪, rule: "pile_steel_pipe_material·bored_pile_verticality (PHC휨 partial)"}
+  강구조:
+    - {id: st_material, 종목: 구조강재 항복강도, 기준: "SS275 275·SM355 355 MPa", 빈도: 50톤/회, status: ⚪, rule: "structural_steel_strength (t>16 저감 미반영)"}
+    - {id: st_weld, 종목: 용접부 검사, 기준: "외관10%·RT5%·UT5%, 1·2류 합격", status: ✅채움, rule: steel_weld_inspection}
+    - {id: st_bolt, 종목: 고장력볼트 조임, 기준: "표준장력·너트회전120°(unverified)", status: ❌pending}
+    - {id: st_tol, 종목: 정밀도(수직도 H/1000), status: ❌pending}
+  포장_아스팔트:
+    - {id: ap_compaction, 종목: 다짐도, 기준: "≥96%", status: ✅채움, rule: asphalt_compaction}
+    - {id: ap_thickness, 종목: 두께, 기준: "설계대비 -5%~+10%", status: ✅채움, rule: asphalt_thickness}
+    - {id: ap_marshall, 종목: 마샬 안정도·흐름·공극, 기준: "≥7500N·20~40·3~6%", status: ✅채움, rule: asphalt_marshall}
+    - {id: ap_flatness, 종목: 평탄성 PrI, 기준: "일반≤100·교량접속≤200 mm/km", status: ✅채움, rule: asphalt_flatness}
+  방수_단열:
+    - {id: wp_ponding, 종목: 담수시험, 기준: "48h 누수없음", status: ✅채움, rule: waterproof_ponding}
+    - {id: in_conductivity, 종목: 단열재 열전도율, 기준: "가≤0.034~라≤0.051", status: ✅채움, rule: insulation_conductivity}
+    - {id: in_uvalue, 종목: 외벽 열관류율, 기준: "중부1 0.17~제주 0.41(외기직접)", status: ✅채움, rule: thermal_transmittance_wall}
+    - {id: wp_thickness, 종목: 방수층 두께(도막3/2mm·시트1~3mm), status: ❌pending}

@@ -1,0 +1,47 @@
+type: Incident
+version: "0.1"
+space: evidence
+description: "사고/하자 — 책임추적의 진입점. 발생 시점(event_date)·장소·부재를 기록하고, 이를 기준으로 그 시점 그 현장의 결정·선임을 역추적한다."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 사고/하자 식별명.
+  event_date:
+    type: date
+    required: true
+    nullable: false
+    description: 발생 일시 (사고보고서). 모든 시점 기준 판정(assessment_date)의 기본값.
+  incident_kind:
+    type: string
+    required: true
+    nullable: false
+    description: 구분.
+    enum: [중대재해, 일반재해, 품질하자, 구조결함, 환경, 기타]
+  project_ref:
+    type: string
+    required: true
+    nullable: false
+    description: 발생 현장 (Project 참조).
+  location_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 발생 장소 (Location 참조 — 건물>층>실>부위).
+  component_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 관련 부재 (BuildingComponent 참조).
+  severity:
+    type: string
+    required: false
+    nullable: true
+    description: 중대성.
+    enum: [사망, 부상, 물적, 잠재]
+  description:
+    type: string
+    required: false
+    nullable: true
+    description: 사고/하자 경위 요약.

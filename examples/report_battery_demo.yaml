@@ -1,0 +1,41 @@
+# 통합 검증 — 확장 엔진(85룰)을 다공종 사고로 end-to-end. 5차원 + 신규 battery 룰 동시 발동.
+project:
+  name: OO 복합현장 (건축+토목)
+  facility_kind: building
+  contract_amount_krw: 85000000000
+  total_contract_amount_krw: 85000000000
+  estimated_amount_krw: 85000000000
+  gross_floor_area_m2: 38000
+  is_multiuse_building: true
+  is_public_client: false
+  work_category: 일반
+  total_workers: 140
+  construction_start_date: "2025-01-01"
+  construction_end_date: "2027-12-31"
+  excavation_depth_m: 12
+  floor_count: 25
+  building_height_m: 95
+  contains_building: true
+
+submitted_documents:
+  - {document: 안전관리계획서, submit_date: "2024-12-01"}
+  - {document: 착공신고서, submit_date: "2024-12-20"}
+
+appointed_managers:
+  - {person: 김안전, role: 안전관리자, qualification: 산업안전기사, start_date: "2025-01-01", end_date: "2027-12-31"}
+
+decisions:
+  - {name: 철근배근검측, kind: 시공검측, checkpoint: 철근배근검측, result: 합격, event_date: "2026-09-13", performed_by_ref: 박감리, via_role: 책임감리원, target_component_ref: comp_5f_slab}
+
+incident:
+  name: 5층 슬래브 붕괴 (다공종 품질결함 복합)
+  event_date: "2026-09-20"
+  incident_kind: 중대재해
+  component_ref: comp_5f_slab
+
+# 다공종 작업기록 — 각 신규 battery 룰 행사
+work_records:
+  - {name: 5층 슬래브 타설, work_kind: 콘크리트타설, event_date: "2026-09-15", daily_avg_temp_c: -2, applied_measures: [], spec_slump_mm: 120, design_fck_mpa: 24, pour_volume_m3: 300, strength_tests_count: 1, test_values: {slump_mm: 155, unit_water_kg_m3: 192, strength_mpa: 19}}
+  - {name: 부지 노상 다짐, work_kind: 다짐, event_date: "2025-03-10", fill_layer: 노상, test_values: {compaction_degree_pct: 92, cbr_value: 8}}
+  - {name: 기초 말뚝 시공, work_kind: 말뚝, event_date: "2025-02-20", pile_count: 200, dynamic_test_count: 1, test_values: {test_load_kn: 1500, design_load_kn: 1000}}
+  - {name: 기둥 철근 가스압접, work_kind: 철근이음, event_date: "2026-08-01", test_values: {bulge_dia_ratio: 1.5, bulge_len_ratio: 1.3, eccentricity_ratio: 0.30, tensile_yield_ratio: 1.10}}

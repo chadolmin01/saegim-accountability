@@ -1,0 +1,16 @@
+rule_id: confined_space_oxygen__osha
+title: 밀폐공간 산소농도·작업 전 측정 의무
+dimension: 작업환경
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제619조, rule: "적정 산소 18%~23.5%, 작업 전·교대 전·재개 전 측정", source: "산안법 기준규칙 교차검증 2026-05"}
+applies_to_work_kind: 기타     # 밀폐공간 작업 (work_kind 확장 전 임시)
+applicable_when: {is_confined_space: true}
+requires:
+  value_bounds:
+    - {key: test_values.oxygen_pct, min: 18.0, max: 23.5}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "산소결핍·측정 미실시 작업은 질식 중대재해 직접 원인"}
+pending: ["황화수소10ppm·일산화탄소30ppm·이산화탄소1.5% 등 가스 기준 미반영", "WorkRecord 에 밀폐공간 work_kind 추가 필요"]

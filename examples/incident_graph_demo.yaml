@@ -1,0 +1,69 @@
+# 인스턴스 그래프 데모 — "강수지역 야외양생" 사고를 노드 ref로 완전히 엮은 시나리오.
+# 어댑터(build_instance_graph.py)가 이 ref들을 따라 factual 엣지를, 평가기가 verdict 엣지를 만든다.
+project: {name: OO 신축현장 (다우지역)}
+
+site_context:
+  id: sc1
+  name: OO 현장 (연강수 1600mm)
+  phase_ref: p1_survey
+  region_annual_rainfall_mm: 1600
+  region_rainy_season_work: true
+  groundwater_level_m: 3.0
+  planned_excavation_depth_m: 8.0
+
+persons:
+  - id: 설계자_김
+    name: 김OO
+    appointments: [{id: ap_설계, role: 설계자, license: 건축사, start_date: "2026-01-01", end_date: "2026-06-30"}]
+  - id: 감리_박
+    name: 박OO
+    appointments: [{id: ap_감리, role: 공사감리자, grade: 특급, start_date: "2026-03-01", end_date: "2026-12-31"}]
+  - id: 시공자_이
+    name: 이OO
+    appointments: [{id: ap_시공, role: 현장대리인, license: 기사, start_date: "2026-03-01", end_date: "2026-12-31"}]
+
+design_decisions:
+  - id: dd_cure
+    name: 콘크리트 양생계획
+    kind: 양생계획
+    event_date: "2026-04-10"
+    performed_by_ref: 설계자_김
+    approved_by_ref: 감리_박
+    site_ref: sc1
+    phase_ref: p1_survey
+    chosen_value: 외부 자연양생
+    planned_mitigations: []          # 강우 보양 없음 → 적절성 위반
+
+work_records:
+  - id: wr1
+    name: 3층 슬래브 타설
+    work_kind: 콘크리트타설
+    event_date: "2026-07-20"
+    performed_by_ref: 시공자_이
+    component_ref: c1
+    phase_ref: p4_frame
+    rainfall_mm: 15
+    applied_measures: []
+    design_fck_mpa: 24
+    test_values: {strength_mpa: 18}
+    requires_prior:
+      - {kind: 시공검측, checkpoint: 철근배근검측, result: 합격}
+
+decisions:
+  - id: dec1
+    name: 철근배근 검측
+    kind: 시공검측
+    checkpoint: 철근배근검측
+    result: 합격
+    event_date: "2026-07-18"
+    performed_by_ref: 감리_박
+    via_role: ap_감리
+    target_component_ref: c1
+    phase_ref: p4_frame
+
+incident:
+  id: inc1
+  name: 슬래브 콘크리트 강도미달·균열
+  event_date: "2026-08-15"
+  phase_ref: p4_frame
+  caused_by_refs: [wr1, dd_cure]

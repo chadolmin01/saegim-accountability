@@ -1,0 +1,14 @@
+rule_id: elcb_installation__osha
+title: 가설전기 누전차단기 설치 의무
+dimension: 작업환경
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제304조, rule: "이동형·습윤·도전성장소 기기 누전차단기(정격감도 30mA·0.03초) 설치", source: "lbox 산안규칙 제304조 교차검증 2026-05"}
+applies_to_work_kind: 기타
+applicable_when: {uses_portable_electric_tool: true}
+requires:
+  measures_any: [누전차단기_설치]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "누전차단기 미설치는 감전 중대재해 직접 원인"}

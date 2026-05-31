@@ -1,0 +1,19 @@
+rule_id: asphalt_thickness__kcs445010
+title: 아스팔트 포장 두께 허용오차
+dimension: 공법
+battery_ref: ap_thickness
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 44 50 10:2023 §3.4.14(2)
+  rule: "완성두께 = 설계두께 대비 -5% 미만 금지·+10% 초과 금지 (두께비 0.95~1.10)"
+  source: "KCS 44 50 10:2023 (sonnet 크롤 verified 2026-05)"
+applies_to_work_kind: 포장
+applicable_when: {test_values.thickness_ratio__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.thickness_ratio, min: 0.95, max: 1.10}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "두께 미달은 지지력·수명 부족. KCS 44 50 10 위반"}

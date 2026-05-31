@@ -1,0 +1,32 @@
+# 품질관리자 시나리오 — 특급 현장이나 사고 당일 특급 등급자가 해임되어 등급 미달.
+# 등급별 인원(graded_slots) 판정 + 시간축이 동시에 작동하는지 증명.
+
+rule: rules/quality_manager_staffing.yaml
+
+project:
+  name: OO복합청사 신축공사
+  facility_kind: building
+  contract_amount_krw: 120000000000     # 1,200억 → 특급 등급 현장 (특급1+중급1+초급1 요구)
+  gross_floor_area_m2: 42000
+  is_multiuse_building: true
+  construction_start_date: "2025-01-01"
+  construction_end_date: "2027-12-31"
+
+appointed_managers:
+  - person: 정OO
+    grade: 특급
+    start_date: "2025-01-01"
+    end_date: "2026-05-31"              # 사고(2026-09-10) 전 해임 → 특급 공백
+  - person: 한OO
+    grade: 고급
+    start_date: "2025-03-01"
+    end_date: null
+  - person: 오OO
+    grade: 초급
+    start_date: "2025-03-01"
+    end_date: null
+
+incident:
+  name: 지하 1층 매스콘크리트 균열 하자
+  event_date: "2026-09-10"
+  incident_kind: 품질하자

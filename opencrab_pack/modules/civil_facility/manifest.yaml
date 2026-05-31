@@ -1,0 +1,10 @@
+module: civil_facility
+title: 토목 시설법 요건
+gate: 토목시설
+description: 도로법·하천법·국토계획법 등 토목시설 인허가. 미작성(gap) — 다음 단계.
+requirement_count: 3
+laws:
+- 국토계획법
+- 도로법
+dimensions:
+- 문서제출

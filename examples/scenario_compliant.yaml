@@ -1,0 +1,29 @@
+# 대조 시나리오 — 동일 현장이나 누구도 사고 전 해임되지 않은 경우 → 적정.
+# scenario_understaffed 와 단 한 줄(이OO end_date) 차이로 판정이 갈린다 = 시간축이 핵심임을 증명.
+
+project:
+  name: OO주상복합 신축공사 (해임 없음 대조)
+  facility_kind: building
+  contract_amount_krw: 95000000000
+  contractor_type: 원도급
+  work_category: 일반
+  construction_start_date: "2025-01-01"
+  construction_end_date: "2026-12-31"
+
+appointed_managers:
+  - person: 이OO
+    role: 안전관리자
+    start_date: "2025-01-01"
+    end_date: null                      # 해임 안 함 → 사고 당일에도 유효
+    qualification: 건설안전기사
+  - person: 박OO
+    role: 안전관리자
+    start_date: "2025-01-01"
+    end_date: null
+    qualification: 건설안전기사
+
+incident:
+  name: 3층 외벽 거푸집 붕괴
+  event_date: "2026-08-15"
+  incident_kind: 중대재해
+  severity: 사망

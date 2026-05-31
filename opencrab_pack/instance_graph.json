@@ -1,0 +1,304 @@
+{
+ "nodes": [
+  {
+   "space": "subject",
+   "node_type": "Organization",
+   "node_id": "org_remicon",
+   "properties": {
+    "name": "OO레미콘",
+    "org_role": "하도급",
+    "subcontract_tier": 1
+   }
+  },
+  {
+   "space": "subject",
+   "node_type": "Organization",
+   "node_id": "org_main",
+   "properties": {
+    "name": "OO건설",
+    "org_role": "원도급",
+    "subcontract_tier": 0
+   }
+  },
+  {
+   "space": "resource",
+   "node_type": "Batch",
+   "node_id": "batch_07",
+   "properties": {
+    "batch_id": "07호차",
+    "mix_design_no": "M30-EC4",
+    "delivery_note": "DN-20260530-07",
+    "dispatch_time": "2026-05-30T13:10:00",
+    "arrival_time": "2026-05-30T14:05:00",
+    "elapsed_min": 85,
+    "supplier_org_ref": "org_remicon",
+    "pour_component_ref": "c_basement_wall"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "BuildingComponent",
+   "node_id": "c_basement_wall",
+   "properties": {}
+  },
+  {
+   "space": "resource",
+   "node_type": "Sample",
+   "node_id": "smp_01",
+   "properties": {
+    "test_type": "압축강도",
+    "sampling_date": "2026-05-30",
+    "test_date": "2026-06-27",
+    "age_days": 28,
+    "result_value": 18.0,
+    "design_fck_mpa": 30,
+    "performed_by_ref": "감리_박",
+    "sampled_component_ref": "c_basement_wall"
+   }
+  },
+  {
+   "space": "decision",
+   "node_type": "CustodyTransfer",
+   "node_id": "ct_accept",
+   "properties": {
+    "transfer_point": "반입검수",
+    "transfer_time": "2026-05-30T14:10:00",
+    "from_org_ref": "org_remicon",
+    "to_org_ref": "org_main",
+    "batch_ref": "batch_07",
+    "performed_by_ref": "감리_박",
+    "result": "인수"
+   }
+  },
+  {
+   "space": "subject",
+   "node_type": "Person",
+   "node_id": "감리_박",
+   "properties": {
+    "name": "박OO(공사감리자)"
+   }
+  },
+  {
+   "space": "subject",
+   "node_type": "Appointment",
+   "node_id": "ap_gamri",
+   "properties": {
+    "role": "공사감리자",
+    "grade": "특급",
+    "start_date": "2026-01-01",
+    "end_date": "2026-12-31"
+   }
+  },
+  {
+   "space": "resource",
+   "node_type": "WorkRecord",
+   "node_id": "wr_accept",
+   "properties": {
+    "name": "레미콘 반입검수 (지하외벽)",
+    "work_kind": "콘크리트타설",
+    "event_date": "2026-05-30",
+    "performed_by_ref": "감리_박",
+    "component_ref": "c_basement_wall",
+    "exposure_class": "EC4",
+    "design_fck_mpa": 30,
+    "test_values": {
+     "slump_mm": 150,
+     "wb_ratio": 0.5,
+     "air_content_pct": 4.5
+    }
+   }
+  },
+  {
+   "space": "outcome",
+   "node_type": "Incident",
+   "node_id": "inc_wall",
+   "properties": {
+    "name": "지하외벽 균열·내구성 미달 (W/B 초과)",
+    "event_date": "2026-08-01",
+    "component_ref": "c_basement_wall",
+    "caused_by_refs": [
+     "wr_accept"
+    ],
+    "defects": [
+     {
+      "id": "def_wb",
+      "defect_type": "내구성미달",
+      "mechanism": "chemical",
+      "cause_category": "Material",
+      "component_ref": "c_basement_wall"
+     }
+    ]
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "Defect",
+   "node_id": "def_wb",
+   "properties": {
+    "defect_type": "내구성미달",
+    "mechanism": "chemical",
+    "cause_category": "Material",
+    "component_ref": "c_basement_wall"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "durability_exposure_wb__kds142040",
+   "properties": {
+    "title": "내구성 노출등급별 물-결합재비(W/B) 상한"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "concrete_strength_acceptance__ksf4009",
+   "properties": {
+    "title": "콘크리트 압축강도 합격 판정 (1회 0.85fck)"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "concrete_pour_holdpoints__kcs",
+   "properties": {
+    "title": "콘크리트 타설 전 정지점(Hold Point) 검측 선행 의무"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "from_id": "batch_07",
+   "relation": "supplied_by",
+   "to_id": "org_remicon"
+  },
+  {
+   "from_id": "batch_07",
+   "relation": "delivered_for",
+   "to_id": "c_basement_wall"
+  },
+  {
+   "from_id": "smp_01",
+   "relation": "sampled_from",
+   "to_id": "c_basement_wall"
+  },
+  {
+   "from_id": "ct_accept",
+   "relation": "custody_from",
+   "to_id": "org_remicon"
+  },
+  {
+   "from_id": "ct_accept",
+   "relation": "custody_to",
+   "to_id": "org_main"
+  },
+  {
+   "from_id": "ct_accept",
+   "relation": "transfers",
+   "to_id": "batch_07"
+  },
+  {
+   "from_id": "ct_accept",
+   "relation": "performed_by",
+   "to_id": "감리_박"
+  },
+  {
+   "from_id": "감리_박",
+   "relation": "belongs_to",
+   "to_id": "org_main"
+  },
+  {
+   "from_id": "감리_박",
+   "relation": "holds",
+   "to_id": "ap_gamri"
+  },
+  {
+   "from_id": "wr_accept",
+   "relation": "performed_by",
+   "to_id": "감리_박"
+  },
+  {
+   "from_id": "wr_accept",
+   "relation": "targets",
+   "to_id": "c_basement_wall"
+  },
+  {
+   "from_id": "inc_wall",
+   "relation": "caused_by",
+   "to_id": "wr_accept"
+  },
+  {
+   "from_id": "inc_wall",
+   "relation": "exhibits",
+   "to_id": "def_wb"
+  },
+  {
+   "from_id": "def_wb",
+   "relation": "manifests_in",
+   "to_id": "c_basement_wall"
+  },
+  {
+   "from_id": "wr_accept",
+   "relation": "violates",
+   "to_id": "durability_exposure_wb__kds142040"
+  },
+  {
+   "from_id": "smp_01",
+   "relation": "violates",
+   "to_id": "concrete_strength_acceptance__ksf4009"
+  },
+  {
+   "from_id": "wr_accept",
+   "relation": "violates",
+   "to_id": "concrete_pour_holdpoints__kcs"
+  },
+  {
+   "from_id": "감리_박",
+   "relation": "responsible_for",
+   "to_id": "inc_wall",
+   "properties": {
+    "basis": "유효선임 직접행위책임",
+    "valid_at_action": true,
+    "appointment": "ap_gamri",
+    "via_node": "wr_accept",
+    "action_date": "2026-05-30"
+   }
+  },
+  {
+   "from_id": "org_main",
+   "relation": "responsible_for",
+   "to_id": "inc_wall",
+   "properties": {
+    "basis": "소속 도급조직 구조적 귀속(행위자 책임)",
+    "structural": true,
+    "legal_type": "illegal_subcontracting:미적용; serious_accident_corporate_duty:미적용",
+    "via_person": "감리_박",
+    "via_node": "wr_accept"
+   }
+  },
+  {
+   "from_id": "감리_박",
+   "relation": "responsible_for",
+   "to_id": "inc_wall",
+   "properties": {
+    "basis": "유효선임 직접행위책임",
+    "valid_at_action": true,
+    "appointment": "ap_gamri",
+    "via_node": "smp_01",
+    "action_date": "2026-06-27"
+   }
+  },
+  {
+   "from_id": "org_main",
+   "relation": "responsible_for",
+   "to_id": "inc_wall",
+   "properties": {
+    "basis": "소속 도급조직 구조적 귀속(행위자 책임)",
+    "structural": true,
+    "legal_type": "illegal_subcontracting:미적용; serious_accident_corporate_duty:미적용",
+    "via_person": "감리_박",
+    "via_node": "smp_01"
+   }
+  }
+ ]
+}

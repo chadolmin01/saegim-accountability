@@ -1,0 +1,21 @@
+rule_id: asphalt_marshall__ksf2337
+title: 아스팔트 혼합물 마샬 안정도·흐름·공극 합격
+dimension: 재료
+battery_ref: ap_marshall
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 44 50 10:2023 표2.4-3·2.5-2 / KS F 2337(마샬)·KS F 2364(공극)
+  rule: "마샬 안정도 ≥7,500N, 흐름값 20~40(1/100cm), 공극률 3~6%"
+  source: "KCS 44 50 10:2023 (sonnet 크롤 verified 2026-05)"
+applies_to_work_kind: 포장
+applicable_when: {test_values.marshall_stability_n__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.marshall_stability_n, min: 7500}
+    - {key: test_values.flow_value_001cm, min: 20, max: 40}
+    - {key: test_values.air_void_pct, min: 3, max: 6}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "마샬 기준 미달은 소성변형·균열·내구성 저하. KCS 44 50 10 위반"}

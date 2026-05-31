@@ -1,0 +1,15 @@
+rule_id: guardrail_height__osha
+title: 안전난간 상부난간대 높이 기준
+dimension: 공법
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제13조, rule: "상부난간대 바닥면 90cm 이상(120cm 초과 시 중간난간 60cm 이하 간격), 발끝막이판 10cm↑, 100kg 하중", source: "lbox·hseworld 교차검증 2026-05"}
+applies_to_work_kind: 고소작업
+applicable_when: {guardrail_top_height_cm__gte: 0}
+requires:
+  value_bounds:
+    - {key: guardrail_top_height_cm, min: 90}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "안전난간 높이 미달은 추락 직접 원인"}

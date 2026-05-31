@@ -1,0 +1,21 @@
+rule_id: rebar_elongation__ksd3504
+title: 철근 연신율 합격 (강종별)
+dimension: 재료
+battery_ref: rb_tensile
+regime: KS D 3504
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS D 3504 (철근콘크리트용 봉강) / KS B 0802
+  rule: "연신율(%) ≥ 강종별 — SD300·400·400W·400S:16, SD500·500W·500S:12, SD600:10"
+  source: "material_specs/steel_rebar_ks.yaml (e나라표준 재검증)"
+applies_to_work_kind: 철근배근
+applicable_when: {test_values.elongation_pct__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.elongation_pct
+    by: rebar_grade
+    min_table: {SD300: 16, SD400: 16, SD500: 12, SD600: 10, SD400W: 16, SD500W: 12, SD400S: 16, SD500S: 12}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "연신율 미달은 취성 파괴 위험(지진·과하중 시). KS D 3504 위반"}

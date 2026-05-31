@@ -1,0 +1,133 @@
+# 콘크리트 vertical 태깅 (view layer — 구조는 기존 knowledge graph, 이건 projection 축)
+# prior-art 정렬:
+#   stage  = 공정흐름 (EN 13670 §8 / ACI 301 §5 / ACI 318 Ch.26 / KCS 14 20 10 §3 / BCOM process)
+#   state  = fresh|hardened|na (KS F 시리즈 / EN 13670 §8.2 명시적 분류축)
+#   cause  = Design|Material|Construction|Maintenance (ASCE GFI 2nd / ASTM E678 포렌식 4범주 → 책임주체 매핑)
+#   mcp    = self(별표2 무료검증, saegim 자가판정) | external(MIDAS/QC verdict consume)
+# cause→전형 책임주체: Design→설계자, Material→제조사/공급, Construction→시공자, Maintenance→유지관리자
+
+stages_order: [배합설계, 자재반입, 타설조건, 검측선행, 양생존치, 굳은강도, 후속결정]
+
+rules:
+  design_curing_vs_rainfall__apdc:      {stage: 배합설계, state: na,       dim: 의사결정권한, cause: Design,       mcp: self}
+  concrete_mix_strength__kcs142010:     {stage: 배합설계, state: na,       dim: 작업조건,    cause: Design,       mcp: self}
+  concrete_slump_tolerance__ksf4009:    {stage: 자재반입, state: fresh,    dim: 작업조건,    cause: Material,     mcp: self}
+  concrete_air_ae__ksf4009:             {stage: 자재반입, state: fresh,    dim: 작업조건,    cause: Material,     mcp: self}
+  concrete_chloride__ksf4009:           {stage: 자재반입, state: fresh,    dim: 작업조건,    cause: Material,     mcp: self}
+  concrete_unit_water__kcs142010:       {stage: 자재반입, state: fresh,    dim: 작업조건,    cause: Material,     mcp: self}
+  concrete_test_frequency__kcs142010:   {stage: 자재반입, state: fresh,    dim: 작업조건,    cause: Construction, mcp: self}
+  # ── 재료 wave1 (KS 검증, 2026-05) — 골재·시멘트·혼화재 ──
+  aggregate_absorption__ksf2526:        {stage: 자재반입, state: na, dim: 작업조건, cause: Material, mcp: self}
+  aggregate_soundness__ksf2526:         {stage: 자재반입, state: na, dim: 작업조건, cause: Material, mcp: self}
+  aggregate_la_abrasion__ksf2526:       {stage: 자재반입, state: na, dim: 작업조건, cause: Material, mcp: self}
+  fine_aggregate_chloride__ksf2526:     {stage: 자재반입, state: na, dim: 작업조건, cause: Material, mcp: self}
+  cement_compressive_strength__ksl5201: {stage: 자재반입, state: na, dim: 작업조건, cause: Material, mcp: self}
+  fly_ash_loss_on_ignition__ksl5405:    {stage: 자재반입, state: na, dim: 작업조건, cause: Material, mcp: self}
+  fly_ash_activity_index__ksl5405:      {stage: 자재반입, state: na, dim: 작업조건, cause: Material, mcp: self}
+  slag_activity_index__ksf2563:         {stage: 자재반입, state: na, dim: 작업조건, cause: Material, mcp: self}
+  # ── 혼화제 wave4 (KS F 2560:2019 원문 verified, corpus 캐시, 2026-05) ──
+  admixture_water_reduction__ksf2560:   {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  admixture_bleeding_ratio__ksf2560:    {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  admixture_strength_ratio_28d__ksf2560: {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  admixture_length_change__ksf2560:     {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  admixture_total_alkali__ksf2560:      {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  # ── 혼화제 잔여 (KS F 2560 corpus, 2026-05) ──
+  admixture_strength_ratio_3d__ksf2560: {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  admixture_strength_ratio_7d__ksf2560: {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  admixture_freeze_thaw__ksf2560:       {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  admixture_slump_loss__ksf2560:        {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  admixture_air_change__ksf2560:        {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  admixture_initial_set_max__ksf2560:   {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  admixture_final_set_max__ksf2560:     {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  cold_weather_concrete__kcs:           {stage: 타설조건, state: fresh,    dim: 작업조건,    cause: Construction, mcp: self}
+  hot_weather_concrete__kcs:            {stage: 타설조건, state: fresh,    dim: 작업조건,    cause: Construction, mcp: self}
+  hot_weather_pour_temp__kcs:           {stage: 타설조건, state: fresh,    dim: 작업조건,    cause: Construction, mcp: self}
+  rain_concrete_pour__kcs:              {stage: 타설조건, state: fresh,    dim: 작업조건,    cause: Construction, mcp: self}
+  concrete_pour_holdpoints__kcs:        {stage: 검측선행, state: na,       dim: 선행요건,    cause: Construction, mcp: self}
+  shoring_horizontal_tie__osha:         {stage: 양생존치, state: na,       dim: 작업조건,    cause: Construction, mcp: self}
+  formwork_striking_strength__kcs:      {stage: 양생존치, state: hardened, dim: 작업조건,    cause: Construction, mcp: self}
+  concrete_strength_acceptance__ksf4009: {stage: 굳은강도, state: hardened, dim: 작업조건, cause: Material, mcp: self}
+  concrete_core_strength__ksf2422:      {stage: 굳은강도, state: hardened, dim: 작업조건,    cause: Material,     mcp: self}
+  concrete_flexural_strength__ksf2408:  {stage: 굳은강도, state: hardened, dim: 작업조건,    cause: Material,     mcp: self}
+  structural_review_before_method_change__bldg: {stage: 후속결정, state: na, dim: 선행요건,  cause: Design,       mcp: self}
+  # ── 양생/존치 wave2 (KCS 14 20 12/40 verified, 2026-05) ──
+  formwork_strip_age__kcs142012:        {stage: 양생존치, state: hardened, dim: 공법, cause: Construction, mcp: self}
+  concrete_moist_curing_period__kcs142010: {stage: 양생존치, state: hardened, dim: 공법, cause: Construction, mcp: self}
+  cold_weather_fly_ash_limit__kcs142040: {stage: 배합설계, state: na, dim: 재료, cause: Material, mcp: self}
+  cold_weather_slag_limit__kcs142040:   {stage: 배합설계, state: na, dim: 재료, cause: Material, mcp: self}
+  # ── 특수종류 wave3 (KCS 14 20 30/42/43/44·KDS verified 2차출처, 2026-05) ──
+  mass_concrete_thermal_crack_index__kcs142042: {stage: 타설조건, state: na, dim: 공법, cause: Construction, mcp: self}
+  marine_concrete_cover__kds142050:     {stage: 검측선행, state: na, dim: 공법, cause: Design, mcp: self}
+  # ── 내구성 노출등급 합부판정 (bucket3 차별점: 측정값↔KDS 기준 대조, 2026-05) ──
+  durability_exposure_wb__kds142040:    {stage: 배합설계, state: na, dim: 재료, cause: Design, mcp: self}
+  durability_exposure_fck__kds142040:   {stage: 배합설계, state: na, dim: 재료, cause: Design, mcp: self}
+  aggregate_max_size__kcs142010:        {stage: 배합설계, state: na, dim: 재료, cause: Design, mcp: self}
+  underwater_antiwashout_slump_flow__kcs142043: {stage: 자재반입, state: fresh, dim: 재료, cause: Material, mcp: self}
+  underwater_concrete_wb__kcs142043:    {stage: 배합설계, state: na, dim: 재료, cause: Material, mcp: self}
+  watertight_concrete_wb__kcs142030:    {stage: 배합설계, state: na, dim: 재료, cause: Material, mcp: self}
+  # ── 숏크리트/PS wave4 (KCS 27 30 00·14 20 53, 2-vote verified, 2026-05) ──
+  shotcrete_rebound_rate__kcs273000:    {stage: 타설조건, state: fresh, dim: 공법, cause: Construction, mcp: self}
+  shotcrete_strength_28d__kcs273000:    {stage: 굳은강도, state: hardened, dim: 재료, cause: Material, mcp: self}
+  shotcrete_early_strength_1d__kcs273000: {stage: 굳은강도, state: hardened, dim: 재료, cause: Material, mcp: self}
+  shotcrete_bond_strength__kcs273000:   {stage: 굳은강도, state: hardened, dim: 공법, cause: Construction, mcp: self}
+  shotcrete_accelerator_set__kcs273000: {stage: 자재반입, state: fresh, dim: 재료, cause: Material, mcp: self}
+  shotcrete_layer_thickness__kcs273000: {stage: 타설조건, state: fresh, dim: 공법, cause: Construction, mcp: self}
+  ps_min_strength_at_tensioning__kcs142053: {stage: 후속결정, state: hardened, dim: 재료, cause: Construction, mcp: self}
+  ps_elongation_tolerance__kcs142053:   {stage: 후속결정, state: na, dim: 공법, cause: Construction, mcp: self}
+  ps_grout_bleeding__kcs142053:         {stage: 후속결정, state: na, dim: 재료, cause: Construction, mcp: self}
+  ps_grout_expansion__kcs142053:        {stage: 후속결정, state: na, dim: 재료, cause: Construction, mcp: self}
+  ps_grout_strength_28d__kcs142053:     {stage: 후속결정, state: hardened, dim: 재료, cause: Construction, mcp: self}
+  # ── 잔여종류 wave5 (KCS 14 20 20/21/22/32/33, 2-vote verified, 2026-05) ──
+  lightweight_concrete_unit_mass__kcs142020: {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  recycled_aggregate_replacement__kcs142021: {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  fiber_aspect_ratio__kcs142022:        {stage: 자재반입, state: na, dim: 재료, cause: Material, mcp: self}
+  high_strength_min_fck__kcs142033:     {stage: 배합설계, state: na, dim: 재료, cause: Design, mcp: self}
+  scc_slump_flow__kcs142032:            {stage: 자재반입, state: fresh, dim: 재료, cause: Material, mcp: self}
+  scc_t500__kcs142032:                  {stage: 자재반입, state: fresh, dim: 재료, cause: Material, mcp: self}
+  scc_box_filling__kcs142032:           {stage: 자재반입, state: fresh, dim: 재료, cause: Material, mcp: self}
+
+# cross-cutting (stage 무관, 모든 콘크리트 사고에 적용)
+cross_cutting:
+  인적배치: "품질관리자·공사감리자 staffing (rules/) — Construction/감리"
+  문서제출: "품질관리계획서 (document_rules/) — 시험성적서 무결성은 gap"
+  책임귀속: "responsible_for 합성 (trail/phase_trace) + cause→책임주체 매핑"
+
+# 콘크리트 종류 축 (KCS 14 20 시리즈 — verified taxonomy 2026-05). 종류별 기준 상이 → 별도 축.
+# status: ✅(종류 특화 룰 있음/일반룰로 충분) · ⚪(부분) · ❌(종류 특화 기준 없음 — KCS 원문 검증 시 fillable, 추측금지)
+concrete_types:
+  category_재료조성:
+    - {type: 일반,       kcs: "14 20 10", status: ✅, note: "기본 — slump·강도·다짐 등 18룰 적용"}
+    - {type: 경량골재,   kcs: "14 20 20", status: ⚪, note: "wave5: 기건단위질량(1종2100/2종1800). W/B≤60·인장 unverified"}
+    - {type: 순환골재,   kcs: "14 20 21", status: ⚪, note: "wave5: 치환율≤30%. 흡수율은 일반골재룰. 0.08mm·실적률 pending"}
+    - {type: 섬유보강,   kcs: "14 20 22", status: ⚪, note: "wave5: 형상비20~100. 혼입률·등가휨강도는 KCS 미규정(설계위임)"}
+    - {type: 폴리머시멘트, kcs: "14 20 23", status: ❌}
+    - {type: 팽창,       kcs: "14 20 24", status: ❌, note: "팽창률"}
+  category_성능특성:
+    - {type: 수밀,   kcs: "14 20 30", status: ⚪, note: "wave3: watertight_concrete_wb(W/B≤0.50). 슬럼프/공기량/양생 추가 가능"}
+    - {type: 유동화, kcs: "14 20 31", status: ❌, note: "유동화 후 슬럼프 증가량"}
+    - {type: 고유동, kcs: "14 20 32", status: ✅, note: "wave5: 슬럼프플로≥600·T500 3~20·U형충전≥300 3룰. 등급별 철근순간격은 선택기준"}
+    - {type: 고강도, kcs: "14 20 33", status: ✅, note: "wave5: 정의 fck≥40(보통)/27(경량) + 일반강도룰. W/B는 KCS 미규정"}
+    - {type: 방사선차폐, kcs: "14 20 34", status: ❌, note: "밀도·차폐성능"}
+  category_시공환경:
+    - {type: 한중, kcs: "14 20 40", status: ✅, note: "cold_weather_concrete (일평균≤4℃)"}
+    - {type: 서중, kcs: "14 20 41", status: ✅, note: "hot_weather_concrete·hot_weather_pour_temp (≤35℃)"}
+    - {type: 매스, kcs: "14 20 42", status: ⚪, note: "wave3: 온도균열지수 Icr≥1.5/1.2. 파이프쿨링·단위시멘트량 pending"}
+    - {type: 수중, kcs: "14 20 43", status: ⚪, note: "wave3: 슬럼프플로≥600·W/B(담수0.55/해수0.50). 배합강도할증 pending"}
+    - {type: 해양, kcs: "14 20 44", status: ⚪, note: "wave3: W/B·피복·최소강도(ES별). 단위결합재량(노출×골재) pending"}
+  category_시공방법:
+    - {type: 프리팩트,   kcs: "14 20 50", status: ❌}
+    - {type: 숏크리트,   kcs: "14 20 51 / 27 30 00", status: ✅, note: "wave4: 리바운드·강도(1/28일)·부착·급결·두께 6룰(KCS 27 30 00)"}
+    - {type: 프리캐스트, kcs: "14 20 52", status: ❌, note: "공장제작·접합부"}
+    - {type: 프리스트레스트, kcs: "14 20 53", status: ✅, note: "wave4: 긴장강도(0.75fck)·신장량±5·그라우트(블리딩3/팽창10/강도20) 5룰"}
+  category_마감구조:
+    - {type: 외장노출, kcs: "14 20 60", status: ❌, note: "표면 품질·색차"}
+    - {type: 합성구조, kcs: "14 20 70", status: ❌, note: "강-콘크리트 합성"}
+# 종류 커버리지: 일반·한중·서중 ✅(3) / 고강도 ⚪(1) / 나머지 18 ❌(KCS 원문 검증 시 fillable, 추측금지로 미작성)
+# 정직: 콘크리트 vertical은 '일반+환경(한중/서중)'엔 깊으나, 특수 종류(고강도·매스·해양·수중·숏크리트 등)는 종류축에서 빈칸.
+
+# 미졸업/외부 (정직)
+gaps:
+  - {item: 반발경도/초음파, status: external, note: "KS F 2730 추정강도 — MIDAS/QC verdict consume (saegim 비목표)"}
+  - {item: 시험성적서_무결성, status: gap, note: "허위 시험성적서 탐지 미모델 (DID/VC 영역)"}
+  - {item: 재료분리/콜드조인트/곰보, status: defect, note: "결함(Defect) 축 — cause=Construction, 다짐불량. Defect 노드로 표현"}
+  - {item: 중성화/염해/AAR, status: defect, note: "결함 축 — cause=Material/Maintenance(열화). 유지단계 연계"}

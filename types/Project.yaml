@@ -1,0 +1,56 @@
+type: Project
+version: "0.1"
+space: concept
+description: "건설 현장/공사 — 책임추적 판정의 모(母)단위. 공사금액·기간·도급정보를 담아 법정 배치규칙의 입력이 된다."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 공사명 / 현장명.
+  facility_kind:
+    type: string
+    required: true
+    nullable: false
+    description: 시설 종류. 본 팩은 건축물로 고정.
+    enum: [building]
+    default: building
+  contract_amount_krw:
+    type: integer
+    required: true
+    nullable: false
+    description: 총공사금액(원). 안전관리자·감리 배치규칙의 1차 판정 입력.
+  contractor_type:
+    type: string
+    required: false
+    nullable: false
+    description: 본 현장 도급 구분 (선임 의무 하한 판정에 사용).
+    enum: [원도급, 관계수급인]
+    default: 원도급
+  work_category:
+    type: string
+    required: false
+    nullable: false
+    description: 공종 구분 (토목공사업은 배치규칙 구간 경계 이동).
+    enum: [일반, 토목공사업]
+    default: 일반
+  construction_start_date:
+    type: date
+    required: true
+    nullable: false
+    description: 착공일 (착공계·도급계약서). 전·후 15% 완화구간 계산 기준.
+  construction_end_date:
+    type: date
+    required: true
+    nullable: false
+    description: 준공예정일 (도급계약서, 변경 시 변경계약). 전·후 15% 완화구간 계산 기준.
+  ordering_agency:
+    type: string
+    required: false
+    nullable: true
+    description: 발주청 / 발주자.
+  gross_floor_area_m2:
+    type: float
+    required: false
+    nullable: true
+    description: 연면적(㎡). 감리 배치규칙(후속)의 2차 입력.

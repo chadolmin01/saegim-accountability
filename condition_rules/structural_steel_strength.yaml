@@ -1,0 +1,22 @@
+rule_id: structural_steel_strength__ksd3503
+title: 구조강재 항복강도 합격 (강종별)
+dimension: 재료
+battery_ref: st_material
+regime: KS D 3503
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: 건설공사 품질관리 업무지침 별표2 / KS D 3503(SS)·KS D 3515(SM)
+  rule: "항복강도(t≤16mm) ≥ SS275 275·SS315 315·SS410 410·SM275 275·SM355 355 MPa. 50톤/회"
+  source: "별표2(빈도 verified) + material_specs/steel_rebar_ks.yaml + e나라표준 (sonnet 크롤 verified 2026-05)"
+applies_to_work_kind: 강구조
+applicable_when: {test_values.yield_strength_mpa__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.yield_strength_mpa
+    by: steel_grade
+    min_table: {SS275: 275, SS315: 315, SS410: 410, SM275: 275, SM355: 355}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "강재 항복강도 미달은 구조 내력 직접 부족. KS D 3503/3515 위반"}
+pending: ["판두께 16mm 초과 구간 항복강도 저감(265/245/235) 미반영"]

@@ -1,0 +1,33 @@
+# Condition Rule — 콘크리트 습윤양생 최소기간 (시멘트종류 × 일평균기온)
+# 검증: 국토부 콘크리트 표준시방서 표2.28 CODIL 원문 PDF 직접추출(2026-05) + 보통포틀랜드 2-vote.
+#   1차 원문(authoritative). 단 2016판 기준 — 2022/24 KCS 14 20 10 개정 수치변경 미확인(개정고시에 양생표 변경 언급 없음).
+rule_id: concrete_moist_curing_period__kcs142010
+title: 콘크리트 습윤양생 최소기간 (시멘트종류×기온)
+dimension: 공법
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 10 표3.4-1 (= 2016 콘크리트 표준시방서 표2.28)
+  rule: "습윤양생 최소일수 — 보통포틀랜드 15℃↑5·10℃↑7·5℃↑9일 / 고로슬래그·플라이애시B 7·9·12일 / 조강 3·4·5일"
+  source: "국토부 CODIL 표준시방서 원문 PDF 직접추출(2026-05) + 보통포틀랜드 2차출처 일치"
+  pending: "조강·혼합시멘트 행은 CODIL 1차원문 단일확인. 2022/24 KCS 개정 수치변경 여부 미대조"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.moist_curing_days__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.moist_curing_days
+    by: curing_category
+    min_table:
+      보통_15up: 5
+      보통_10up: 7
+      보통_5up: 9
+      슬래그FA_15up: 7
+      슬래그FA_10up: 9
+      슬래그FA_5up: 12
+      조강_15up: 3
+      조강_10up: 4
+      조강_5up: 5
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "습윤양생 부족 → 수화 미완·강도발현 부족·표면 건조균열. KCS 14 20 10 위반. curing_category 미설정 시 n/a"}

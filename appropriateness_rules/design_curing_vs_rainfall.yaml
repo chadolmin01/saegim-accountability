@@ -1,0 +1,26 @@
+rule_id: design_curing_vs_rainfall__apdc
+title: 강수 현장여건 대비 양생계획 적절성
+dimension: 의사결정권한          # 상류 결정의 적절성 (의사결정 차원 확장)
+phase: 조사·설계
+applies_to_facility_class: 전체
+regime: 건설기술진흥법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority:
+  law: 건설기술진흥법 시행규칙
+  article: 별표7
+  related: "총괄안전관리계획 2.나 현장특성분석(현장여건·환경요소) — 강수 등 환경요소 분석 및 그에 따른 대책 반영 의무"
+  standard: "KCS 14 20 10 콘크리트 양생(강우·습윤 보양)"
+  rule: "현장 환경요소(강수)를 분석하고 그에 따른 시공·양생 대책을 설계·안전관리계획에 반영해야 한다"
+  source: "별표7 추출 2026-05 (references/extracted)"
+# SiteContext 가 이 조건이면 룰 발동
+triggers_when:
+  site:
+    any:
+      - region_rainy_season_work
+      - {region_annual_rainfall_mm__gte: 1400}
+# 어떤 DesignDecision 를 보는가
+decision_kind: 양생계획
+# 그 결정의 planned_mitigations 에 있어야 할 대책
+requires_mitigation:
+  any: [강우_보양, 우천대비_양생, 강우시_타설중단, 가설지붕]
+on_violation: "강수 현장여건 분석·반영 없이 양생계획 수립 → 별표7 현장특성분석 의무 미흡 (상류 설계 책임)"

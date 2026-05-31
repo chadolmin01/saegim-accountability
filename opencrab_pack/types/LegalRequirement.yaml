@@ -1,0 +1,70 @@
+type: LegalRequirement
+version: "1.0"
+space: concept
+description: >
+  법정요건 노드 — 제출 의무 문서/작업조건/인적배치 요건 1건을 typed 노드로 환원.
+  saegim 룰 1개 = 이 노드 1개. 임계값·트리거는 property(데이터)이고, 실제 충족 판정은 saegim 런타임이 수행한다.
+  관계: →governed_by→ Law, →gated_by→ FacilityClass.
+properties:
+  requirement_id:
+    type: string
+    required: true
+    nullable: false
+    description: 요건 식별자 (saegim rule_id).
+  document:
+    type: string
+    required: false
+    nullable: true
+    description: 제출 대상 문서명 (문서·보고 차원 요건일 때).
+  dimension:
+    type: string
+    required: true
+    nullable: false
+    description: 책임 차원 (5대 + 도급책임·유지관리).
+    enum: [문서제출, 인적배치, 작업조건, 선행요건, 의사결정권한, 도급책임, 유지관리]
+  topic:
+    type: string
+    required: false
+    nullable: true
+    description: "세부 주제 라벨 (작업조건 하위 — 온도·기상/재료/공법/작업환경/환경/기상·근로/근로시간 등)."
+  regime:
+    type: string
+    required: true
+    nullable: false
+    description: 소관 법 (Law.name 과 일치 — governed_by 엣지의 대상).
+  applies_to_facility_class:
+    type: string
+    required: true
+    nullable: false
+    description: "게이트. 건축물=건축물 부재 포함 현장만 / 토목시설=토목 인프라 현장만 / 전체=모든 건설공사 (gated_by 엣지로 표현)."
+    enum: [건축물, 토목시설, 전체]
+  facility_subtype:
+    type: string
+    required: false
+    nullable: true
+    description: "토목시설 세분 (해당 시설 인허가만 필터). 도로/하천/철도/댐/도시계획시설일반 등."
+  trigger_summary:
+    type: string
+    required: false
+    nullable: true
+    description: 적용 트리거 요약 (예 "도급금액≥500억 OR 다중이용+연면적≥3만").
+  threshold_fields:
+    type: string
+    required: false
+    nullable: true
+    description: 판정에 필요한 입력 필드 콤마목록 (saegim required_when 참조 필드). 미입력 시 saegim 이 '판정보류'로 표기.
+  submit_before:
+    type: string
+    required: false
+    nullable: true
+    description: 제출 시점.
+  submit_to:
+    type: string
+    required: false
+    nullable: true
+    description: 제출처.
+  legal_basis:
+    type: string
+    required: false
+    nullable: true
+    description: 근거 법조문 (authority).

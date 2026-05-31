@@ -1,0 +1,20 @@
+rule_id: usage_approval_after_completion__bldg
+title: 사용승인 전 감리완료보고·공종검측 선행 의무
+dimension: 시공순서·선행요건
+regime: 건축법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 건축물   # 단계6 준공·검수 (건축물 게이트)
+authority:
+  law: 건축법
+  article: 제22조(사용승인) · 제25조(공사감리)
+  rule: "건축물 사용승인 신청 전 공사감리자의 감리완료보고서가 선행돼야 하며, 미완료 시 사용승인 불가."
+  source: "건축법 §22/§25 + 시행규칙 §16~17 교차검증 2026-05"
+applies_to_decision_kind: 준공검사   # 사용승인(준공검사) 결정이 트리거
+requires_prior:
+  - {kind: 단계승인, checkpoint: 감리완료보고, result: 완료}
+evaluation:
+  steps:
+    - "사용승인(준공검사) 결정 시점 이전에 감리완료보고(완료)가 선행했는가."
+    - "누락·미완료 → violated (감리완료 없는 사용승인 = 시공적합 미확인)."
+  outputs: [compliant, violated, not_applicable]
+  audit_significance: "감리완료보고 없는 사용승인은 설계도서 적합 시공 미확인. 건축법 위반·하자 책임."

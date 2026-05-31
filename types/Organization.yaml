@@ -1,0 +1,26 @@
+type: Organization
+version: "0.1"
+space: subject
+description: "조직(회사). 도급 사슬 전체를 트리로 모델링하지 않고(DESIGN 원칙2, 옵션2 깊이), 도급단계 속성 + subcontracts_under 관계로 법이 책임을 묻는 지점만 표현한다."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 조직명.
+  org_role:
+    type: string
+    required: true
+    nullable: false
+    description: 본 현장에서의 계약상 지위.
+    enum: [발주자, 원도급, 하도급, 재하도급, 감리용역사, 안전관리대행]
+  subcontract_tier:
+    type: integer
+    required: false
+    nullable: true
+    description: 도급 차수 (원도급=0, 1차 하도급=1, 재하도급=2 …). 무한 트리 대신 차수 정수로.
+  registration:
+    type: string
+    required: false
+    nullable: true
+    description: 건설업 등록 종류/번호 (종합·전문).

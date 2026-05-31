@@ -1,0 +1,20 @@
+rule_id: concrete_core_strength__ksf2422
+title: 콘크리트 코어 강도 합격 (압축강도 불합격 시)
+dimension: 재료
+battery_ref: ch_core
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 10 / KS F 2422 (코어 채취·강도)
+  rule: "코어 3개 평균 ≥0.85fck, 개별 ≥0.75fck (공시체 압축강도 불합격·구조 의심 시)"
+  source: "KCS 14 20 10 + KS F 2422 (sonnet 크롤 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.core_avg_ratio__gte: 0}   # 코어 채취(=강도 불합격 후) 시 적용
+requires:
+  value_bounds:
+    - {key: test_values.core_avg_ratio, min: 0.85}   # 3개 평균 ≥0.85fck
+    - {key: test_values.core_min_ratio, min: 0.75}   # 개별 ≥0.75fck
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "코어 강도 미달은 구조 안전성 직접 미달 — 보강·철거 판단 근거. 미실시는 강도확인 회피"}

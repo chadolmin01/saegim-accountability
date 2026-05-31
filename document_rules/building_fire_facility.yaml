@@ -1,0 +1,16 @@
+rule_id: building_fire_facility__fire
+title: 건축물 소방시설(스프링클러 등) 설치 의무
+dimension: 문서·보고
+regime: 소방시설법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 소방시설 설치 및 관리에 관한 법률, article: 시행령 별표4, rule: "스프링클러 6층↑ 또는 연면적5000㎡↑, 옥내소화전 3000㎡↑, 자동화재탐지 600㎡↑", source: "law.go.kr 별표4+소방체크 교차검증 2026-05"}
+document: 소방시설_준공
+applies_to_facility_class: 건축물   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {floor_count__gte: 6}
+    - {gross_floor_area_m2__gte: 5000}
+submit_before: 사용승인전
+submit_to: 소방서(완공검사)
+evaluation: {steps: ["6층↑ 또는 5000㎡↑이면 소방시설 의무. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "소방시설 미설치·불량은 소방시설법 위반. 화재 인명피해 직접 원인"}
+pending: ["용도별 세부 면적(의료·판매·노유자) 미세분"]

@@ -1,0 +1,64 @@
+# 통합 사고 책임 보고서 입력 — 배치 적정성 + 의사결정 권한을 한 사고로 동시 평가.
+# OO메디컬타워(850억 다중이용), 5층 슬래브 붕괴 사고. 배치 위반 + 검측 권한결함 동시 존재.
+
+project:
+  name: OO메디컬타워 신축공사
+  facility_kind: building
+  contract_amount_krw: 85000000000
+  total_contract_amount_krw: 85000000000
+  estimated_amount_krw: 85000000000
+  gross_floor_area_m2: 38000
+  is_multiuse_building: true
+  is_public_client: false
+  work_category: 일반
+  total_workers: 140
+  split_order_count: 1
+  combined_amount_krw: 85000000000
+  construction_start_date: "2025-01-01"
+  construction_end_date: "2027-12-31"
+  excavation_depth_m: 12
+  floor_count: 25
+  building_height_m: 95
+  is_special_use_building: true
+
+submitted_documents:
+  - {document: 안전관리계획서, submit_date: "2024-12-01"}
+  - {document: 착공신고서, submit_date: "2024-12-20"}
+  - {document: 산업안전보건관리비_사용내역서, submit_date: "2025-01-05"}
+  - {document: 안전보건관리체계, submit_date: "2024-11-15"}
+  # 유해위험방지계획서·품질관리계획서·휴게시설 미제출 → 실제 갭
+
+incident:
+  name: 5층 슬래브 콘크리트 양생 중 붕괴
+  event_date: "2026-09-20"
+  incident_kind: 중대재해
+  severity: 사망
+  component_ref: comp_5f_slab
+  location_ref: loc_5f
+  work_record:
+    name: 5층 슬래브 타설 (사고 작업)
+    work_kind: 콘크리트타설
+    event_date: "2026-09-20"
+    daily_avg_temp_c: 2.0          # 영상 2℃ → 한중콘크리트 의무(4℃ 이하)
+    applied_measures: []           # 한중 조치 없음 → 위반
+    test_values: {slump_mm: 195}
+
+appointments:
+  - {role: 안전관리자, person: 김안전, start_date: "2025-01-01", end_date: "2026-07-31"}
+  - {role: 안전관리자, person: 이안전, start_date: "2025-01-01", end_date: null}
+  - {role: 보건관리자, person: 박보건, start_date: "2025-02-01", end_date: null}
+  - {role: 안전보건관리책임자, person: 최소장, start_date: "2025-01-01", end_date: null}
+  - {role: 품질관리자, person: 정중급, grade: 중급, start_date: "2025-01-01", end_date: null}
+  - {role: 품질관리자, person: 한초급, grade: 초급, start_date: "2025-01-01", end_date: null}
+  - {role: 현장대리인, person: 강대리, license: 기사, experience_years: 8, grade: 고급, start_date: "2025-01-01", end_date: null}
+  - {role: 공사감리자, person: 윤감리, field: 총괄, start_date: "2025-01-01", end_date: null}
+  - {role: 공사감리자, person: 보건축, field: 건축, start_date: "2025-01-01", end_date: null}
+  # 책임감리원 김감리 — 2026-08-31 해임 (이후 공백)
+  - {role: 책임감리원, person: 김감리, start_date: "2025-01-01", end_date: "2026-08-31"}
+
+decisions:
+  - {name: 슬래브 반입검수, kind: 자재반입검수, event_date: "2026-06-10",
+     performed_by_ref: 김감리, via_role: 책임감리원, target_component_ref: comp_5f_slab, result: 합격, legal_basis: "KCS 14 20 10"}
+  - {name: 슬래브 타설 검측, kind: 시공검측, checkpoint: 거푸집검측, event_date: "2026-09-15",
+     performed_by_ref: 김감리, via_role: 책임감리원, target_component_ref: comp_5f_slab, result: 합격, legal_basis: "KCS 14 20 40"}
+  # 철근배근검측 누락 → 선행요건 위반

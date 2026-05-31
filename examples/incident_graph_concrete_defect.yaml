@@ -1,0 +1,30 @@
+# 콘크리트 결함 cause축 데모 — 강도미달·콜드조인트 → 원인범주(포렌식) → 책임주체.
+# defect축 wiring 검증: 사고→exhibits→Defect→manifests_in→부재, cause_category→전형 책임주체.
+persons:
+  - id: 시공자_김
+    name: 김OO(시공 현장대리인)
+    affiliation_org: org_main
+    appointments:
+      - {id: ap_sigong, role: 현장대리인, start_date: "2024-01-01", end_date: "2024-12-31"}
+
+organizations:
+  - {id: org_main, name: OO건설, org_role: 원도급, subcontract_tier: 0}
+
+work_records:
+  - id: wr_pour
+    name: 슬래브 콘크리트 타설(강도미달)
+    work_kind: 콘크리트타설
+    event_date: "2024-06-01"
+    performed_by_ref: 시공자_김
+    component_ref: c_slab
+    design_fck_mpa: 24
+    test_values: {strength_mpa: 9.9}   # < 0.85×24=20.4 → concrete_strength_acceptance 위반
+
+incident:
+  id: inc_concrete
+  name: 슬래브 강도미달·균열
+  event_date: "2024-08-01"
+  caused_by_refs: [wr_pour]
+  defects:
+    - {id: def_strength,  defect_type: 강도미달,   mechanism: construction, cause_category: Construction, component_ref: c_slab}
+    - {id: def_coldjoint, defect_type: 콜드조인트, mechanism: construction, cause_category: Construction, component_ref: c_slab}

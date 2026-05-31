@@ -1,0 +1,44 @@
+# 현장 전체 배치 적정성 감사 입력 — 사고 1건으로 모든 역할 일괄 판정.
+# 850억 민간 다중이용 건축물. 일부 역할이 사고 당일 미달인 상황.
+
+project:
+  name: OO메디컬타워 신축공사
+  facility_kind: building
+  contract_amount_krw: 85000000000          # 850억 (안전관리자 2명 구간 / 보건 1명 / 품질 고급)
+  total_contract_amount_krw: 85000000000     # 총괄책임자·CM 판정용
+  estimated_amount_krw: 85000000000          # 현장대리인 판정용
+  gross_floor_area_m2: 38000
+  is_multiuse_building: true                  # 다중이용 3만㎡↑ → 품질 고급 등급
+  is_public_client: false                     # 민간 → 책임CM(건진법) 비해당, 건축법 공사감리 적용
+  work_category: 일반
+  total_workers: 140
+  split_order_count: 1                        # 분리발주 아님 → 조정자 비해당
+  combined_amount_krw: 85000000000
+  construction_start_date: "2025-01-01"
+  construction_end_date: "2027-12-31"
+
+incident:
+  name: 5층 슬래브 콘크리트 양생 중 붕괴
+  event_date: "2026-09-20"
+  incident_kind: 중대재해
+  severity: 사망
+
+appointments:
+  # 안전관리자: 850억 → 2명 필요. 2명 선임했으나 1명이 사고 전 해임 → 미달
+  - {role: 안전관리자, person: 김안전, start_date: "2025-01-01", end_date: "2026-07-31"}
+  - {role: 안전관리자, person: 이안전, start_date: "2025-01-01", end_date: null}
+  # 보건관리자: 850억 → 1명 필요. 선임됨 → 적정
+  - {role: 보건관리자, person: 박보건, start_date: "2025-02-01", end_date: null}
+  # 안전보건관리책임자: 20억↑ → 1명. 현장소장 겸직 → 적정
+  - {role: 안전보건관리책임자, person: 최소장, start_date: "2025-01-01", end_date: null}
+  # 안전보건총괄책임자: 20억↑/100명 → 1명. 미선임 → 미달
+  # (appointments 에 없음)
+  # 품질관리자: 다중이용 3만㎡↑ → 고급 등급(고급1+중급1+초급1). 중급·초급만 → 고급 슬롯 미충족
+  - {role: 품질관리자, person: 정중급, grade: 중급, start_date: "2025-01-01", end_date: null}
+  - {role: 품질관리자, person: 한초급, grade: 초급, start_date: "2025-01-01", end_date: null}
+  # 현장대리인: 850억 → 700억↑ 기술사 요구. 기사 8년 배치 → 자격 미달
+  - {role: 현장대리인, person: 강대리, license: 기사, experience_years: 8, grade: 고급, start_date: "2025-01-01", end_date: null}
+  # 공사감리자: 38000㎡ 상주대상 → 총괄+분야별4. 총괄+건축+전기만, 토목·기계 누락 → 미달
+  - {role: 공사감리자, person: 윤감리, field: 총괄, start_date: "2025-01-01", end_date: null}
+  - {role: 공사감리자, person: 보건축, field: 건축, start_date: "2025-01-01", end_date: null}
+  - {role: 공사감리자, person: 보전기, field: 전기, start_date: "2025-01-01", end_date: null}

@@ -1,0 +1,15 @@
+rule_id: rest_facility__osha
+title: 휴게시설 설치 의무
+dimension: 문서·보고
+regime: 산업안전보건법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 산업안전보건법, article: 제128조의2, related: "시행령 제96조의2, 시행규칙 별표21의2", rule: "건설업 공사금액 20억↑ 설치 의무. 최소 6㎡·천장2.1m·온도18~28℃·조명100~200럭스", source: "산안법+inpyeonglaw 교차검증 2026-05"}
+document: 휴게시설
+applies_to_facility_class: 전체   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {total_contract_amount_krw__gte: 2000000000}
+submit_before: 공사기간중상시
+submit_to: 현장설치(과태료 50억↑ 부과)
+evaluation: {steps: ["20억↑이면 설치 의무. submitted_documents 에 휴게시설 확인."], outputs: [compliant, violated, not_required], audit_significance: "휴게시설 미설치는 산안법 위반(과태료 1500만↓). 폭염·과로 사고 연관"}
+pending: ["면적·온도·조명 등 시설 기준 충족 여부는 미판정(설치 유무만)"]

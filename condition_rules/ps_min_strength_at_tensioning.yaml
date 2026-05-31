@@ -1,0 +1,19 @@
+# Condition Rule — PS 긴장 시 최소 콘크리트 압축강도 (KCS 14 20 53)
+# 검증: sonnet 2-vote 2026-05 (긴장 시 fci ≥ 설계기준강도의 0.75배).
+rule_id: ps_min_strength_at_tensioning__kcs142053
+title: 프리스트레싱 시 최소 콘크리트 압축강도
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 53(프리스트레스트 콘크리트) / LHCS 14 20 53:2020
+  rule: "긴장(프리스트레싱) 시 콘크리트 압축강도(fci) ≥ 설계기준강도(fck)의 0.75배. (포스트텐션 절대 최소 fck≥30 MPa)"
+  source: "KCS 14 20 53 + totalmna PS해설 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 프리스트레싱
+applicable_when: {test_values.fci_at_tensioning_mpa__gte: 0}
+requires:
+  ratio_bound: {key: test_values.fci_at_tensioning_mpa, of: design_fck_mpa, ratio: 0.75}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "강도 미달 상태 긴장 → 정착부 파괴·과도 크리프·프리스트레스 손실. KCS 14 20 53 위반"}

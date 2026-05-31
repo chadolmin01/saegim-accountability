@@ -1,0 +1,58 @@
+# 완전 적합 사례 — 모든 차원 충족 → 0건. 엔진이 적합/위반을 판별함을 증명.
+# 70억 일반 건축물, 4층 2500㎡(상주감리 미해당), 굴착3m, 비해체. 필수 의무 전부 이행.
+project:
+  name: OO근린생활시설 신축공사
+  facility_kind: building
+  contract_amount_krw: 7000000000
+  total_contract_amount_krw: 7000000000
+  estimated_amount_krw: 7000000000
+  gross_floor_area_m2: 2500
+  is_multiuse_building: false
+  is_public_client: false
+  is_building_permit_target: true
+  work_category: 일반
+  total_workers: 30
+  split_order_count: 1
+  combined_amount_krw: 7000000000
+  construction_start_date: "2025-01-01"
+  construction_end_date: "2027-12-31"
+  excavation_depth_m: 3
+  floor_count: 4
+  building_height_m: 15
+  is_special_use_building: false
+  expected_waste_ton: 3
+
+incident:
+  name: 정기 적정성 조회 (사고 아님)
+  event_date: "2026-09-20"
+  incident_kind: 품질하자
+  component_ref: comp_3f_slab
+  work_record:
+    name: 3층 슬래브 타설
+    work_kind: 콘크리트타설
+    event_date: "2026-09-20"
+    daily_avg_temp_c: 18
+    applied_measures: []
+    test_values: {air_pct: 4.5, chloride_kg_m3: 0.2}
+
+submitted_documents:
+  - {document: 착공신고서}
+  - {document: 산업안전보건관리비_사용내역서}
+  - {document: 안전보건관리체계}
+  - {document: 품질관리계획서}
+  - {document: 휴게시설}
+  - {document: 비산먼지발생사업신고서}
+  - {document: 건설폐기물처리계획서}
+  - {document: 구조안전확인서}
+
+appointments:
+  - {role: 안전관리자, person: 김안전, qualification: 건설안전기사, start_date: "2025-01-01", end_date: null}
+  - {role: 안전보건관리책임자, person: 최소장, start_date: "2025-01-01", end_date: null}
+  - {role: 안전보건총괄책임자, person: 최소장, start_date: "2025-01-01", end_date: null}
+  - {role: 현장대리인, person: 박기술, license: 기사, experience_years: 6, grade: 고급, start_date: "2025-01-01", end_date: null}
+  - {role: 공사감리자, person: 윤감리, field: 총괄, start_date: "2025-01-01", end_date: null}
+  - {role: 품질관리자, person: 정품질, grade: 초급, start_date: "2025-01-01", end_date: null}
+
+decisions:
+  - {kind: 시공검측, checkpoint: 철근배근검측, result: 합격, event_date: "2026-09-18", target_component_ref: comp_3f_slab, performed_by_ref: 윤감리, via_role: 공사감리자}
+  - {kind: 시공검측, checkpoint: 거푸집검측, result: 합격, event_date: "2026-09-19", target_component_ref: comp_3f_slab, performed_by_ref: 윤감리, via_role: 공사감리자}

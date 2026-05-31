@@ -1,0 +1,20 @@
+rule_id: bored_pile_verticality__kcs245115
+title: 현장타설말뚝 공내 연직도·슬라임 검측
+dimension: 공법
+battery_ref: pl_material
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 24 51 15 (현장타설콘크리트말뚝기초) / KCS 11 50 40
+  rule: "연직도 ≤ 1/100. 슬라임 1차청소 ≤50mm·타설직전 ≤100mm. 건전도(PIT) 30m미만 20%·30m↑ 30%"
+  source: "KCS 24 51 15:2023 (sonnet 크롤 — 연직도·건전도 verified, 슬라임 수치 unverified)"
+applies_to_work_kind: 말뚝
+applicable_when: {test_values.verticality_ratio__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.verticality_ratio, max: 0.01}   # ≤1/100
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "연직도 초과·슬라임 과다는 지지력 손실·말뚝 결함. KCS 24 51 15 위반"}
+pending: ["슬라임 두께 50/100mm KCS 11 50 40 원문 대조"]

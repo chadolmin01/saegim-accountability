@@ -1,0 +1,22 @@
+# Condition Rule — 고강도 콘크리트 정의 최소 설계기준강도 (KCS 14 20 33)
+# 검증: sonnet 2-vote 2026-05 (보통골재 fck≥40·경량 ≥27). 고강도 라벨 정합성 체크.
+rule_id: high_strength_min_fck__kcs142033
+title: 고강도 콘크리트 최소 설계기준강도 (골재별)
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 33(고강도 콘크리트)
+  rule: "고강도 정의 fck — 보통(중량)골재 ≥40, 경량골재 ≥27 MPa. (W/B·단위수량 상한은 KCS 미규정 — 배합시험 결정)"
+  source: "KCS 14 20 33 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.hs_design_fck_mpa__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.hs_design_fck_mpa
+    by: aggregate_weight_class
+    min_table: {보통: 40, 경량: 27}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "고강도로 칭하나 fck 미달 → 정의 부정합·설계전제 오류. KCS 14 20 33"}

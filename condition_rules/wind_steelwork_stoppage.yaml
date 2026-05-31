@@ -1,0 +1,13 @@
+rule_id: wind_steelwork_stoppage__osha
+title: 강풍 시 철골·고소작업 중지
+dimension: 온도·기상
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: prohibition
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제383조, rule: "풍속 10m/s 이상 철골작업 중지", source: "국가법령정보센터 교차검증 2026-05"}
+applies_to_work_kind: 고소작업
+applicable_when: {wind_speed_ms__gte: 10}
+on_violation: "풍속 10m/s 이상 고소·철골작업 — 산안규칙 제383조 작업중지 위반"
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "강풍 고소작업은 추락·낙하 중대재해 원인"}

@@ -1,0 +1,14 @@
+rule_id: excavation_displacement__kosha
+title: 흙막이 수평변위 계측 관리기준
+dimension: 공법
+regime: KOSHA Guide
+source_type: 권고(가이드)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: prohibition
+authority: {standard: KOSHA C-103-2014, name: 굴착공사 계측관리, rule: "지중수평변위 허용한계 강성벽 0.002H·보통벽 0.0025H·연성벽 0.003H 초과 시 굴착중지", source: "KOSHA C-103+지반공학회 교차검증 2026-05. H=굴착깊이"}
+applies_to_work_kind: 굴착
+applicable_when: {displacement_over_limit: true}
+on_violation: "흙막이 수평변위 허용한계(0.002~0.003H) 초과 — 굴착 중지 기준 위반(붕괴 임박)"
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "계측 관리기준 초과 굴착 강행은 흙막이 붕괴 중대재해 직접 원인"}
+pending: ["벽체강성별(강성/보통/연성) 한계를 displacement_over_limit 단일 플래그로 단순화 — H·벽종류 입력 시 정밀화 가능"]

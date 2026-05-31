@@ -1,0 +1,15 @@
+rule_id: concrete_chloride__ksf4009
+title: 콘크리트 염화물량 허용 기준
+dimension: 재료
+regime: KS F 4009
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {standard: KS F 4009, name: 레디믹스트콘크리트, rule: "염화물량 0.30 kg/m³ 이하 (구입자 승인 시 0.60)", source: "KRMCIA·KS원문 교차검증 2026-05"}
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.chloride_kg_m3__gte: 0}   # 측정값 있으면 판정
+requires:
+  value_bounds:
+    - {key: test_values.chloride_kg_m3, max: 0.30}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "염화물 초과는 철근부식·구조내구성 저하 → 장기 구조결함 원인"}

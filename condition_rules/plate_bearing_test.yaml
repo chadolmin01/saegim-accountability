@@ -1,0 +1,22 @@
+rule_id: plate_bearing_test__kcs112020
+title: 평판재하시험(PBT) 지지력계수 K30 층별 기준
+dimension: 공법
+battery_ref: ec_pbt
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: 건설공사 품질관리 업무지침 별표2 / KCS 11 20 20 / KS F 2310 (PBT)
+  rule: "K30(MN/㎥, 아스팔트포장 침하2.5mm 기준) — 노체≥147.1·노상≥196.1·보조기층≥294 (현장밀도 불가 구간 대체)"
+  source: "별표2(시험·빈도 verified) + 평판재하 규정(sonnet 재크롤 2026-05): 옛 70/110/190 정정 → 147.1/196.1/294 (아스팔트, partial-verified). 콘크리트포장 98.1/147.1/196은 별도"
+applies_to_work_kind: 다짐
+applicable_when: {test_values.k30_value__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.k30_value
+    by: fill_layer
+    min_table: {노체: 147.1, 노상: 196.1, 보조기층: 294}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "지지력계수 미달은 지반 지지력 부족. 별표2·KCS 위반"}
+pending: ["K30 수치 147.1/196.1/294(아스팔트) KCS 원문 fully-verified 대조 + 콘크리트포장 별도값 분기"]

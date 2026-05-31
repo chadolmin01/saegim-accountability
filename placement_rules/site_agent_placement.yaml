@@ -1,0 +1,63 @@
+# Reference Rule — 현장대리인(건설기술인) 배치 기준
+# 검증: 건설산업기본법 시행령 별표5 (제35조). 공사예정금액 구간별 자격(자격증+경력 또는 등급).
+# 산출 형태 = qualification (자격 프로파일 중 하나 충족, count=1).
+rule_id: site_agent_placement__cibc
+title: 건설공사 현장대리인(건설기술인) 배치 기준
+role: 현장대리인
+regime: 건설산업기본법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+requirement_shape: qualification
+
+authority:
+  law: 건설산업기본법 시행령
+  table: "별표 5 (건설기술인의 현장배치기준, 제35조)"
+  revision: "재확인 필요(2020.10.8 이후) — pending"
+  source: "04noti·trevilime 해설 2개 소스 교차검증 (2026-05). 별표5 HWP 원문 대조 pending."
+
+# 자격 축: license(국가기술자격) + min_experience_years + min_grade(건설기술인 등급) 가 OR.
+license_order: [산업기사, 기사, 기능장, 기술사]   # 참고 서열(엄밀 비교는 profile별)
+grade_order: [초급, 중급, 고급, 특급]
+
+parameters:
+  - {key: estimated_amount_krw, label: 공사예정금액(원), type: integer, required: true}
+  - {key: assessment_date, label: 판정기준시점, type: date, required: true}
+  - {key: appointed_managers, label: 배치 현장대리인, type: list, required: true,
+     item_fields: [person, license, experience_years, grade, start_date, end_date]}
+
+# 각 구간: count=1, accepts=수용 가능한 자격 프로파일들(하나만 충족하면 됨).
+brackets:
+  - min_krw: 70000000000      # 700억↑
+    max_krw: null
+    count: 1
+    accepts: [{license: 기술사}]
+  - min_krw: 50000000000      # 500~700억
+    max_krw: 70000000000
+    count: 1
+    accepts: [{license: 기술사}, {license: 기능장}, {min_grade: 특급, min_experience_years: 5}]
+  - min_krw: 30000000000      # 300~500억
+    max_krw: 50000000000
+    count: 1
+    accepts: [{license: 기술사}, {license: 기능장}, {license: 기사, min_experience_years: 10}, {min_grade: 특급, min_experience_years: 3}]
+  - min_krw: 10000000000      # 100~300억
+    max_krw: 30000000000
+    count: 1
+    accepts: [{license: 기술사}, {license: 기능장}, {license: 기사, min_experience_years: 5}, {license: 산업기사, min_experience_years: 7}, {min_grade: 고급, min_experience_years: 3}]
+  - min_krw: 3000000000       # 30~100억
+    max_krw: 10000000000
+    count: 1
+    accepts: [{license: 기사, min_experience_years: 3}, {license: 산업기사, min_experience_years: 5}, {min_grade: 고급}]
+  - min_krw: 0                # 30억 미만
+    max_krw: 3000000000
+    count: 1
+    accepts: [{license: 산업기사, min_experience_years: 3}, {min_grade: 중급}]
+
+evaluation:
+  steps:
+    - "공사예정금액으로 bracket 선택."
+    - "effective(assessment 시점 유효) 중 accepts 프로파일 하나라도 충족하는 사람 수 >= count → compliant."
+    - "유효 인원 부족 → understaffed. 인원은 있으나 자격 미충족 → unqualified."
+  outputs: [compliant, understaffed, unqualified, not_required]
+  audit_significance: 무자격 현장대리인 배치는 건산법 위반. 부실시공 책임 가중.
+
+pending: ["별표5 원문/최신개정 대조", "300억 미만 동일업종 2~3현장 중복배치 허용 — 본 rule 미반영(단일현장 판정)"]

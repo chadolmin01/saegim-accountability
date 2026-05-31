@@ -1,0 +1,18 @@
+rule_id: confined_space_gas__osha
+title: 밀폐공간 유해가스 농도 기준
+dimension: 작업환경
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제619조 이하, rule: "황화수소 10ppm 미만·일산화탄소 30ppm 미만·이산화탄소 1.5% 미만·가연성가스 폭발하한 10% 미만", source: "산안법 기준규칙 교차검증 2026-05"}
+applies_to_work_kind: 기타
+applicable_when: {is_confined_space: true}
+requires:
+  value_bounds:
+    - {key: test_values.h2s_ppm, max: 10}
+    - {key: test_values.co_ppm, max: 30}
+    - {key: test_values.co2_pct, max: 1.5}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "유해가스 초과 밀폐공간 작업은 질식·중독 중대재해 직접 원인"}
+pending: ["가연성가스 폭발하한 10% 미반영(LEL 데이터 필요)"]

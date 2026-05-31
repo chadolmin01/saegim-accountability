@@ -1,0 +1,21 @@
+rule_id: asphalt_flatness__kcs445010
+title: 아스팔트 포장 평탄성(PrI) 한도
+dimension: 공법
+battery_ref: ap_flatness
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 44 50 10:2023 §3.5.13(2) (7.6m 프로파일미터 PrI)
+  rule: "PrI(mm/km) — 일반 본선 ≤100·교량접속 ≤200·시가지 ≤160·시가지교량/IC ≤240"
+  source: "KCS 44 50 10:2023 (sonnet 크롤 verified 2026-05)"
+applies_to_work_kind: 포장
+applicable_when: {test_values.pri_mm_km__gte: 0}
+requires:
+  lookup_max:
+    key: test_values.pri_mm_km
+    by: road_class
+    max_table: {일반: 100, 교량접속: 200, 시가지: 160, 시가지교량: 240}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "평탄성 불량은 주행성·안전 저하. KCS 44 50 10 위반"}

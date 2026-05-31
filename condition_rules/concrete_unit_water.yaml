@@ -1,0 +1,19 @@
+rule_id: concrete_unit_water__kcs142010
+title: 콘크리트 단위수량 상한
+dimension: 재료
+battery_ref: cc_unitwater
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 10 / 건설공사 품질관리 업무지침 별표2 (2024 강화)
+  rule: "단위수량 ≤ 185 kg/㎥. 시험빈도 1일1회·120㎥(2024 '필요시'→강화)"
+  source: "KCS 14 20 10 + 품질관리업무지침 2024 개정 (sonnet 크롤 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.unit_water_kg_m3__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.unit_water_kg_m3, max: 185}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "단위수량 초과는 건조수축·균열·내구성 저하. 2024 강화 기준 위반"}

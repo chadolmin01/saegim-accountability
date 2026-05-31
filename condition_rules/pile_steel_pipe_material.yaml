@@ -1,0 +1,21 @@
+rule_id: pile_steel_pipe_material__ksf4602
+title: 강관말뚝 재료 인장강도 합격 (강종별)
+dimension: 재료
+battery_ref: pl_material
+regime: KS F 4602
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS F 4602 (강관말뚝)
+  rule: "인장강도 ≥ SKK400 400·SKK490 490 N/㎟. 항복 235·315, 신장 18%. 편평·용접부 비파괴(10이음/회). 제조사·200개/회"
+  source: "KS F 4602 가이드북 (sonnet 크롤 verified 2026-05)"
+applies_to_work_kind: 말뚝
+applicable_when: {test_values.pile_tensile_mpa__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.pile_tensile_mpa
+    by: pile_steel_grade
+    min_table: {SKK400: 400, SKK490: 490}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "강관말뚝 강도 미달은 기초 지지력·좌굴 직결. KS F 4602 위반"}

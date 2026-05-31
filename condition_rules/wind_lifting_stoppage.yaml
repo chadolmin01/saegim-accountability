@@ -1,0 +1,14 @@
+rule_id: wind_lifting_stoppage__osha
+title: 강풍 시 양중·타워크레인 작업중지
+dimension: 온도·기상
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: prohibition
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제37조, rule: "타워크레인 운전 순간풍속 15m/s 초과·설치해체 10m/s 초과 시 작업중지", source: "lbox 법령 교차검증 2026-05. 순간풍속 기준"}
+applies_to_work_kind: 양중
+applicable_when: {wind_speed_ms__gt: 15}
+on_violation: "순간풍속 15m/s 초과 양중작업 — 산안규칙 제37조 작업중지 위반"
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "강풍 양중은 낙하·전도 중대재해 직접 원인"}
+pending: ["설치·해체(10m/s)·철골(10m/s) 별도 rule 분리 필요"]

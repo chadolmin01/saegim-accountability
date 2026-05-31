@@ -1,0 +1,42 @@
+# Reference Rule — 안전보건조정자 선임 (binary, 발주자 선임)
+# 검증: 산업안전보건법 시행령 제56~58조. 분리발주 2개↑ 합산 50억↑.
+rule_id: safety_health_coordinator__osha
+title: 안전보건조정자 선임 기준
+role: 안전보건조정자
+regime: 산업안전보건법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+requirement_shape: threshold_binary
+
+authority:
+  law: 산업안전보건법 시행령
+  article: 제56조(선임)·제57조(업무)·제58조
+  related: 법 제68조
+  revision: "2025-01-31 (제35240호)"
+  source: "시행령 제56조 원문(lbox.kr) + 04noti 해설 교차검증 (2026-05)."
+
+parameters:
+  - {key: split_order_count, label: 같은 장소 분리발주 공사 수, type: integer, required: true}
+  - {key: combined_amount_krw, label: 분리발주 공사금액 합계(원), type: integer, required: true}
+  - {key: assessment_date, label: 판정기준시점, type: date, required: true}
+  - {key: appointed_managers, label: 선임 안전보건조정자, type: list, required: true,
+     item_fields: [person, start_date, end_date]}
+
+# 발주자가 선임. 같은 장소 2개 이상 분리발주 + 합산 50억↑.
+threshold:
+  trigger_when:
+    all:
+      - {split_order_count__gte: 2}
+      - {combined_amount_krw__gte: 5000000000}   # 50억
+  required_count: 1
+  role_note: 분리발주 착공일 전날까지 선임. 자격 7택1(산업안전지도사·건설안전기술사·책임감리자·안전보건관리책임자3년↑ 등).
+  qualification_ref: 시행령 제56조 7개 자격 중 1.
+
+evaluation:
+  steps:
+    - "분리발주 2개 미만 또는 합산 50억 미만 → not_required."
+    - "충족 시 required=1. effective(착공일 전 선임 유효) >= 1 → compliant, else understaffed."
+  outputs: [compliant, understaffed, not_required]
+  audit_significance: 분리발주 현장 혼재작업 조정 부재 시 사고 책임. 발주자 측 의무.
+
+pending: ["자격 7택1 충족 검증은 별도 자격규칙 필요"]

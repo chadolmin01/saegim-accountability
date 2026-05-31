@@ -1,0 +1,30 @@
+# Org Rule — 중대재해 경영책임자 안전보건확보의무
+# 검증: corpus/중대재해처벌법_경영책임자의무.md (CaseNote·KOSHA 교차검증 2026-05)
+rule_id: serious_accident_corporate_duty__sapa
+title: 중대재해 경영책임자 안전보건확보의무
+dimension: 도급책임
+regime: 중대재해처벌법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: org
+
+# ★시행일 게이트 — 사고일 < 시행일이면 not_applicable(소급 불가). 시점 유효성의 핵심.
+effective_date: "2022-01-27"
+
+authority:
+  law: 중대재해처벌법 제4조(중대산업재해)·제9조(중대시민재해)·제6조·제10조(처벌)
+  rule: "경영책임자등(사업 대표)은 안전보건관리체계 구축·이행 등 확보의무. 사망 중대재해 시 1년 이상 징역 또는 10억원 이하 벌금. 시행 2022-01-27(50인↑/50억↑), 중대시민재해는 규모무관 2022-01-27."
+  source: "중대재해처벌법 §4·§9·§2(정의)·부칙(시행 2022-01-27) (CaseNote·KOSHA 교차검증 2026-05). 재취득 가능 — 캐시 대신 인용"
+  pending: "조·호 세부번호 law.go.kr 503 최종 미대조. 규모별 시행일(검증됨, 게이트 미구현 — 실 post-시행 사고 견인 시 구현): 50인↑/공사 50억↑=2022-01-27, 50인미만/50억미만=2024-01-27, 중대시민재해는 규모무관 2022-01-27. 현 effective_date(2022-01-27)는 50억↑ 기준 보수적."
+
+# 경영책임자 = 사업 대표(원도급 본사)
+applies_to_org_role: [원도급]
+duty_field: safety_health_system   # =true 이행 / =false 미이행 / 미입력 판정보류
+
+evaluation:
+  steps:
+    - "사고일 < effective_date(2022-01-27) → not_applicable (시행 전, 소급 불가)."
+    - "사고일 >= 시행일 + org_role 원도급(경영책임자) + 중대재해(사망1+): safety_health_system=true compliant / false violated / 미입력 판정보류."
+    - "원도급 아니면 not_applicable."
+  outputs: [compliant, violated, not_applicable, 판정보류]
+  audit_significance: "경영책임자 안전보건체계 부재가 중대재해의 조직적 원인. 단 시행일 소급 불가 — 학동(2021.6.9)·화정(2022.1.11) 모두 시행 전이라 미적용."

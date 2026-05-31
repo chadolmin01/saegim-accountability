@@ -1,0 +1,19 @@
+# Condition Rule — 수중콘크리트 물-결합재비(W/B) 상한 (KCS 14 20 43)
+# 검증: sonnet 2-vote 2026-05 (담수철근 ≤0.55·해수철근 ≤0.50).
+rule_id: underwater_concrete_wb__kcs142043
+title: 수중콘크리트 W/B 상한 (환경별)
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 43(수중콘크리트) / KCS 24 11 05
+  rule: "철근 수중콘크리트 W/B 상한 — 담수 ≤0.55, 해수 ≤0.50"
+  source: "KCS 14 20 43 + KCS 24 11 05 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.uw_wb_ratio__gte: 0}
+requires:
+  lookup_max: {key: test_values.uw_wb_ratio, by: uw_environment, max_table: {담수철근: 0.55, 해수철근: 0.50}}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "수중 W/B 과다 → 강도·내구성 부족. KCS 14 20 43 위반"}

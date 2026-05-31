@@ -1,0 +1,19 @@
+# Condition Rule — 숏크리트 리바운드율 (KCS 27 30 00)
+# 검증: sonnet 2-vote 2026-05 (건식30~40·습식10~20%, KCS 27 + USACE 교차).
+rule_id: shotcrete_rebound_rate__kcs273000
+title: 숏크리트 리바운드율 상한 (공법별)
+dimension: 공법
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 27 30 00(터널 숏크리트)
+  rule: "리바운드율 상한 — 건식 ≤40%, 습식 ≤20%"
+  source: "KCS 27 30 00 + USACE EM 1110-2-2005 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 숏크리트
+applicable_when: {test_values.rebound_rate_pct__gte: 0}
+requires:
+  lookup_max: {key: test_values.rebound_rate_pct, by: shotcrete_method, max_table: {건식: 40, 습식: 20}}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "리바운드 과다 → 재료손실·품질 불균질·부착저하. KCS 27 30 00 위반"}

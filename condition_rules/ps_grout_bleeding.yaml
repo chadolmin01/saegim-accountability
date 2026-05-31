@@ -1,0 +1,20 @@
+# Condition Rule — PS 쉬스 그라우트 블리딩률 (KCS 14 20 53)
+# 검증: sonnet 2-vote 2026-05 (블리딩 ≤3%, KCI-PS102).
+rule_id: ps_grout_bleeding__kcs142053
+title: PS 그라우트 블리딩률 합격
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 53 / KCI-PS102
+  rule: "쉬스 그라우트 블리딩률 ≤3% (3시간, 수직관). 원칙 0"
+  source: "KCS 14 20 53 + KCI-PS102 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 프리스트레싱
+applicable_when: {test_values.grout_bleeding_pct__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.grout_bleeding_pct, max: 3}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "블리딩 과다 → 쉬스 상부 공극·PS강재 부식. KCS 14 20 53 위반"}

@@ -1,0 +1,15 @@
+rule_id: usage_approval__bldg
+title: 건축물 사용승인 의무
+dimension: 문서·보고
+regime: 건축법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 건축법, article: 제22조, rule: "공사완료 후 사용승인 신청·교부 전 사용금지. 임시사용승인 2년 이내. 위반 2년↓ 또는 1억↓", source: "건축법 제22조 교차검증 2026-05"}
+document: 사용승인서
+applies_to_facility_class: 건축물   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  all:
+    - is_building_permit_target
+    - is_in_use
+submit_before: 사용개시전
+submit_to: 허가권자
+evaluation: {steps: ["허가대상 + 사용개시면 사용승인 필요. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "사용승인 없는 사용(무단사용)은 건축법 위반(2년↓/1억↓). 안전 미검증 사용"}

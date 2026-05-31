@@ -1,0 +1,554 @@
+# 자동생성 — `python build_extraction_schema.py`. 직접 수정 말 것(types/·edges.yaml에서 파생).
+schema: saegim-extraction-schema-v1
+purpose: Ontology-Guided Extraction — 문서→typed graph 추출 시 이 Class/Relationship만 허용(자유추출 금지).
+classes:
+- name: FacilityClass
+  space: concept
+  role: reference
+  properties:
+  - class_id
+  - name
+  - discriminator
+  - legal_basis
+  - governed_regime
+  description: 시설 분류 노드 — 건축법 §2 건축물 판별 기준에 따른 분기 축. 법정요건이 이 분류로 게이트(gated_by)된다.
+- name: Law
+  space: concept
+  role: reference
+  properties:
+  - law_id
+  - name
+  - scope
+  - authority_basis
+  description: 법령 노드 — 건설 책임추적의 권위 출처. 각 법정요건(LegalRequirement)이 이 법에 귀속(governed_by)된다.
+- name: LegalRequirement
+  space: concept
+  role: reference
+  properties:
+  - requirement_id
+  - document
+  - dimension
+  - topic
+  - regime
+  - applies_to_facility_class
+  - facility_subtype
+  - trigger_summary
+  - threshold_fields
+  - submit_before
+  - submit_to
+  - legal_basis
+  description: '법정요건 노드 — 제출 의무 문서/작업조건/인적배치 요건 1건을 typed 노드로 환원. saegim 룰 1개 = 이 노드 1개. 임계값·트리거는 property(데이터)이고,
+    실제 충족 판정은 saegim 런타임이 수행한다. 관계: →governed_by→ Law, →gated_by→ FacilityClass.'
+- name: Appointment
+  space: resource
+  role: extractable
+  properties:
+  - name
+  - role
+  - person_ref
+  - project_ref
+  - start_date
+  - end_date
+  - appointed_by_org_ref
+  - grade
+  - license
+  - experience_years
+  - cm_experience_years
+  description: 선임 — 특정 개인이 특정 현장에서 특정 역할을 맡은 기간 기록. 역할은 여기 산다(영구 속성 아님). 시간 유효구간(start~end)을 가지므로 '사고
+    당일 누가 유효 선임돼 있었나'를 판정 가능 (DESIGN 원칙1).
+- name: Batch
+  space: resource
+  role: extractable
+  properties:
+  - batch_id
+  - mix_design_no
+  - delivery_note
+  - dispatch_time
+  - arrival_time
+  - elapsed_min
+  - supplier_org_ref
+  - pour_component_ref
+  description: '레미콘 배치(트럭) 노드 — 사건층. prior-art: BCOM ConcreteDelivery + GS1 EPCIS(5W What/When/Where/Who).
+    "어느 부재에 어느 트럭이 들어갔나"의 역추적 단위. 책임이전(handover): supplied_by(공급자) → delivered_for(부재, 시공자 인수).'
+- name: BuildingComponent
+  space: concept
+  role: extractable
+  properties:
+  - name
+  - location_ref
+  - component_category
+  - event_date
+  - material_summary
+  description: 부재 인스턴스 — '이 위치의 이 부재' (장소 × 공종 교차점). 책임추적의 실제 단위. 예 '3층 외벽의 2026-09-15 타설 콘크리트'. 결정(검측·자재반입)이
+    이 인스턴스를 target 한다.
+- name: ComplianceFinding
+  space: claim
+  role: extractable
+  properties:
+  - name
+  - rule_id
+  - target_ref
+  - assessment_date
+  - verdict
+  - required_count
+  - effective_count
+  - shortfall
+  - triggered_by_ref
+  - rationale
+  description: 법정 규칙 대조 판정 결과. 현장 데이터를 rules/*.yaml 에 대조하여 산출한 결정적 판정(assertion). RAG 가 아니라 actual>=required
+    계산의 결과이므로 추적·재현 가능하다.
+- name: ConstructionPhase
+  space: concept
+  role: extractable
+  properties:
+  - phase_id
+  - order
+  - name
+  - key_givens
+  description: 시공 생애주기 단계 — 책임추적의 backbone(1급 축). 모든 결정·작업·문서·배치 노드가 phase_ref로 단계에 매달린다. 사고추적 = 이 단계를
+    0→7로 걸으며 '어느 단계 어느 요소에서 끊겼나'를 찾는 것. 빈 단계(상류 0~1)가 곧 온톨로지 사각지대.
+- name: CustodyTransfer
+  space: decision
+  role: extractable
+  properties:
+  - transfer_point
+  - transfer_time
+  - from_org_ref
+  - to_org_ref
+  - batch_ref
+  - performed_by_ref
+  - result
+  description: '책임이전(custody handover) 사건 — 트랙 경계에서 책임주체가 바뀌는 마디. ≈prov:Activity / EPCIS receiving / ISO
+    19650 handover. 양자서명: custody_from(양도자) + custody_to(인수자) + performed_by(검수자, 자격 시점검증). 분쟁이 가장 빈번한
+    책임 귀속 핵심 노드.'
+- name: Decision
+  space: decision
+  role: extractable
+  properties:
+  - name
+  - kind
+  - event_date
+  - performed_by_ref
+  - via_role
+  - checkpoint
+  - point_type
+  - target_component_ref
+  - target_location_ref
+  - result
+  - legal_basis
+  - based_on_ref
+  description: 규제 도메인 의사결정 — 검측·자재반입·안전점검·단계승인·설계변경 등. 책임추적의 anchor. 시점(event_date)·수행자·대상 부재/위치·결과·근거를
+    갖는다. 사고 시 '이 부재에 누가 무엇을 언제 결정했나 + 그때 유효 선임이었나'를 회수.
+- name: Defect
+  space: concept
+  role: extractable
+  properties:
+  - defect_type
+  - mechanism
+  - cause_category
+  - component_ref
+  description: '결함 노드 — 사고가 드러낸 물리적 결함(균열·강도미달·콜드조인트·부착력소실 등). prior-art 정렬: OCSD(Defect×Inspection×Diagnosis×Repair×Element)
+    + 포렌식 원인분류(ASCE GFI/ASTM E678). cause축의 진입점 — Incident →exhibits→ Defect →(cause_category)→ 책임주체.
+    콘크리트 vertical에서 신설.'
+- name: DesignDecision
+  space: decision
+  role: extractable
+  properties:
+  - name
+  - kind
+  - event_date
+  - performed_by_ref
+  - via_role
+  - approved_by_ref
+  - phase_ref
+  - target_component_ref
+  - chosen_value
+  - planned_mitigations
+  description: 상류(기획·설계) 의사결정 — 입지·공법·재료·구조·양생·차수 선택. 기존 Decision(시공 실행 검측)이 못 담던 단계0~1 결정. 적절성 룰이 'SiteContext를
+    반영했나(planned_mitigations)'로 판정. 책임추적에서 사고의 뿌리가 보통 여기. 결정별 법정주체(설계자·구조기술사·발주)에서 책임이 끊긴다.
+- name: Incident
+  space: evidence
+  role: extractable
+  properties:
+  - name
+  - event_date
+  - incident_kind
+  - project_ref
+  - location_ref
+  - component_ref
+  - severity
+  - description
+  description: 사고/하자 — 책임추적의 진입점. 발생 시점(event_date)·장소·부재를 기록하고, 이를 기준으로 그 시점 그 현장의 결정·선임을 역추적한다.
+- name: Location
+  space: concept
+  role: extractable
+  properties:
+  - name
+  - level
+  - parent_ref
+  - project_ref
+  - floor_no
+  description: '[DORMANT — 트리/계층 미활성] 장소 노드(건물>층>실/구역>부위, self-ref parent). 현재 활성 용도는 location_ref를 *평면
+    문자열 식별자*로 trail.py 가 사고↔결정 매칭에 쓰는 것뿐. 타입노드·parent_ref 트리·계층 공간추적(부위별 책임 slice)은 미인스턴스화·미순회·그래마 미등록.
+    활성화는 계층 공간추적을 요구하는 실사고(예: 다층 연쇄붕괴 ''어느 층 작업이 연루?'')가 끌 때만 — 그 전 투기적 트리 빌드 금지(목표 견인 없는 schema-first
+    = 가짜).'
+- name: Organization
+  space: subject
+  role: extractable
+  properties:
+  - name
+  - org_role
+  - subcontract_tier
+  - registration
+  description: 조직(회사). 도급 사슬 전체를 트리로 모델링하지 않고(DESIGN 원칙2, 옵션2 깊이), 도급단계 속성 + subcontracts_under 관계로 법이
+    책임을 묻는 지점만 표현한다.
+- name: Person
+  space: subject
+  role: extractable
+  properties:
+  - name
+  - qualifications
+  - qualification_grade
+  - affiliation_org
+  description: 개인 행위자. 역할은 영구 속성이 아니라 Appointment(선임)로 부여되므로, Person 은 신원과 보유 자격만 갖는다 (한 사람이 현장마다 다른 역할
+    가능).
+- name: Project
+  space: concept
+  role: extractable
+  properties:
+  - name
+  - facility_kind
+  - contract_amount_krw
+  - contractor_type
+  - work_category
+  - construction_start_date
+  - construction_end_date
+  - ordering_agency
+  - gross_floor_area_m2
+  description: 건설 현장/공사 — 책임추적 판정의 모(母)단위. 공사금액·기간·도급정보를 담아 법정 배치규칙의 입력이 된다.
+- name: Sample
+  space: resource
+  role: extractable
+  properties:
+  - sample_id
+  - test_type
+  - sampling_date
+  - test_date
+  - age_days
+  - result_value
+  - design_fck_mpa
+  - performed_by_ref
+  - sampled_component_ref
+  description: '시료(공시체) 노드 — 사건층 시점분리. prior-art: SOSA sosa:Sample + phenomenonTime(채취 T1)/resultTime(시험
+    T2). 반입·타설 시점에 채취·봉인 기록(T1) → 28일 후 압축강도 결과(T2)가 같은 체인에 연결. 하나의 사건이 두 시점으로 이어지는 구조.'
+- name: SiteContext
+  space: concept
+  role: extractable
+  properties:
+  - name
+  - phase_ref
+  - region_annual_rainfall_mm
+  - region_rainy_season_work
+  - region_winter_work
+  - seismic_zone
+  - groundwater_level_m
+  - planned_excavation_depth_m
+  - soil_type
+  - is_soft_ground
+  - adjacent_structures
+  description: 현장의 주어진 조건(givens) — 결정보다 먼저 존재하며 결정을 제약한다. 지역 기후(강수·기온·적설·지진구역)와 지반(지하수위·토질·연약지반·지지력)·지형.
+    적절성 룰이 'DesignDecision이 이 SiteContext를 반영했나'를 판정하는 기준. 단계0~1의 사각지대를 메우는 핵심 타입.
+- name: WorkRecord
+  space: resource
+  role: extractable
+  properties:
+  - name
+  - work_kind
+  - event_date
+  - location_ref
+  - component_ref
+  - daily_avg_temp_c
+  - daily_max_temp_c
+  - spec_slump_mm
+  - pour_volume_m3
+  - strength_tests_count
+  - fill_layer
+  - joint_type
+  - pile_count
+  - dynamic_test_count
+  - pile_steel_grade
+  - steel_grade
+  - road_class
+  - insulation_grade
+  - climate_region
+  - apparent_temp_c
+  - rainfall_mm
+  - wind_speed_ms
+  - applied_measures
+  - test_values
+  - is_confined_space
+  - component_category
+  - soil_type
+  - slope_ratio_horizontal
+  - weekly_work_hours
+  - is_afternoon_peak
+  - scaffold_post_spacing_ledger_m
+  - scaffold_post_spacing_transverse_m
+  - shoring_height_m
+  - flammable_within_11m
+  - uses_portable_electric_tool
+  - work_height_m
+  - guardrail_top_height_cm
+  - noise_db
+  - cover_thickness_mm
+  - rebar_spacing_dev_mm
+  - rebar_grade
+  - design_fck_mpa
+  - concrete_type
+  - aggregate_type
+  - cement_type
+  - fly_ash_grade
+  - slag_grade
+  - exposure_class
+  - member_type
+  - crack_control_level
+  - uw_environment
+  - curing_category
+  - admixture_type
+  - shotcrete_method
+  - shotcrete_grade
+  - lightweight_class
+  - aggregate_weight_class
+  description: 시공 행위 기록 — 시공일지의 typed 형태. 특정 작업(타설·굴착·양중 등)이 어떤 조건(온도·기상·자재시험값)에서, 어떤 조치를 적용해 수행됐는지. 조건
+    판정 rule(condition)이 이 기록을 대상으로 적법성을 판정한다.
+relationships:
+- name: performed_by
+  kind: factual
+  role: who
+  from:
+  - Decision
+  - DesignDecision
+  - WorkRecord
+  to:
+  - Person
+  mode: EXTRACT
+  semantics: 이 결정·작업을 수행한 사람.
+- name: acts_via
+  kind: factual
+  role: when
+  from:
+  - Decision
+  - DesignDecision
+  to:
+  - Appointment
+  mode: EXTRACT
+  semantics: 그 결정이 근거한 선임/직책(Appointment). trail 의 시점유효성 판정 대상.
+- name: holds
+  kind: factual
+  role: who
+  from:
+  - Person
+  to:
+  - Appointment
+  mode: EXTRACT
+  semantics: 그 사람이 보유한 선임(역할·자격·유효구간).
+- name: belongs_to
+  kind: factual
+  role: who
+  from:
+  - Person
+  to:
+  - Organization
+  mode: EXTRACT
+  semantics: 그 사람이 소속한 도급조직. 책임의 조직 귀속 진입점(DESIGN 원칙2 옵션2 깊이).
+- name: subcontracts_under
+  kind: factual
+  role: who
+  from:
+  - Organization
+  to:
+  - Organization
+  mode: EXTRACT
+  semantics: 하도급 조직이 상위 도급조직 밑에 있음(원도급→하도급→재하도급 사슬). 사슬 순회용 — 상위 tier 책임 '판정'은 별도 룰(건산법§29 등).
+- name: targets
+  kind: factual
+  role: what
+  from:
+  - Decision
+  - WorkRecord
+  - DesignDecision
+  to:
+  - BuildingComponent
+  mode: EXTRACT
+  semantics: 그 결정·작업이 대상으로 한 부재.
+- name: in_phase
+  kind: factual
+  role: when
+  from:
+  - Decision
+  - DesignDecision
+  - WorkRecord
+  - Incident
+  - SiteContext
+  to:
+  - ConstructionPhase
+  mode: EXTRACT
+  semantics: 생애주기 backbone 상의 단계(0~7). 상류→하류 정렬축.
+- name: constrained_by
+  kind: factual
+  role: why
+  from:
+  - DesignDecision
+  to:
+  - SiteContext
+  mode: EXTRACT
+  semantics: 상류 설계결정이 반영했어야 할 현장여건(givens). 적절성 판정 대상.
+- name: requires
+  kind: factual
+  role: norm
+  from:
+  - WorkRecord
+  - Decision
+  to:
+  - Decision
+  mode: EXTRACT
+  semantics: 이 작업·마일스톤 전에 선행돼야 할 검측·결정(Hold Point).
+- name: caused_by
+  kind: factual
+  role: why
+  from:
+  - Incident
+  to:
+  - WorkRecord
+  - Decision
+  - DesignDecision
+  mode: EXTRACT
+  semantics: 사고가 비롯된 작업·결정. 추적의 출발점.
+- name: violates
+  kind: verdict
+  role: verdict
+  from:
+  - WorkRecord
+  - Decision
+  - DesignDecision
+  - Appointment
+  to:
+  - LegalRequirement
+  mode: COMPUTED(엔진)
+  semantics: 그 노드가 어긴 법정요건. 엔진 판정 결과.
+- name: responsible_for
+  kind: verdict
+  role: verdict
+  from:
+  - Person
+  - Appointment
+  - Organization
+  to:
+  - Incident
+  mode: COMPUTED(엔진)
+  semantics: 위반 노드를 수행/승인한 주체에서 사고로 이어지는 책임 귀속. 추적의 종착점(=책임추적 답).
+- name: exhibits
+  kind: factual
+  role: what
+  from:
+  - Incident
+  to:
+  - Defect
+  mode: EXTRACT
+  semantics: 사고가 드러낸 결함(Defect). cause축 진입 — Defect.cause_category가 책임주체 시사(포렌식). prior-art OCSD/ASCE
+    GFI.
+- name: manifests_in
+  kind: factual
+  role: what
+  from:
+  - Defect
+  to:
+  - BuildingComponent
+  mode: EXTRACT
+  semantics: 결함이 발현된 부재. OCSD defect×element.
+- name: supplied_by
+  kind: factual
+  role: who
+  from:
+  - Batch
+  to:
+  - Organization
+  mode: EXTRACT
+  semantics: 레미콘 배치의 공급자(EPCIS source party). 반입검수=책임이전(공급자→시공자)의 한쪽 끝.
+- name: delivered_for
+  kind: factual
+  role: what
+  from:
+  - Batch
+  to:
+  - BuildingComponent
+  mode: EXTRACT
+  semantics: 배치가 투입된 부재(BCOM DeliversConcreteFor). "어느 트럭이 어느 부재로" 역추적.
+- name: sampled_from
+  kind: factual
+  role: what
+  from:
+  - Sample
+  to:
+  - BuildingComponent
+  mode: EXTRACT
+  semantics: 공시체의 채취 대상 부재(sosa:isSampleOf). 28일 deferred 결과를 부재에 연결.
+- name: custody_from
+  kind: factual
+  role: who
+  from:
+  - CustodyTransfer
+  to:
+  - Organization
+  mode: EXTRACT
+  semantics: 책임이전의 양도자(책임 넘기는 쪽). 반입검수=공급자.
+- name: custody_to
+  kind: factual
+  role: who
+  from:
+  - CustodyTransfer
+  to:
+  - Organization
+  mode: EXTRACT
+  semantics: 책임이전의 인수자(책임 받는 쪽). 반입검수=시공자. 양자서명의 다른 끝.
+- name: transfers
+  kind: factual
+  role: what
+  from:
+  - CustodyTransfer
+  to:
+  - Batch
+  mode: EXTRACT
+  semantics: 책임이전 대상(레미콘 배치). custody가 이 배치에 대해 공급자→시공자로 넘어감.
+- name: governed_by
+  kind: type
+  role: norm
+  from:
+  - LegalRequirement
+  to:
+  - Law
+  mode: PACK구조
+  semantics: 법정요건이 받는 소관 법(Law). 복합 regime 은 atomic Law 마다 1엣지.
+- name: gated_by
+  kind: type
+  role: when
+  from:
+  - LegalRequirement
+  to:
+  - FacilityClass
+  mode: PACK구조
+  semantics: 요건이 적용되는 시설 클래스(건축물/토목시설) 게이트. '전체' 요건은 양쪽 모두.
+constraints:
+- 정의된 Class/Relationship만 사용 — 새 타입·관계를 발명하지 말 것(정의 안 된 것은 추출 대상 아님).
+- 각 노드는 고유한 id 필수.
+- '관계는 from/to 타입 제약을 지킬 것(예: targets는 Decision/WorkRecord → BuildingComponent만).'
+- mode=EXTRACT(factual) 관계·노드만 추출. mode=COMPUTED 관계(violates·responsible_for)는 절대 추출하지 말 것 — saegim 평가기가
+  계산한다.
+- 기준층 Class(LegalRequirement·Law·FacilityClass)는 새로 만들지 말고 *_ref로 링크만(고정 온톨로지).
+- 불확실하면 만들지 말고 생략. 원문에서 확인 안 된 수치는 넣지 말 것(추측금지).
+validation: 추출 그래프는 load_to_opencrab의 grammar 검증(허용 from→to 쌍)을 통과해야 적재 — SHACL 대응. 통과 후 엔진이 verdict 계산.
+counts:
+  classes: 20
+  extractable: 17
+  relationships: 22
+  extract_relations: 18

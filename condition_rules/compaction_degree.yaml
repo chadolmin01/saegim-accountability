@@ -1,0 +1,21 @@
+rule_id: compaction_degree__byeolpyo2
+title: 흙쌓기 다짐도(현장밀도) 층별 기준
+dimension: 공법
+battery_ref: ec_density
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: 건설공사 품질관리 업무지침 별표2 / KCS 11 20 20 (흙쌓기) / KS F 2311 (현장밀도)
+  rule: "다짐도(최대건조밀도 대비) — 노체≥90·노상≥95·보조기층≥95·동상방지층≥95·되메우기≥90·구조물뒷채움≥95%"
+  source: "별표2 + KCS 11 20 20 (sonnet 크롤 교차검증 2026-05)"
+applies_to_work_kind: 다짐
+applicable_when: {test_values.compaction_degree_pct__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.compaction_degree_pct
+    by: fill_layer
+    min_table: {노체: 90, 노상: 95, 보조기층: 95, 동상방지층: 95, 되메우기: 90, 구조물뒷채움: 95}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "다짐도 미달은 부등침하·지반붕괴 직결. 별표2·KCS 위반"}

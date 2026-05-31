@@ -1,0 +1,9 @@
+# 타설 전 거푸집검측만 하고 철근배근검측 누락 → 정지점 미통과 위반.
+work_record:
+  name: 5층 슬래브 타설
+  work_kind: 콘크리트타설
+  event_date: "2026-09-15"
+  component_ref: comp_5f_slab
+decisions:
+  - {kind: 시공검측, checkpoint: 거푸집검측, result: 합격, event_date: "2026-09-14", target_component_ref: comp_5f_slab, point_type: H}
+  # 철근배근검측 없음 → 누락

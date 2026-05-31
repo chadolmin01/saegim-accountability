@@ -1,0 +1,33 @@
+# 의사결정 책임 트레일 — 5층 슬래브 부재에 대한 결정 이력 + 권한 유효성 교차검증.
+# 시나리오: 콘크리트 타설 검측을 김감리가 했으나, 그 시점 김감리 선임이 만료(공백) → 권한 결함.
+
+project:
+  name: OO메디컬타워 신축공사
+
+incident:
+  name: 5층 슬래브 콘크리트 양생 중 붕괴
+  event_date: "2026-09-20"
+  component_ref: comp_5f_slab        # 사고 부재
+  location_ref: loc_5f
+
+appointments:
+  # 김감리: 책임감리원 — 2026-08-31 해임 (이후 공백)
+  - {role: 책임감리원, person: 김감리, start_date: "2025-01-01", end_date: "2026-08-31"}
+  # 박감리: 후임 책임감리원 — 2026-10-01 부터 (사고·검측 시점엔 아직 미선임)
+  - {role: 책임감리원, person: 박감리, start_date: "2026-10-01", end_date: null}
+  # 이기사: 시공기술자(현장대리인) — 계속 유효
+  - {role: 현장대리인, person: 이기사, start_date: "2025-01-01", end_date: null}
+
+decisions:
+  # 자재반입 검수 — 김감리 재직기간(~8/31) 내인 6/10 → 유효
+  - {name: 슬래브 콘크리트 반입검수, kind: 자재반입검수, event_date: "2026-06-10",
+     performed_by_ref: 김감리, via_role: 책임감리원, target_component_ref: comp_5f_slab,
+     result: 합격, legal_basis: "KCS 14 20 10"}
+  # 시공검측 — 김감리 선임 만료(8/31) 이후인 9/15 수행 → 권한 결함
+  - {name: 슬래브 타설 검측, kind: 시공검측, event_date: "2026-09-15",
+     performed_by_ref: 김감리, via_role: 책임감리원, target_component_ref: comp_5f_slab,
+     result: 합격, legal_basis: "KCS 14 20 40 / 건진법 §39"}
+  # 자기검측 — 시공기술자, 유효
+  - {name: 슬래브 자기검측, kind: 시공검측, event_date: "2026-09-14",
+     performed_by_ref: 이기사, via_role: 현장대리인, target_component_ref: comp_5f_slab,
+     result: 합격, legal_basis: "자체 품질관리"}

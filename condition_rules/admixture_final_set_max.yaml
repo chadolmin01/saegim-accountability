@@ -1,0 +1,24 @@
+# Condition Rule — 화학혼화제 응결 종결시간차 상한 (KS F 2560:2019 표2)
+# 상한(지연 방향)만 모델 — 하한은 corpus 표에 보존.
+rule_id: admixture_final_set_max__ksf2560
+title: 화학혼화제 응결 종결시간차 상한 (종류별)
+dimension: 재료
+regime: KS F 2560
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS F 2560:2019 표2(응결시간의 차)
+  rule: "종결시간차 상한(min) — AE제+60·감수제 표준+90/지연+210/촉진 0·AE감수제 표준+90/지연+210/촉진 0·고성능AE 표준+120/지연+240. 하한은 corpus 참조"
+  source: "KS F 2560:2019 원문(corpus 캐시)"
+  corpus_ref: corpus/KS_F_2560_화학혼화제.md
+  pending: "하한(촉진방향) 미모델 — corpus 표에 보존"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.admixture_final_set_diff_min__gte: -999}
+requires:
+  lookup_max:
+    key: test_values.admixture_final_set_diff_min
+    by: admixture_type
+    max_table: {AE제: 60, 감수제표준: 90, 감수제지연: 210, 감수제촉진: 0, AE감수제표준: 90, AE감수제지연: 210, AE감수제촉진: 0, 고성능AE표준: 120, 고성능AE지연: 240}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "종결 과다지연 → 공정 지연·품질 변동. KS F 2560 위반"}

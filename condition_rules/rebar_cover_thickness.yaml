@@ -1,0 +1,18 @@
+rule_id: rebar_cover_thickness__kds
+title: 철근 피복두께 최소 기준
+dimension: 공법
+regime: KDS 설계기준
+source_type: 설계기준(KDS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {standard: KDS 14 20 50, name: 콘크리트 피복두께, rule: "기초 80mm·기둥/보 40mm·슬래브 20mm 이상(또는 설계도서)", source: "검측체크리스트(국토부/LH) 인용. KDS 14 20 50 원문 대조 pending"}
+applies_to_work_kind: 철근배근
+applicable_when: {cover_thickness_mm__gte: 0}
+requires:
+  lookup_bounds:
+    key: cover_thickness_mm
+    by: component_category
+    min_table: {기초: 80, 기둥: 40, 보: 40, 슬래브: 20, 벽체: 40, 외벽: 40}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "피복두께 부족은 철근부식·내화성능 저하·구조내구성 직접 영향"}
+pending: ["KDS 14 20 50 원문 대조 필요(체크리스트 인용값)", "노출환경별 가산(흙접촉·해양) 미반영"]

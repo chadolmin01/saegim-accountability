@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+*.log
+
+# pyvis 번들 산출물
+lib/
+*.html
+
+# OpenCRAB local 그래프(생성물)
+opencrab_data/
+
+# Cloud Pack 빌드 산출물 (build_cloud_pack.py로 재생성)
+dist/
+
+# 비밀키 — 절대 커밋 금지 (ANTHROPIC_API_KEY 등은 .env 에, 추적 안 함)
+.env
+.env.*
+!.env.example

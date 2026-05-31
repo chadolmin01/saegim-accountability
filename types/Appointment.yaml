@@ -1,0 +1,70 @@
+type: Appointment
+version: "0.1"
+space: resource
+description: "선임 — 특정 개인이 특정 현장에서 특정 역할을 맡은 기간 기록. 역할은 여기 산다(영구 속성 아님). 시간 유효구간(start~end)을 가지므로 '사고 당일 누가 유효 선임돼 있었나'를 판정 가능 (DESIGN 원칙1)."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 선임 식별명 (예 \"OO현장 안전관리자 선임 - 이OO\").
+  role:
+    type: string
+    required: true
+    nullable: false
+    description: |
+      선임된 역할. 각 역할은 적용 배치규칙(rules/*.yaml)이 1:1 매핑된다 (role → rule).
+      family — 시공사측: 안전관리자·보건관리자·안전보건관리책임자·안전보건총괄책임자·현장대리인·품질관리자
+              감리/감독측: 책임건설사업관리기술인·공사감리자·감리원(주택)
+              발주자 선임: 안전보건조정자
+    enum: [안전관리자, 보건관리자, 안전보건관리책임자, 안전보건총괄책임자, 안전보건조정자,
+           현장대리인, 품질관리자, 책임건설사업관리기술인, 공사감리자, 감리원, 책임감리원, 기타]
+  person_ref:
+    type: string
+    required: true
+    nullable: false
+    description: 선임된 개인 (Person 참조).
+  project_ref:
+    type: string
+    required: true
+    nullable: false
+    description: 선임된 현장 (Project 참조).
+  start_date:
+    type: date
+    required: true
+    nullable: false
+    description: 선임일 (선임계). 무조건 존재.
+  end_date:
+    type: date
+    required: false
+    nullable: true
+    description: 해임일 (해임계). null = 현재까지 유효. assessment_date 시점 유효성 판정에 사용.
+  appointed_by_org_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 선임 주체 조직 (Organization 참조).
+  # --- 자격 스냅샷 (qualification shape rule 판정용) ---
+  # 선임 시점의 자격을 선임 기록에 박아둠 (Person 의 현재 자격과 별개로, 그때 그 자격으로 선임됐는지).
+  grade:
+    type: string
+    required: false
+    nullable: true
+    description: 선임 당시 건설기술인 등급 (등급별 인원/자격 판정용).
+    enum: [초급, 중급, 고급, 특급]
+  license:
+    type: string
+    required: false
+    nullable: true
+    description: 국가기술자격 (현장대리인 등 자격요건 판정용).
+    enum: [산업기사, 기사, 기능장, 기술사]
+  experience_years:
+    type: integer
+    required: false
+    nullable: true
+    description: 해당 분야 실무경력 연수 (자격요건 판정용).
+  cm_experience_years:
+    type: integer
+    required: false
+    nullable: true
+    description: 시공단계 건설사업관리(CM) 경력 연수 (책임CM 판정용).

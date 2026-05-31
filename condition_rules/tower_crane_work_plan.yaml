@@ -1,0 +1,14 @@
+rule_id: tower_crane_work_plan__osha
+title: 타워크레인 설치·해체 작업계획서·작업지휘자 의무
+dimension: 공법
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트 (단계4 골조·구체, 양중)
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제38조(사전조사 및 작업계획서)·별표4 제1호, related: "설치·해체 자격: 산안법 시행령 별표22(4명↑ 자격) / 조종: 건설기계관리법 §26(3톤↑ 면허)", rule: "타워크레인 설치·조립·해체 시 작업계획서(종류·형식, 순서, 도구·방호설비, 인원구성·역할) 작성 + 작업지휘자 지정", source: "딥리서치 2026-05: 산안규칙 §38 별표4 + 시행령 별표22 + 건설기계관리법 §26(verified)"}
+applies_to_work_kind: 양중
+applicable_when: {is_tower_crane_erection: true}
+requires:
+  measures_all: [작업계획서_작성, 작업지휘자_지정]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "작업계획서·지휘자 없는 타워크레인 설치·해체는 붕괴·낙하 중대재해의 직접 원인. 산안규칙 §38 위반"}

@@ -1,0 +1,14 @@
+rule_id: shoring_horizontal_tie__osha
+title: 동바리 수평연결재 설치 의무
+dimension: 공법
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제332조의2, rule: "파이프서포트 높이 3.5m 초과 시 2m 이내마다 수평연결재 2방향 설치", source: "law.go.kr + KOSHA C-51 교차검증 2026-05"}
+applies_to_work_kind: 거푸집설치
+applicable_when: {shoring_height_m__gt: 3.5}
+requires:
+  measures_any: [수평연결재_2방향]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "수평연결재 미설치 고높이 동바리는 좌굴·붕괴 직접 원인 (붕괴사고 다수)"}

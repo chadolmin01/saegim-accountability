@@ -1,0 +1,21 @@
+rule_id: safety_management_plan__citp
+title: 안전관리계획서 제출 의무
+dimension: 문서·보고
+regime: 건설기술진흥법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 건설기술진흥법, article: 제62조, related: "시행령 제98조, 시행규칙 별표7", rule: "1·2종시설물·지하10m굴착·10층↑건축물·폭발물·타워크레인등·가설구조물 공사 → 착공 전 제출", source: "건설안전종합정보망(CSI)+lbox 교차검증 2026-05"}
+document: 안전관리계획서
+applies_to_facility_class: 전체   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {excavation_depth_m__gte: 10}
+    - {floor_count__gte: 10}
+    - is_facility_grade_1_or_2
+    - uses_tower_crane
+    - uses_temporary_structure
+submit_before: 착공
+submit_to: 발주청/인허가기관 (→ 7일내 국토부)
+evaluation:
+  steps: ["required_when 충족 시 제출 의무. submitted_documents 에 '안전관리계획서'+착공 전 제출일 있으면 compliant, 없으면 violated(미제출)."]
+  outputs: [compliant, violated, not_required]
+  audit_significance: "안전관리계획서 미제출·부실은 건진법 위반. 사고 시 사전 위험관리 부재 증거."

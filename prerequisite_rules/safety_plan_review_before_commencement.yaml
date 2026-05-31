@@ -1,0 +1,19 @@
+rule_id: safety_plan_review_before_commencement__cmguide
+title: 착공 전 안전관리계획서 감리 적정성검토 선행 의무
+dimension: 시공순서·선행요건
+regime: 건설사업관리 업무수행지침 / 건설기술진흥법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+authority:
+  law: 건설사업관리 업무수행지침 제99조 / 건진법 제62조
+  rule: "건설사업관리기술인은 시공자 안전관리계획서를 공사 착공 전 제출받아 적정성을 검토·확인해야 한다. 미검토 착공 불가"
+  source: "업무수행지침 전문 PDF(281p) §99 직접 추출 verified 2026-05"
+applies_to_decision_kind: 착공신고
+requires_prior:
+  - {kind: 단계승인, checkpoint: 안전관리계획_감리검토, result: 완료}
+evaluation:
+  steps:
+    - "착공신고 시점 이전에 안전관리계획_감리검토(완료)가 선행했는가."
+    - "누락 → violated (감리 검토 없는 착공 = 사전 위험관리 부재)."
+  outputs: [compliant, violated, not_applicable]
+  audit_significance: "안전관리계획 감리검토 없는 착공은 지침·건진법 위반. 사고 시 감리·발주 사전관리 부재 증거."

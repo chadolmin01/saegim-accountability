@@ -1,0 +1,22 @@
+# Condition Rule — 고로슬래그 미분말 활성도지수 28일 (KS F 2563)
+# 검증: KS F 2563 등급별. 2차출처(제조사 규격) 교차검증 2026-05 (1종≥105·2종≥95·3종≥75%).
+rule_id: slag_activity_index__ksf2563
+title: 고로슬래그 미분말 활성도지수(28일) 합격 (등급별)
+dimension: 재료
+regime: KS F 2563
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS F 2563(고로슬래그 미분말) / 별표2
+  rule: "활성도지수 28일 — 1종 ≥105%, 2종 ≥95%, 3종 ≥75%. 반입 lot마다"
+  source: "KS F 2563 (제조사 규격표 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.slag_activity28_pct__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.slag_activity28_pct
+    by: slag_grade
+    min_table: {"1종": 105, "2종": 95, "3종": 75}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "슬래그 활성도 미달 → 잠재수경성 부족·강도 발현 저하. KS F 2563 위반"}

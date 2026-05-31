@@ -1,0 +1,31 @@
+type: FacilityClass
+version: "1.0"
+space: concept
+description: "시설 분류 노드 — 건축법 §2 건축물 판별 기준에 따른 분기 축. 법정요건이 이 분류로 게이트(gated_by)된다."
+properties:
+  class_id:
+    type: string
+    required: true
+    nullable: false
+    description: 분류 식별자 (geonchukmul / tomok_siseol).
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 분류명.
+    enum: [건축물, 토목시설]
+  discriminator:
+    type: string
+    required: true
+    nullable: false
+    description: "판별 기준. 건축법 §2①2 — 토지정착 + 지붕 + (기둥 또는 벽) 충족 시 건축물, 불충족 시 토목시설/공작물."
+  legal_basis:
+    type: string
+    required: false
+    nullable: true
+    description: 근거 법조문.
+  governed_regime:
+    type: string
+    required: false
+    nullable: true
+    description: "이 분류가 끌고 오는 허가/완성 차원 법 (건축물=건축법; 토목시설=개별 시설법 도로법·하천법 등)."

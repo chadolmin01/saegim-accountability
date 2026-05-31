@@ -1,0 +1,27 @@
+rule_id: serious_accident_safety_system__sapa
+title: 중대재해처벌법 안전보건관리체계 구축 의무
+dimension: 문서·보고
+regime: 중대재해처벌법
+lifecycle_stage: 전체   # 단계 게이트 — 유지단계 룰(시공 시나리오엔 비적용)
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 중대재해 처벌 등에 관한 법률, article: 제4조, related: "시행령 제4조 9대 의무", rule: "상시근로자 5인↑(2024.1.27~ 공사금액 무관) 적용. 경영책임자 안전보건관리체계 구축·이행. 제3·5·7·9호 반기 1회 점검", source: "국가법령정보센터+김앤장 교차검증 2026-05"}
+document: 안전보건관리체계
+applies_to_facility_class: 전체   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {total_workers__gte: 5}
+    - {total_contract_amount_krw__gte: 5000000000}
+submit_before: 상시구축·이행
+submit_to: 경영책임자(자체 구축·반기점검)
+checklist_9:
+  - 경영방침_설정
+  - 전담조직_설치
+  - 유해위험요인_확인개선_절차(반기점검)
+  - 안전보건_예산_편성
+  - 안전보건관리책임자_권한예산부여(반기평가)
+  - 안전관리자등_인력배치
+  - 종사자_의견청취_절차(반기점검)
+  - 작업중지_대피_매뉴얼
+  - 수급인_평가기준_관리비공기기준(반기점검)
+penalty: {사망: "경영책임자 1년↑ 징역 또는 10억↓ 벌금 / 법인 50억↓", 부상질병: "7년↓ 또는 1억↓ / 법인 10억↓"}
+evaluation: {steps: ["적용대상(5인↑ 또는 50억↑)이면 체계 구축 의무. submitted_documents 에 '안전보건관리체계' 확인."], outputs: [compliant, violated, not_required], audit_significance: "체계 미구축 + 중대재해 발생 시 경영책임자 직접 형사책임 (중대재해처벌법 제6조)"}

@@ -1,0 +1,192 @@
+# =============================================================================
+# Reference Rule — 건설업 안전관리자 선임 기준
+# =============================================================================
+# 이것은 "현장 데이터"가 아니라 "법령이 정한 배치 요건 규칙"이다.
+# 어떤 현장이든 자기 공사금액·도급구분·공종·시점·실제 선임인원을 넣으면
+# 이 규칙으로 "선임 적정 / 미달"을 결정적으로 판정할 수 있다.
+#
+# 검증: 산업안전보건법 시행령 별표 3 원문 (개정 2024.3.12) 대조 완료.
+# =============================================================================
+
+rule_id: safety_manager_staffing__osha
+title: 건설업 안전관리자 선임 기준
+role: 안전관리자
+regime: 산업안전보건법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+
+authority:
+  law: 산업안전보건법 시행령
+  table: "별표 3 (안전관리자를 두어야 하는 사업의 종류 및 사업장의 상시근로자 수, 안전관리자의 수 및 선임방법)"
+  article: 제16조제1항
+  revision: "2024-03-12"
+  source: "국가법령정보센터 산업안전보건법 시행령 별표 3 — 검증 대조 (2026-05 수집)"
+
+# 별표4 안전관리자 자격 (건설업 인정) — 유효선임자가 이 중 하나여야 자격 충족
+acceptable_qualifications: [산업안전지도사, 건설안전기술사, 건설안전기사, 산업안전기사, 건설안전산업기사, 산업안전산업기사]
+
+# --- 판정 입력 파라미터 ---------------------------------------------------
+# 현장(Project) 데이터가 이 키들을 제공하면 규칙이 required_count 를 산출한다.
+# 시간 데이터는 착공계·계약서·선임계·사고보고서 등 원천 문서에 항상 존재하므로
+# 별도 부담 없이 채워진다 (가짜 필드 아님).
+parameters:
+  - key: contract_amount_krw
+    label: 공사금액(원)
+    type: integer
+    required: true
+  - key: contractor_type
+    label: 도급 구분
+    type: enum
+    values: [원도급, 관계수급인]
+    default: 원도급
+    note: 관계수급인은 선임 의무 시작 하한이 다름 (50억 → 100억)
+  - key: work_category
+    label: 공종 구분
+    type: enum
+    values: [일반, 토목공사업]
+    default: 일반
+    note: 토목공사업은 첫 두 구간 경계가 120억 → 150억으로 이동 (건설산업기본법 시행령 별표1 제1호가목)
+  # --- 시간 축 (1급) ---
+  - key: construction_start_date
+    label: 착공일
+    type: date
+    required: true
+    source_doc: 착공계 / 도급계약서
+  - key: construction_end_date
+    label: 준공예정일
+    type: date
+    required: true
+    source_doc: 도급계약서 (변경 시 변경계약)
+    note: 전·후 15% 완화 구간 계산의 기준. 사용자는 착공·준공일만 입력하고 15% 구간은 rule 이 자동 계산한다.
+  - key: assessment_date
+    label: 판정 기준시점
+    type: date
+    required: true
+    source_doc: 사고보고서의 사고발생일시 / 점검일 / 임의 조회시점
+    note: "이 시점에 법정 인원이 실제 선임돼 있었는지를 판정. 보통 사고 발생일."
+  - key: appointed_managers
+    label: 선임 안전관리자 목록
+    type: list
+    required: true
+    item_fields:
+      - appointment_date   # 선임일 (선임계, 무조건 존재)
+      - release_date       # 해임일 (해임계, nullable — 현직이면 null = 현재까지 유효)
+      - qualification       # 자격 (별표4 해당 여부 — 후속 규칙으로 검증)
+    note: "assessment_date 시점에 유효한(선임~해임 구간에 드는) 사람만 카운트."
+
+# --- 선임 의무 시작 하한 -----------------------------------------------------
+applicability_threshold:
+  원도급_min_krw: 5000000000        # 50억
+  관계수급인_min_krw: 10000000000   # 100억
+  note: 이 미만이면 본 규칙상 안전관리자 선임 의무 없음 (별도 안전보건관리담당자 규정은 본 규칙 범위 밖)
+
+# --- 공사금액 구간별 요구 인원 ----------------------------------------------
+# required_count = 통상 요구 인원
+# relief_15pct_count = 전체공사기간 중 전·후 15% 기간에 한해 허용되는 완화 인원 (null = 완화 없음)
+# boundary_override = 토목공사업일 때 이 구간의 하한/상한이 이동
+brackets:
+  - min_krw: 5000000000          # 50억 (관계수급인 100억)
+    max_krw: 12000000000         # 120억
+    boundary_override:
+      토목공사업_max_krw: 15000000000   # 토목은 150억 미만
+    required_count: 1
+    relief_15pct_count: null
+    qualification_ref: "별표4 제1호~제7호 및 제10호~제12호 중 어느 하나"
+
+  - min_krw: 12000000000         # 120억 (토목 150억)
+    max_krw: 80000000000         # 800억
+    boundary_override:
+      토목공사업_min_krw: 15000000000   # 토목은 150억 이상
+    required_count: 1
+    relief_15pct_count: null
+    qualification_ref: "별표4 제1호~제7호 및 제10호 중 어느 하나"
+
+  - min_krw: 80000000000         # 800억
+    max_krw: 150000000000        # 1,500억
+    required_count: 2
+    relief_15pct_count: 1
+    qualification_ref: "별표4 제1호~제7호 및 제10호 중 어느 하나. 단 제1호~제3호 중 어느 하나에 해당하는 사람 1명 이상 포함"
+
+  - min_krw: 150000000000        # 1,500억
+    max_krw: 220000000000        # 2,200억
+    required_count: 3
+    relief_15pct_count: 2
+    qualification_ref: "별표4 제1호~제7호 및 제12호. 제12호는 1명만 포함 가능. 산업안전지도사등 1명 이상 포함"
+
+  - min_krw: 220000000000        # 2,200억
+    max_krw: 300000000000        # 3,000억
+    required_count: 4
+    relief_15pct_count: 2
+    qualification_ref: "별표4 제1호~제7호 및 제12호 (위 동일 자격조건)"
+
+  - min_krw: 300000000000        # 3,000억
+    max_krw: 390000000000        # 3,900억
+    required_count: 5
+    relief_15pct_count: 3
+    qualification_ref: "산업안전지도사등 2명 이상 포함. 제12호는 1명만 포함 가능"
+
+  - min_krw: 390000000000        # 3,900억
+    max_krw: 490000000000        # 4,900억
+    required_count: 6
+    relief_15pct_count: 3
+    qualification_ref: "산업안전지도사등 2명 이상 포함"
+
+  - min_krw: 490000000000        # 4,900억
+    max_krw: 600000000000        # 6,000억
+    required_count: 7
+    relief_15pct_count: 4
+    qualification_ref: "산업안전지도사등 2명 이상 포함. 제12호는 2명까지 포함 가능"
+
+  - min_krw: 600000000000        # 6,000억
+    max_krw: 720000000000        # 7,200억
+    required_count: 8
+    relief_15pct_count: 4
+    qualification_ref: "산업안전지도사등 2명 이상 포함"
+
+  - min_krw: 720000000000        # 7,200억
+    max_krw: 850000000000        # 8,500억
+    required_count: 9
+    relief_15pct_count: 5
+    qualification_ref: "산업안전지도사등 3명 이상 포함. 제12호는 2명까지 포함 가능"
+
+  - min_krw: 850000000000        # 8,500억
+    max_krw: 1000000000000       # 1조
+    required_count: 10
+    relief_15pct_count: 5
+    qualification_ref: "산업안전지도사등 3명 이상 포함"
+
+  - min_krw: 1000000000000       # 1조
+    max_krw: null                # 이상
+    required_count: 11
+    relief_15pct_count: null
+    increment_rule: "1조원 이상은 11명, 매 2천억원 증가마다 1명씩 추가 (별표3 비고 참조)"
+    qualification_ref: "산업안전지도사등 포함 (상위 구간 자격조건 준용)"
+
+# --- 판정 방법 (machine-checkable semantics) ---------------------------------
+evaluation:
+  steps:
+    - "1. [의무 여부] contractor_type 에 따른 applicability_threshold 확인. 공사금액 < 하한 → not_required."
+    - "2. [구간 선택] work_category=토목공사업이면 boundary_override 적용 후 공사금액이 속하는 bracket 선택."
+    - "3. [기간 계산] total = construction_end_date − construction_start_date.
+         전15% 구간 = [start, start + total×0.15], 후15% 구간 = [end − total×0.15, end]."
+    - "4. [완화 적용] assessment_date 가 전15% 또는 후15% 구간에 들고 bracket.relief_15pct_count != null
+         → required = relief_15pct_count. 그 외 → required = required_count."
+    - "5. [유효 선임자] appointed_managers 중 appointment_date <= assessment_date <= (release_date ?? 무한)
+         인 사람만 effective_count 로 카운트. (사고 당일 실제로 선임 유효했던 인원)"
+    - "6. [판정] effective_count >= required → compliant. 미만 → understaffed, shortfall = required − effective_count."
+    - "7. [자격] effective 선임자의 자격이 bracket.qualification_ref(별표4) 충족 여부 별도 검증
+         → 미충족 시 unqualified (인원은 충족해도 자격 미달). 별표4 규칙은 후속 직렬화 예정."
+  outputs:
+    - compliant            # 적정 (인원·시점 충족)
+    - understaffed         # 판정 시점에 유효 선임 인원 미달
+    - unqualified          # 인원은 충족하나 자격 미달
+    - not_required         # 선임 의무 없음
+  audit_significance: |
+    핵심: 단순 "몇 명 선임"이 아니라 "사고 당일(assessment_date) 법정 인원이 실제 유효 선임돼 있었나".
+    understaffed 판정은 산업안전보건법 위반 및 중대재해처벌법상 경영책임자 책임 가중 사유가 됨.
+    선임은 했으나 사고 전 해임되어 공백이었던 경우(release_date < assessment_date)도 understaffed 로 포착됨.
+
+# --- 미검증/후속 ------------------------------------------------------------
+pending:
+  - "별표4 (안전관리자의 자격) 규칙 미직렬화 — qualification_ref 의 '제1호~제7호', '산업안전지도사등' 정의 필요."
+  - "1조원 이상 increment_rule 의 정확한 비고 문구 별표3 비고란 원문 재확인 필요."

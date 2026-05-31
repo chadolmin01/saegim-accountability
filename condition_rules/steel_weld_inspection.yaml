@@ -1,0 +1,18 @@
+rule_id: steel_weld_inspection__byeolpyo2
+title: 강구조 용접부 검사 (외관·비파괴)
+dimension: 재료
+battery_ref: st_weld
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: 건설공사 품질관리 업무지침 별표2(철강구조물) / KS B 0845(RT)·KS B 0896(UT)
+  rule: "외관 10% 추출, RT 맞이음 5%(또는 10이음/1장), UT 완전용입 20개소/1(5%). RT·UT 1·2류 합격"
+  source: "별표2 (sonnet 크롤 verified 2026-05; KS 합격등급 상세는 unverified)"
+applies_to_work_kind: 강구조
+applicable_when: {test_values.weld_inspected__eq: true}
+requires:
+  measures_all: [용접부_외관합격, 용접부_비파괴합격]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "용접부 비파괴 미실시·불합격은 강구조 연결부 파괴 → 붕괴 직결. 별표2 위반"}

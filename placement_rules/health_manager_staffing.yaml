@@ -1,0 +1,52 @@
+# Reference Rule — 보건관리자 선임 기준
+# 검증: 산업안전보건법 시행령 별표5 (제20조). 교차검증 anbak4 등.
+rule_id: health_manager_staffing__osha
+title: 건설업 보건관리자 선임 기준
+role: 보건관리자
+regime: 산업안전보건법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+requirement_shape: simple_count
+
+authority:
+  law: 산업안전보건법 시행령
+  table: "별표 5 (보건관리자를 두어야 하는 사업의 종류·규모·인원), 별표 6 (자격)"
+  article: 제20조
+  revision: "재확인 필요 — pending"
+  source: "anbak4 등 해설 교차검증 (2026-05). 별표5 HWP 원문 직접 대조 pending."
+
+# 별표6 보건관리자 자격
+acceptable_qualifications: [산업보건지도사, 의사, 간호사, 산업위생관리산업기사, 산업위생관리기사, 대기환경산업기사, 인간공학기사]
+
+parameters:
+  - {key: contract_amount_krw, label: 공사금액(원), type: integer, required: true}
+  - {key: work_category, label: 공종, type: enum, values: [일반, 토목공사업], default: 일반}
+  - {key: construction_start_date, label: 착공일, type: date, required: true}
+  - {key: construction_end_date, label: 준공예정일, type: date, required: true}
+  - {key: assessment_date, label: 판정기준시점, type: date, required: true}
+  - {key: appointed_managers, label: 선임 보건관리자 목록, type: list, required: true,
+     item_fields: [person, start_date, end_date]}
+
+applicability_threshold:
+  원도급_min_krw: 80000000000        # 일반건설 800억
+  토목공사업_min_krw: 100000000000   # 토목 1,000억
+  note: 상시근로자 600명 이상도 선임 대상이나 본 rule 은 공사금액 축만 (근로자수 축 pending).
+
+# 800억(토목1000억)→1명, 이후 1,400억 증가마다 +1명
+brackets:
+  - min_krw: 80000000000
+    max_krw: null
+    required_count: 1
+    increment: {base_krw: 80000000000, base_count: 1, step_krw: 140000000000, step_count: 1}
+    boundary_override: {토목공사업_min_krw: 100000000000}
+    qualification_ref: "별표6 (산업위생관리산업기사↑·의사·간호사 등)"
+
+evaluation:
+  steps:
+    - "공사금액 < 하한 → not_required."
+    - "required = base_count + floor((amount - increment.base_krw)/step_krw)*step_count."
+    - "effective(선임~해임, assessment 시점) >= required → compliant, else understaffed."
+  outputs: [compliant, understaffed, not_required]
+  audit_significance: 보건관리 부재는 산안법 위반. 직업병·보건사고 시 책임.
+
+pending: ["별표5 원문 직접 대조", "상시근로자 600명 축 미반영", "겸직 가능 여부"]

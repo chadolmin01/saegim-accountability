@@ -1,0 +1,18 @@
+rule_id: road_occupancy_permit__dorr
+title: 도로점용허가
+dimension: 문서·보고
+regime: 도로법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 토목시설
+facility_subtype: 도로
+authority: {law: 도로법, article: 제61조, related: 시행령 제54조·제55조, rule: "도로에 공작물·물건·시설을 신설·개축·변경·제거하여 도로를 점용하려는 자는 도로관리청 허가. 점용기간 연장·허가사항 변경도 동일", source: "국가법령정보센터+LBOX 교차검증 2026-05"}
+document: 도로점용허가서
+required_when:
+  any:
+    - occupies_road            # 도로 점용(공작물·시설 설치) 발생 시
+submit_before: 점용 개시 전
+submit_to: 도로관리청
+evaluation:
+  steps: ["도로 점용 시 허가 의무. submitted_documents 확인."]
+  outputs: [compliant, violated, not_required]
+  audit_significance: "무단 도로점용은 도로법 위반·변상금. 점용 안전관리 책임의 기점."

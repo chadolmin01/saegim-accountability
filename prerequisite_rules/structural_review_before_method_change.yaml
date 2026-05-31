@@ -1,0 +1,19 @@
+rule_id: structural_review_before_method_change__bldg
+title: 구조 영향 공법변경 전 건축구조기술사 검토·안전관리계획 변경승인 선행
+dimension: 시공순서·선행요건
+regime: 건축법 / 건설기술진흥법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+authority:
+  law: 건축법 제67조(관계전문기술자 협력) / 건진법 제62조(안전관리계획 변경)
+  rule: "구조에 영향을 주는 공법·구조 변경은 건축구조기술사 구조검토 및 안전관리계획 변경승인이 선행돼야 한다. 무단변경 불가"
+  source: "건축법§67·건진법§62 + 광주 화정아이파크 사고조사위 결론(무단 공법변경) 대조 2026-05"
+applies_to_decision_kind: 공법선택   # 공법변경 결정이 트리거
+requires_prior:
+  - {kind: 단계승인, checkpoint: 건축구조기술사_구조검토, result: 완료}
+evaluation:
+  steps:
+    - "공법선택(변경) 결정 시점 이전에 건축구조기술사 구조검토(완료)가 선행했는가."
+    - "누락 → violated (무단 공법변경 — 구조 안전성 미확인)."
+  outputs: [compliant, violated, not_applicable]
+  audit_significance: "구조검토 없는 공법변경은 하중·구조 안전성 미확인 → 붕괴 직접원인(화정아이파크). 건축법§67 위반."

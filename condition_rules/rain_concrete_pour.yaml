@@ -1,0 +1,14 @@
+rule_id: rain_concrete_pour__kcs
+title: 강우 시 콘크리트 타설 제한
+dimension: 온도·기상
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: prohibition
+authority: {standard: KCS 14 20 00, name: 콘크리트공사, rule: "강우 시 타설 원칙 금지. 시간당 3mm 이하+책임기술자 승인 시 예외", revision: "2025-01-01", source: "국토부 강우시타설 가이드라인 2024.12 + 전건신문 교차검증 2026-05"}
+applies_to_work_kind: 콘크리트타설
+applicable_when: {rainfall_mm__gt: 3}
+on_violation: "시간당 3mm 초과 강우 중 타설 — 원칙 금지 위반 (품질 저하·재료분리)"
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "강우 중 타설은 표면 강도저하·세척 → 구조결함 원인"}
+pending: ["3mm 이하+승인 예외 경로 미반영 (승인 필드 추가 시)"]

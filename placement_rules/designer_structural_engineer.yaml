@@ -1,0 +1,58 @@
+# Reference Rule — 건축구조기술사 협력(관계전문기술자) 배치 기준 (단계1 조사·설계, 상류 인적배치)
+# 검증(딥리서치 2026-05): 건축법 §67 + 시행령 §91의3① 협력 의무 규모 확정. 설계자=건축사(§23)는 별도 기본요건.
+# 형식 = qualification (규모 게이트 + 자격 프로파일).
+rule_id: structural_engineer_collaboration__bldg
+title: 건축구조기술사 협력(관계전문기술자) 의무 배치
+role: 건축구조기술사
+regime: 건축법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 건축물   # 건축/토목 게이트 (단계1 상류)
+requirement_shape: qualification
+
+authority:
+  law: 건축법
+  article: 제67조(관계전문기술자) · 시행령 제91조의3제1항
+  table: "건축물의 구조기준 등에 관한 규칙 §58(6층↑ 건축구조기술사 공동 서명날인)"
+  revision: "시행령 2025-01-21 시행"
+  source: "딥리서치 2026-05: lbox 시행령 §91의3 + 건축법 §67③ + 구조기준규칙 §58 교차검증(verified)."
+
+grade_order: [초급, 중급, 고급, 특급]
+
+parameters:
+  - {key: floor_count, label: 층수, type: integer, required: false}
+  - {key: gross_floor_area_m2, label: 연면적(㎡), type: float, required: false}
+  - {key: is_multiuse_building, label: 다중이용건축물(5천㎡↑/16층↑), type: bool, required: false}
+  - {key: is_quasi_multiuse_building, label: 준다중이용건축물(1천㎡↑), type: bool, required: false}
+  - {key: is_special_structure, label: 특수구조건축물(캔틸레버3m↑/경간20m↑/무량판/고시), type: bool, required: false}
+  - {key: is_piloti, label: 필로티형식, type: bool, required: false}
+  - {key: assessment_date, label: 판정기준시점, type: date, required: true}
+  - {key: appointed_managers, label: 배치 구조기술사, type: list, required: true,
+     item_fields: [person, license, grade, start_date, end_date]}
+
+# 건축법 시행령 §91의3① — 아래 중 하나면 건축구조기술사 협력(공동 서명날인) 의무
+applicability:
+  trigger_when:
+    any:
+      - {floor_count__gte: 6}
+      - is_special_structure
+      - is_multiuse_building
+      - is_quasi_multiuse_building
+      - {all: [is_piloti, {floor_count__gte: 3}]}
+  note: "비대상(소규모)은 건축사 설계(§23)로 충분 — 본 rule 비해당. 설계자=건축사 기본요건은 별도(미모델)."
+
+brackets:
+  - min_krw: 0          # 금액 무관 — applicability(규모)로 게이트, 단일 bracket
+    max_krw: null
+    count: 1
+    accepts:
+      - {license: 건축구조기술사}
+
+evaluation:
+  steps:
+    - "시행령 §91의3① 대상 아니면 not_required."
+    - "assessment 시점 유효 배치 중 건축구조기술사 >= 1 → compliant. 없으면 understaffed/unqualified."
+  outputs: [compliant, understaffed, unqualified, not_required]
+  audit_significance: "구조기술사 협력 누락은 건축법 §67 위반. 구조설계 결함·붕괴 사고의 상류(설계) 책임 귀속점."
+
+# 등급표 확정됨(딥리서치). 잔여 unverified: 시행령 §91의3①제6호(국토부령 위임 중요건축물) 세부 목록.
+pending: ["§91의3①제6호 국토부령 위임 건축물 세부 — 추가 확인"]

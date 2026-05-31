@@ -1,0 +1,29 @@
+# 가짜 현장 시나리오 — "선임은 2명 했으나 1명이 사고 전 해임되어 공백" 케이스.
+# 시간축이 판정을 가르는 핵심 데모: 단순 인원 카운트면 통과, 시점 기준이면 미달.
+
+project:
+  name: OO주상복합 신축공사
+  facility_kind: building
+  contract_amount_krw: 95000000000      # 950억 → 800~1500억 구간, 요구 2명
+  contractor_type: 원도급
+  work_category: 일반
+  construction_start_date: "2025-01-01"
+  construction_end_date: "2026-12-31"   # 전체 730일, 15% ≈ 109일
+
+appointed_managers:
+  - person: 이OO
+    role: 안전관리자
+    start_date: "2025-01-01"
+    end_date: "2026-06-30"              # 사고(2026-08-15) 전 해임 → 공백
+    qualification: 건설안전기사
+  - person: 박OO
+    role: 안전관리자
+    start_date: "2025-01-01"
+    end_date: null                      # 현직 (현재까지 유효)
+    qualification: 건설안전기사
+
+incident:
+  name: 3층 외벽 거푸집 붕괴
+  event_date: "2026-08-15"              # 후15% 구간(≈2026-09-13~) 이전 → 완화 적용 안 됨
+  incident_kind: 중대재해
+  severity: 사망

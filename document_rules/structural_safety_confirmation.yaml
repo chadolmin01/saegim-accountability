@@ -1,0 +1,16 @@
+rule_id: structural_safety_confirmation__bldg
+title: 건축물 구조안전확인서 제출 의무
+dimension: 문서·보고
+regime: 건축법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 건축법, article: 제48조·시행령 제32조, rule: "2층↑ 또는 연면적200㎡↑ 또는 높이13m↑ 또는 처마9m↑ 또는 경간10m↑ → 착공신고 시 구조안전확인서. 내진설계 동일범위", source: "04noti+법령 교차검증 2026-05"}
+document: 구조안전확인서
+applies_to_facility_class: 건축물   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {floor_count__gte: 2}
+    - {gross_floor_area_m2__gte: 200}
+    - {building_height_m__gte: 13}
+submit_before: 착공신고시
+submit_to: 허가권자
+evaluation: {steps: ["2층↑/200㎡↑/13m↑이면 구조안전확인서 제출 의무. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "구조안전확인 누락·부실은 건축법 위반. 구조 붕괴(부실설계) 직접 원인"}

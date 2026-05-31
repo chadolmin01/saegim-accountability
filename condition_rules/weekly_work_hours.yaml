@@ -1,0 +1,15 @@
+rule_id: weekly_work_hours__lsa
+title: 주 52시간 근로시간 상한
+dimension: 근로시간
+regime: 근로기준법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {law: 근로기준법, article: 제50조·제53조, rule: "주 40시간 + 연장 12시간 = 52시간 상한", source: "근로기준법 교차검증 2026-05"}
+applicable_when: {weekly_work_hours__gt: 0}
+requires:
+  value_bounds:
+    - {key: weekly_work_hours, max: 52}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "주52시간 초과는 근로기준법 위반. 과로·피로누적 사고 연관."}
+pending: ["탄력·선택근로제 특례 미반영"]

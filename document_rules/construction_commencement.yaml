@@ -1,0 +1,15 @@
+rule_id: construction_commencement__bldg
+title: 착공신고(착공계) 제출 의무
+dimension: 문서·보고
+regime: 건축법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 건축법, article: 제21조, related: 시행규칙 별지 제13호, rule: "건축허가·신고 대상 공사 착수 전 허가권자에게 착공신고", source: "건축법 제21조 교차검증 2026-05"}
+document: 착공신고서
+applies_to_facility_class: 건축물   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - is_building_permit_target
+    - {floor_count__gte: 1}
+submit_before: 착공
+submit_to: 허가권자(시장·군수·구청장)
+evaluation: {steps: ["허가대상이면 제출 의무. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "착공신고 없는 공사는 건축법 위반(무단 착공)"}

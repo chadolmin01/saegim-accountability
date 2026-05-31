@@ -1,0 +1,16 @@
+rule_id: concrete_air_ae__ksf4009
+title: AE콘크리트 공기량 허용 범위
+dimension: 재료
+regime: KS F 4009
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {standard: KS F 4009, name: 레디믹스트콘크리트, rule: "AE콘크리트 공기량 4.5%±1.5% (3.0~6.0%)", source: "KS F 4009 §6.4 교차검증 2026-05"}
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.air_pct__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.air_pct, min: 3.0, max: 6.0}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "공기량 범위 이탈은 동결융해 저항성·시공성 저하"}
+pending: ["비AE 보통콘크리트는 관리값(규정 없음) — 본 rule 은 AE 전제"]

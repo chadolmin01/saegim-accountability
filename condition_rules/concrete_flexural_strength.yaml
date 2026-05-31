@@ -1,0 +1,19 @@
+rule_id: concrete_flexural_strength__ksf2408
+title: 콘크리트 휨강도 합격 (도로포장)
+dimension: 재료
+battery_ref: ch_flexure
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 44 50 15 (시멘트콘크리트 포장) / KS F 2408 (휨강도 시험)
+  rule: "도로포장 설계기준 휨강도 ≥ 4.5 MPa. 1일 1회·150m당 1회. 공시체 3개 평균"
+  source: "KCS 44 50 15 표 3.2-1 (sonnet 크롤 verified 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.flexural_strength_mpa__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.flexural_strength_mpa, min: 4.5}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "포장 휨강도 미달은 균열·파손 조기 발생. KCS 44 50 15 위반"}

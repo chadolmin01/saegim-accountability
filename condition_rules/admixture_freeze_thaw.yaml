@@ -1,0 +1,22 @@
+# Condition Rule — 화학혼화제 동결융해 저항성(상대동탄성계수) (KS F 2560:2019 표2)
+rule_id: admixture_freeze_thaw__ksf2560
+title: 화학혼화제 동결융해 저항성 합격 (AE계)
+dimension: 재료
+regime: KS F 2560
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS F 2560:2019 표2
+  rule: "동결융해 저항성(상대동탄성계수) — AE제·AE감수제·고성능AE감수제 ≥80%. (감수제는 해당 없음). 슬럼프 80mm(AE계)·180mm(고성능)"
+  source: "KS F 2560:2019 원문(corpus 캐시)"
+  corpus_ref: corpus/KS_F_2560_화학혼화제.md
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.admixture_freeze_thaw_pct__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.admixture_freeze_thaw_pct
+    by: admixture_type
+    min_table: {AE제: 80, AE감수제표준: 80, AE감수제지연: 80, AE감수제촉진: 80, 고성능AE표준: 80, 고성능AE지연: 80}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "동결융해 저항 부족 → 동해 열화. KS F 2560 위반. 감수제(공기연행 아님)는 not_applicable"}

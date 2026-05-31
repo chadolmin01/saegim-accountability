@@ -1,0 +1,14 @@
+rule_id: safety_cost_usage__osha
+title: 산업안전보건관리비 사용내역서 작성·보존 의무
+dimension: 문서·보고
+regime: 산업안전보건법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 산업안전보건법, article: 제72조, related: "고용부고시 2024-53호", rule: "건설공사 산업안전보건관리비 계상·사용내역서 작성·보존(공사종료 후 1년), 요청 시 제출", source: "고용부고시 교차검증 2026-05"}
+document: 산업안전보건관리비_사용내역서
+applies_to_facility_class: 전체   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {total_contract_amount_krw__gte: 40000000}
+submit_before: 공사종료후1년보존
+submit_to: 발주자/감독관(요청 시)
+evaluation: {steps: ["계상대상이면 작성·보존 의무. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "산안관리비 미작성·목적외 사용은 산안법 위반·과태료"}

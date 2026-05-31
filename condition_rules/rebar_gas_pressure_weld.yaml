@@ -1,0 +1,22 @@
+rule_id: rebar_gas_pressure_weld__kcs142011
+title: 철근 가스압접 이음 검사 (외관·인장·초음파)
+dimension: 재료
+battery_ref: rj_gas
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 11 (철근공사) / KS D 0244 (가스압접 외관·인장) / KS D 0273 (초음파)
+  rule: "외관 돌출부 지름≥1.4d·길이≥1.2d·편심≤d/5, 인장 ≥항복강도×1.25. 외관 전수·인장 3/200·초음파 30/200"
+  source: "KCS 14 20 11 + KS D 0244/0273 (sonnet 크롤 교차검증 2026-05)"
+applies_to_work_kind: 철근이음
+applicable_when: {test_values.bulge_dia_ratio__gte: 0}   # 가스압접 외관 측정 기록시 적용
+requires:
+  value_bounds:
+    - {key: test_values.bulge_dia_ratio, min: 1.4}       # 돌출부 지름 ≥1.4d
+    - {key: test_values.bulge_len_ratio, min: 1.2}       # 돌출부 길이 ≥1.2d
+    - {key: test_values.eccentricity_ratio, max: 0.2}    # 편심 ≤d/5
+    - {key: test_values.tensile_yield_ratio, min: 1.25}  # 인장 ≥1.25×항복
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "가스압접 불량은 철근 연속성 파괴 → 구조 직결. 외관 전수·인장·초음파 누락은 KCS 14 20 11 위반"}

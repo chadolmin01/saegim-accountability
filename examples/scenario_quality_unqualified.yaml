@@ -1,0 +1,26 @@
+rule: rules/quality_manager_staffing.yaml
+project:
+  name: OO복합청사 (인원충분·등급미달 대조)
+  facility_kind: building
+  contract_amount_krw: 120000000000
+  gross_floor_area_m2: 42000
+  is_multiuse_building: true
+  construction_start_date: '2025-01-01'
+  construction_end_date: '2027-12-31'
+appointed_managers:
+- person: A
+  grade: 초급
+  start_date: '2025-01-01'
+  end_date: null
+- person: B
+  grade: 초급
+  start_date: '2025-01-01'
+  end_date: null
+- person: C
+  grade: 초급
+  start_date: '2025-01-01'
+  end_date: null
+incident:
+  name: 지하 1층 매스콘크리트 균열 하자
+  event_date: '2026-09-10'
+  incident_kind: 품질하자

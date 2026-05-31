@@ -1,0 +1,23 @@
+# Condition Rule — 한중콘크리트 플라이애시 치환 상한 (KCS 14 20 40:2024)
+# 검증: KCS 14 20 40:2024 개정. sonnet 3-vote verified 2026-05 (FA ≤15%).
+rule_id: cold_weather_fly_ash_limit__kcs142040
+title: 한중콘크리트 플라이애시 치환율 상한 (2024 개정)
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 40:2024
+  rule: "한중(일평균 4℃ 이하 예상)에서 플라이애시 치환율 ≤15%. 저온 강도발현 지연 방지"
+  source: "KCS 14 20 40:2024 (honamct·kicq 개정안내 3-vote 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when:
+  all:
+    - {daily_avg_temp_c__lte: 4}
+    - {test_values.fly_ash_replace_pct__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.fly_ash_replace_pct, max: 15}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "한중 FA 과다치환 → 초기강도 지연·동해. KCS 14 20 40:2024 위반"}

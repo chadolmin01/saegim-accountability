@@ -1,0 +1,20 @@
+# Condition Rule — 잔골재 염화물(NaCl) (KS F 2526)
+# 검증: KS F 2526 + 별표2. 2차출처 교차검증 2026-05 (≤0.04%, 승인 시 0.1%).
+rule_id: fine_aggregate_chloride__ksf2526
+title: 잔골재 염화물(NaCl) 함유량 합격
+dimension: 재료
+regime: KS F 2526
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS F 2526 / 별표2
+  rule: "잔골재 염화물(NaCl) ≤0.04%(승인 시 ≤0.1%). 1회/일 또는 500㎥마다"
+  source: "KS F 2526 + 별표2 (sonnet 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.fine_agg_chloride_pct__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.fine_agg_chloride_pct, max: 0.04}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "잔골재 염화물 과다 → 철근 부식 가속(염해). KS F 2526 위반. 단 발주자 승인 시 0.1%."}

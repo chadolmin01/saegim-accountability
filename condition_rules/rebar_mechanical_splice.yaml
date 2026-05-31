@@ -1,0 +1,20 @@
+rule_id: rebar_mechanical_splice__kcs142011
+title: 철근 기계적 이음 성능 (1급 인장·잔류변형)
+dimension: 재료
+battery_ref: rj_mech
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 11 (2024.12 개정) / KDS 14 20 52
+  rule: "1급 기계적이음: 인장강도 ≥항복강도×1.35, 잔류변형 ≤0.1mm (2024 3등급 분류)"
+  source: "KCS 14 20 11 2024 개정 (sonnet 크롤 2026-05). 2·3급 잔류 0.3·0.6mm은 별도"
+applies_to_work_kind: 철근이음
+applicable_when: {test_values.mech_residual_def_mm__gte: 0}   # 기계적이음 측정 기록시 적용
+requires:
+  value_bounds:
+    - {key: test_values.tensile_yield_ratio, min: 1.35}   # 1급 인장 ≥1.35×항복
+    - {key: test_values.mech_residual_def_mm, max: 0.1}   # 1급 잔류변형 ≤0.1mm
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "기계적이음 성능 미달은 이음부 활동·파단. KCS 14 20 11 위반"}

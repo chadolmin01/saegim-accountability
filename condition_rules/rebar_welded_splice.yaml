@@ -1,0 +1,19 @@
+rule_id: rebar_welded_splice__kcs142011
+title: 철근 용접이음 검사 (인장·외관·초음파)
+dimension: 재료
+battery_ref: rj_weld
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 11 / KS B 0896 (용접부 외관·초음파)
+  rule: "이음부 인장강도 ≥ 항복강도×1.25(또는 ≥모재). 외관 균열·기공 없음, 초음파 합격. 로트 200개소당 인장 3·초음파 30"
+  source: "KCS 14 20 11 / KS B 0896 (sonnet 크롤 교차검증 2026-05)"
+applies_to_work_kind: 철근이음
+applicable_when: {test_values.weld_tensile_yield_ratio__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.weld_tensile_yield_ratio, min: 1.25}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "용접이음 불량은 철근 연속성 파괴 → 구조 직결. KCS 14 20 11 위반"}

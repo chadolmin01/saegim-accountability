@@ -1,0 +1,19 @@
+# Condition Rule — 플라이애시 강열감량 (KS L 5405)
+# 검증: KS L 5405 종류별. 2차출처 교차검증 2026-05 (1종≤3·2종≤5%).
+rule_id: fly_ash_loss_on_ignition__ksl5405
+title: 플라이애시 강열감량(LOI) 합격 (종류별)
+dimension: 재료
+regime: KS L 5405
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS L 5405(플라이애시) / 별표2
+  rule: "강열감량 — 1종 ≤3.0%, 2종 ≤5.0%. 반입 lot마다"
+  source: "KS L 5405 (sonnet 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.fly_ash_loi_pct__gte: 0}
+requires:
+  lookup_max: {key: test_values.fly_ash_loi_pct, by: fly_ash_grade, max_table: {"1종": 3.0, "2종": 5.0}}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "강열감량(미연탄소) 과다 → AE제 흡착·공기량 저하·내구성 악화. KS L 5405 위반"}

@@ -1,0 +1,20 @@
+rule_id: hazard_prevention_plan__osha
+title: 유해위험방지계획서 제출 의무
+dimension: 문서·보고
+regime: 산업안전보건법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 산업안전보건법, article: 제42조, related: "시행령 제42조, 시행규칙 제121조", rule: "지상31m↑·연면적3만㎡↑·굴착10m↑·연면적5천㎡↑(판매/의료/숙박 등)·교량50m↑·터널 → 착공 전날까지 공단 제출", source: "산안법 시행규칙+edsafety 교차검증 2026-05"}
+document: 유해위험방지계획서
+applies_to_facility_class: 전체   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {building_height_m__gte: 31}
+    - {gross_floor_area_m2__gte: 30000}
+    - {excavation_depth_m__gte: 10}
+    - {all: [is_special_use_building, {gross_floor_area_m2__gte: 5000}]}
+submit_before: 착공전날
+submit_to: 한국산업안전보건공단(KOSHA)
+evaluation:
+  steps: ["required_when 충족 시 제출 의무. submitted_documents 확인."]
+  outputs: [compliant, violated, not_required]
+  audit_significance: "유해위험방지계획서 미제출은 산안법 위반. 중대재해 시 책임 가중."

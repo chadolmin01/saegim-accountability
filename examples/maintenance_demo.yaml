@@ -1,0 +1,16 @@
+# 합성 유지관리 예제 — 정기점검에서 보수권고(C등급)가 났으나 미착수 상태에서 사고 발생.
+# 실명·실사고 없음. maintenance.py 가 '기한 내 미착수 = 제도공백'을 어떻게 드러내는지 보이는 데모.
+facility:
+  name: 예제 교량 A
+  type: 교량
+inspection_findings:
+  - inspection_kind: 정기안전점검
+    grade: C
+    recommendation: 신축이음·바닥판 균열 보수 필요
+    report_date: 2022-04-01
+maintenance_action:
+  repair_started: false
+incident:
+  name: 예제 손상 사고
+  event_date: 2023-04-05
+  incident_kind: 구조손상

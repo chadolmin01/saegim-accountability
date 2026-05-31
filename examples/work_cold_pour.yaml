@@ -1,0 +1,8 @@
+# 한중 조건(영하) 타설인데 한중콘크리트 조치 미적용 → 위반.
+name: 5층 슬래브 콘크리트 타설
+work_kind: 콘크리트타설
+event_date: "2026-12-15"
+daily_avg_temp_c: -2.0
+component_ref: comp_5f_slab
+applied_measures: []
+test_values: {slump_mm: 150}

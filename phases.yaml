@@ -1,0 +1,10 @@
+# 시공 생애주기 backbone — 8단계 레지스트리. 모든 노드가 phase_ref로 여기 매달림.
+# saegim coverage: ✅탄탄 ⚪부분 ❌사각지대.
+- {phase_id: p0_plan,     order: 0, name: 기획·입지,  key_givens: "입지선정·발주방식 / 지역기후·지진구역·지형(SiteContext)", coverage: ❌}
+- {phase_id: p1_survey,   order: 1, name: 조사·설계,  key_givens: "지반조사(지하수·연약)·공법/재료/구조/양생/차수 선택(DesignDecision)·인허가", coverage: ❌}
+- {phase_id: p2_prep,     order: 2, name: 착공준비,  key_givens: "착공신고·계획서 수립·인적 선임(Appointment)·가설계획", coverage: ✅}
+- {phase_id: p3_earth,    order: 3, name: 토공·기초,  key_givens: "땅고르기·터파기/굴착·흙막이·배수·기초 (WorkRecord 굴착)", coverage: ⚪}
+- {phase_id: p4_frame,    order: 4, name: 골조·구체,  key_givens: "철근→거푸집→타설→양생·단계검측(Decision·prerequisite)", coverage: ✅}
+- {phase_id: p5_finish,   order: 5, name: 마감·설비,  key_givens: "방수·마감·기계·전기·소방·승강기", coverage: ❌}
+- {phase_id: p6_complete, order: 6, name: 준공·검수,  key_givens: "준공검사·사용승인·구조/내진 확인", coverage: ⚪}
+- {phase_id: p7_maintain, order: 7, name: 유지관리,  key_givens: "정기점검·안전진단·보수", coverage: ⚪}  # 보수이행1·점검주기·점검자배치 有 / 등급별조치·점검자 시점유효성·사건층연결 未

@@ -1,0 +1,27 @@
+# Maintenance Rule — 점검·진단 결과 보수·보강 이행 의무 (유지단계)
+# 검증: 시특법 §24①(조치)·§22(중대결함 통보)·시행령§19(기한)·§65①(벌칙).
+#   law.go.kr 503 → CaseNote·법제처·국토안전관리원 교차검증 2026-05 (조·항 verified, 세부 pending).
+rule_id: repair_after_inspection__siteul
+title: 점검·진단 결과 보수·보강 이행 의무 (관리주체)
+dimension: 유지관리
+regime: 시설물안전법
+lifecycle_stage: 유지관리   # 단계 게이트 — 유지단계 룰(시공 시나리오엔 비적용)
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: maintenance
+
+authority:
+  law: 시특법 제24조제1항(조치)·제22조(중대결함 통보)·시행령 제19조(기한)·제65조제1항(벌칙)
+  rule: "관리주체는 점검·진단 결과 조치명령/중대결함 통보를 받으면 보수·보강에 착수(사고당시 2년 이내)하고 착수 후 3년 이내 완료해야 한다. 미이행 시 2년 이하 징역 또는 2천만원 이하 벌금(§65①)."
+  source: "시특법 §24·시행령§19 (CaseNote·법제처·국토안전관리원 교차검증 2026-05, law.go.kr 503 최종대조 pending)"
+  deadline_at_incident: {start_within_years: 2, finish_within_years: 3}   # 2023.4 사고당시 기준
+  amendment_note: "사고 후 2025.12.4 시행 개정으로 착수 1년·완료 1년 단축 — 정자교가 견인한 제도 공백 시정"
+
+evaluation:
+  steps:
+    - "점검결과 보수권고/중대결함(C등급↓) 없으면 not_applicable."
+    - "보수 착수했으면 compliant."
+    - "미착수 + 권고~사고 < 2년: 시특법 형식상 적법(기한 내) — 단 ★제도공백 flag(기한이 사고 못 막음)."
+    - "미착수 + 2년 초과: §24 위반(violated·§65①)."
+  outputs: [compliant, violated, not_applicable, 기한내미착수_제도공백]
+  audit_significance: "정자교: 2021 정밀점검 C·전면재포장 권고→사고까지 미착수. 권고~사고 약19개월<2년이라 시특법 형식상 적법이나, 2년 착수허용 기한 자체가 사고를 못 막은 제도 공백(사고 후 1년 단축). 형사책임은 업무상 과실치사로 시특법 최저기준 초과 주의의무를 물음."

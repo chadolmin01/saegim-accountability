@@ -1,0 +1,15 @@
+rule_id: temp_fire_facility__fire
+title: 공사장 임시소방시설 설치 의무
+dimension: 문서·보고
+regime: 소방시설법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 화재의 예방 및 안전관리에 관한 법률/소방시설법, article: 시행령 제18조·별표8, rule: "연면적 3000㎡↑ 간이소화장치, 400㎡↑ 비상경보, 화재위험작업(용접등) 방화포. 2023.7 7종 확대", source: "lbox 소방시설법 시행령 별표8 교차검증 2026-05"}
+document: 임시소방시설
+applies_to_facility_class: 건축물   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {gross_floor_area_m2__gte: 3000}
+    - has_fire_risk_work
+submit_before: 화재위험작업전·상시
+submit_to: 현장설치
+evaluation: {steps: ["대상이면 임시소방시설 설치 의무. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "임시소방시설 미설치는 소방시설법 위반. 공사장 화재(용접 불티) 확산 직접 원인"}

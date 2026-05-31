@@ -1,0 +1,72 @@
+# 레미콘 반입검수 MVP — 사건층 데모 (책임이전 ★마디).
+# 학술기반: PROV-O(검수=Activity, 감리=Agent, 자격=hadRole) + BCOM/EPCIS(배치→부재) + SOSA(공시체 28일 deferred) + OCQA(합부).
+# 시나리오: 지하외벽(EC4 노출등급) 반입 콘크리트 W/B 0.50 > EC4 한도 0.45 → durability 합부 위반 → 감리 책임.
+organizations:
+  - {id: org_remicon, name: OO레미콘, org_role: 하도급, subcontract_tier: 1}
+  - {id: org_main,    name: OO건설,   org_role: 원도급, subcontract_tier: 0}
+
+persons:
+  - id: 감리_박
+    name: 박OO(공사감리자)
+    affiliation_org: org_main
+    appointments:
+      - {id: ap_gamri, role: 공사감리자, grade: 특급, start_date: "2026-01-01", end_date: "2026-12-31"}
+
+# 레미콘 배치(트럭) — 공급자→부재 연결, 경과시간(90분 한도)
+batches:
+  - id: batch_07
+    batch_id: "07호차"
+    mix_design_no: "M30-EC4"
+    delivery_note: "DN-20260530-07"
+    dispatch_time: "2026-05-30T13:10:00"
+    arrival_time: "2026-05-30T14:05:00"
+    elapsed_min: 85          # < 90분 한도
+    supplier_org_ref: org_remicon
+    pour_component_ref: c_basement_wall
+
+# 반입검수 사건 (PROV Activity) — 감리가 측정, 노출등급 대비 W/B 합부
+work_records:
+  - id: wr_accept
+    name: 레미콘 반입검수 (지하외벽)
+    work_kind: 콘크리트타설
+    event_date: "2026-05-30"
+    performed_by_ref: 감리_박
+    component_ref: c_basement_wall
+    exposure_class: EC4               # 지하외벽 = 탄산화/습윤 노출
+    design_fck_mpa: 30
+    test_values:
+      slump_mm: 150
+      wb_ratio: 0.50                  # > EC4 한도 0.45 → durability_exposure_wb 위반
+      air_content_pct: 4.5
+
+# ★책임이전(custody handover) — 반입검수에서 공급자→시공자, 양자서명(검수자 자격검증)
+custody_transfers:
+  - id: ct_accept
+    transfer_point: 반입검수
+    transfer_time: "2026-05-30T14:10:00"
+    from_org_ref: org_remicon      # 양도자(공급자)
+    to_org_ref: org_main           # 인수자(시공자)
+    batch_ref: batch_07
+    performed_by_ref: 감리_박       # 검수자 — 자격 시점검증 대상
+    result: 인수
+
+# 공시체(SOSA Sample) — 채취 T1 기록, 28일 후 강도(T2) 결과 대기
+samples:
+  - id: smp_01
+    test_type: 압축강도
+    sampling_date: "2026-05-30"       # T1 채취·봉인 (반입시점)
+    test_date: "2026-06-27"           # T2 = 28일 후 시험 완료
+    age_days: 28
+    result_value: 18.0                # T2 입력: 18 < 0.85×30=25.5 → deferred 강도 미달
+    design_fck_mpa: 30
+    performed_by_ref: 감리_박          # 결과 귀속(데모상 검수자)
+    sampled_component_ref: c_basement_wall
+
+incident:
+  id: inc_wall
+  name: 지하외벽 균열·내구성 미달 (W/B 초과)
+  event_date: "2026-08-01"
+  component_ref: c_basement_wall
+  caused_by_refs: [wr_accept]
+  defects:
+    - {id: def_wb, defect_type: 내구성미달, mechanism: chemical, cause_category: Material, component_ref: c_basement_wall}

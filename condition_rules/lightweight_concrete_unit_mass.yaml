@@ -1,0 +1,19 @@
+# Condition Rule — 경량골재 콘크리트 기건단위질량 (KCS 14 20 20)
+# 검증: sonnet 2-vote 2026-05 (1종 1800~2100·2종 1400~1800, 상한 캡).
+rule_id: lightweight_concrete_unit_mass__kcs142020
+title: 경량골재 콘크리트 기건단위질량 상한 (종별)
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 20(경량골재 콘크리트)
+  rule: "기건단위질량 상한 — 1종 ≤2100, 2종 ≤1800 kg/m³ (전체 적용범위 ≤2100, fck≥15)"
+  source: "KCS 14 20 20 표1.6-1 + 콘크리트표준시방서2016 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.lightweight_unit_mass_kg__gte: 0}
+requires:
+  lookup_max: {key: test_values.lightweight_unit_mass_kg, by: lightweight_class, max_table: {"1종": 2100, "2종": 1800}}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "단위질량 초과 → 경량 설계의도(자중경감) 미달·구조하중 증가. KCS 14 20 20 위반"}

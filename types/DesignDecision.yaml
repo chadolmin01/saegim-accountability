@@ -1,0 +1,55 @@
+type: DesignDecision
+version: "0.1"
+space: decision
+description: "상류(기획·설계) 의사결정 — 입지·공법·재료·구조·양생·차수 선택. 기존 Decision(시공 실행 검측)이 못 담던 단계0~1 결정. 적절성 룰이 'SiteContext를 반영했나(planned_mitigations)'로 판정. 책임추적에서 사고의 뿌리가 보통 여기. 결정별 법정주체(설계자·구조기술사·발주)에서 책임이 끊긴다."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 결정 식별명.
+  kind:
+    type: string
+    required: true
+    nullable: false
+    enum: [입지선정, 공법선택, 재료선택, 구조설계, 양생계획, 차수배수설계, 기초형식선택, 가설계획]
+  event_date:
+    type: date
+    required: true
+    nullable: false
+    description: 결정 일자 (DESIGN 원칙1 — 시점). 시점 유효 자격·선임 교차검증.
+  performed_by_ref:
+    type: string
+    required: true
+    nullable: false
+    description: 결정 수행자 (Person — 설계자·구조기술사 등).
+  via_role:
+    type: string
+    required: false
+    nullable: true
+    description: 수행 자격/직책.
+  approved_by_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 승인자 (감리·발주). 책임 분기점.
+  phase_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 보통 p0_plan / p1_survey.
+  target_component_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 대상 부재/공종.
+  chosen_value:
+    type: string
+    required: false
+    nullable: true
+    description: 선택한 공법/재료/형식(예 "외부 자연양생", "역타공법", "SD400").
+  planned_mitigations:
+    type: list
+    required: false
+    nullable: true
+    description: 이 결정에 반영한 대책 목록(예 강우_보양, 차수벽, 지반개량). 적절성 룰이 SiteContext 대비 충분한지 본다.

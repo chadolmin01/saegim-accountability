@@ -1,0 +1,20 @@
+# Condition Rule — 고유동 콘크리트 U형(박스) 충전높이 (KCS 14 20 32)
+# 검증: sonnet 2-vote 2026-05 (충전높이 ≥300mm, KCI-CT 108).
+rule_id: scc_box_filling__kcs142032
+title: 고유동 콘크리트 U형 충전성(충전높이)
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 32(고유동 콘크리트) / KCI-CT 108
+  rule: "U형(박스형) 충전성 시험 최소 충전높이 ≥300mm (철근 간 통과·충전성)"
+  source: "KCS 14 20 32 + KCI-CT 108 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.scc_box_filling_mm__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.scc_box_filling_mm, min: 300}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "충전높이 미달 → 철근 조밀부 충전불량. KCS 14 20 32 위반"}

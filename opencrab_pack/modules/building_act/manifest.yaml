@@ -1,0 +1,18 @@
+module: building_act
+title: 건축물 전용 요건
+gate: 건축물
+description: 건축법 §2 건축물 충족 현장에만 적용. 건축허가 축 문서·건축 감리.
+requirement_count: 15
+laws:
+- KCS 표준시방서
+- KS L 9016
+- 건축물 에너지절약설계기준
+- 건축물관리법
+- 건축법
+- 산업안전보건법
+- 소방시설법
+- 승강기안전관리법
+dimensions:
+- 문서제출
+- 선행요건
+- 작업조건

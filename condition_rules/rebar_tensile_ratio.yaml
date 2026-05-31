@@ -1,0 +1,21 @@
+rule_id: rebar_tensile_ratio__ksd3504
+title: 철근 인장강도 합격 (항복 대비 배수, 강종별)
+dimension: 재료
+battery_ref: rb_tensile
+regime: KS D 3504
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS D 3504 (철근콘크리트용 봉강) / KS B 0802 (인장시험방법)
+  rule: "인장강도/항복강도 ≥ 강종별 배수 — SD300·W:1.15, SD400·500·600:1.08, 내진 SD400S·500S:1.25. (현행 KS는 절대값 아닌 항복 대비 배수)"
+  source: "material_specs/steel_rebar_ks.yaml (e나라표준 재검증 2016 개정) — 옛 절대값(SD400 560) 폐기"
+applies_to_work_kind: 철근배근
+applicable_when: {test_values.tensile_ratio__gte: 0}   # 인장/항복 측정비 기록시 적용
+requires:
+  lookup_bounds:
+    key: test_values.tensile_ratio
+    by: rebar_grade
+    min_table: {SD300: 1.15, SD400: 1.08, SD500: 1.08, SD600: 1.08, SD400W: 1.15, SD500W: 1.15, SD400S: 1.25, SD500S: 1.25}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "인장강도 배수 미달은 연성·내력 부족. 내진 SD400S/500S는 1.25 미달 시 내진성능 미확보. KS D 3504 위반"}

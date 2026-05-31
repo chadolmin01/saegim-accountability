@@ -1,0 +1,7 @@
+project: {name: 라이프사이클 선행요건 데모}
+work_record: {name: 본굴착, work_kind: 굴착, event_date: "2026-05-01", component_ref: z1}
+decisions:
+  - {name: 착공신고, kind: 착공신고, event_date: "2026-04-01"}      # 인허가 선행 없음
+  - {name: 사용승인 신청, kind: 준공검사, event_date: "2026-12-01"} # 감리완료 선행 없음
+design_decisions:
+  - {name: 기초 구조설계, kind: 구조설계, event_date: "2026-02-01"} # 지반조사 선행 없음

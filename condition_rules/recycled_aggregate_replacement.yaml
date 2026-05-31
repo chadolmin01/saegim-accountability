@@ -1,0 +1,20 @@
+# Condition Rule — 순환골재 치환율 상한 (KCS 14 20 21 / 순환골재 품질기준 고시)
+# 검증: sonnet 2-vote 2026-05 (fck 21~27 굵은골재 용적 ≤30%).
+rule_id: recycled_aggregate_replacement__kcs142021
+title: 순환골재 치환율 상한
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 21(순환골재 콘크리트) / 순환골재 품질기준 고시(국토부)
+  rule: "순환 굵은골재 치환율 ≤ 총 굵은골재 용적의 30% (fck 21~27 MPa 구간). 흡수율 굵은≤3·잔≤5%(일반 골재룰 적용)"
+  source: "순환골재 품질기준 고시 + KCS 14 20 21 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.recycled_coarse_replacement_pct__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.recycled_coarse_replacement_pct, max: 30}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "순환골재 과다치환 → 흡수·강도편차로 품질 저하. KCS 14 20 21 위반"}

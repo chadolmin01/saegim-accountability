@@ -1,0 +1,15 @@
+rule_id: hot_weather_concrete__kcs
+title: 서중콘크리트 시공기준 적용 의무
+dimension: 온도·기상
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {standard: KCS 14 20 44, name: 서중콘크리트, rule: "일평균기온 25℃ 초과 시 서중콘크리트. 타설온도 35℃ 이하·운반 90분 이내", source: "gigumi·sulark 교차검증 2026-05. 원문 30℃ 트리거 pending"}
+applies_to_work_kind: 콘크리트타설
+applicable_when: {daily_avg_temp_c__gt: 25}
+requires:
+  measures_any: [서중콘크리트_양생, 사전냉각, 지연형감수제, 습윤양생]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "서중 무조치 타설은 급결·콜드조인트·강도저하 → 구조결함"}
+pending: ["KCS 14 20 44 원문 최고기온 30℃ 트리거 확인", "타설온도 35℃ value_bound 미반영"]

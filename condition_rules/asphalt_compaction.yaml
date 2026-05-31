@@ -1,0 +1,19 @@
+rule_id: asphalt_compaction__kcs445010
+title: 아스팔트 포장 다짐도 합격
+dimension: 공법
+battery_ref: ap_compaction
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 44 50 10:2023 / 건설공사 품질관리 업무지침 별표2
+  rule: "기준밀도(마샬공시체 3개 평균)의 96% 이상~100% 이하. 매 층 3,000㎡당 코어 1개"
+  source: "KCS 44 50 10:2023 §3.4.11/3.4.14 (sonnet 크롤 verified 2026-05)"
+applies_to_work_kind: 포장
+applicable_when: {test_values.compaction_pct__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.compaction_pct, min: 96}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "포장 다짐 부족은 소성변형·균열·수명단축. KCS 44 50 10 위반"}

@@ -1,0 +1,237 @@
+# 엣지 온톨로지 — 책임추적 그래프의 관계(relation) 타입.
+# 단위 = 관계 1개 {from-타입, to-타입, 책임역할, 종류, 생성근거}.
+# 입도 원칙: 책임 질문 1개당 1관계 / 의미 같으면 타입쌍 무관 재사용 / factual·verdict 구분 / ~10개 bounded.
+#
+# 두 계층:
+#   (A) 인스턴스 책임추적 관계 20종 (factual·verdict) — build_instance_graph.py 가 생성, bounded(책임질문 1개당 1관계).
+#   (B) type-level reify 관계 2종 (governed_by·gated_by) — export_opencrab_pack.py 가 생성(룰→법/시설클래스).
+#       타입 그래프(modules/composed)에 쓰이며 그래마(manifest.py)에도 등록돼야 적재·검증 가능.
+#
+# 책임역할(accountability_role): who(행위주체) what(대상) when(시점/단계) why(상류원인) norm(규범) verdict(판정)
+# 종류(kind): factual = 인스턴스 ref에서 어댑터 생성 / verdict = saegim 평가기 판정 부착 / type = 요건 reify
+
+relations:
+  # ── factual (어댑터가 *_ref 따라 생성) ──
+  - name: performed_by
+    role: who
+    kind: factual
+    from: [Decision, DesignDecision, WorkRecord]
+    to: [Person]
+    from_space: decision
+    to_space: subject
+    source_ref: performed_by_ref
+    semantics: 이 결정·작업을 수행한 사람.
+
+  - name: acts_via
+    role: when            # 어떤 선임(유효구간)을 근거로 권한 행사했나 — 시점유효성 추적의 핵심
+    kind: factual
+    from: [Decision, DesignDecision]
+    to: [Appointment]
+    from_space: decision
+    to_space: subject
+    source_ref: via_role
+    semantics: 그 결정이 근거한 선임/직책(Appointment). trail 의 시점유효성 판정 대상.
+
+  - name: holds
+    role: who
+    kind: factual
+    from: [Person]
+    to: [Appointment]
+    from_space: subject
+    to_space: subject
+    source_ref: appointment_ref
+    semantics: 그 사람이 보유한 선임(역할·자격·유효구간).
+
+  - name: belongs_to
+    role: who
+    kind: factual
+    from: [Person]
+    to: [Organization]
+    from_space: subject
+    to_space: subject
+    source_ref: affiliation_org
+    semantics: 그 사람이 소속한 도급조직. 책임의 조직 귀속 진입점(DESIGN 원칙2 옵션2 깊이).
+
+  - name: subcontracts_under
+    role: who
+    kind: factual
+    from: [Organization]
+    to: [Organization]
+    from_space: subject
+    to_space: subject
+    source_ref: subcontracts_under_ref
+    semantics: 하도급 조직이 상위 도급조직 밑에 있음(원도급→하도급→재하도급 사슬). 사슬 순회용 — 상위 tier 책임 '판정'은 별도 룰(건산법§29 등).
+
+  - name: targets
+    role: what
+    kind: factual
+    from: [Decision, WorkRecord, DesignDecision]
+    to: [BuildingComponent]
+    from_space: decision
+    to_space: concept
+    source_ref: [component_ref, target_component_ref]
+    semantics: 그 결정·작업이 대상으로 한 부재.
+
+  - name: in_phase
+    role: when
+    kind: factual
+    from: [Decision, DesignDecision, WorkRecord, Incident, SiteContext]
+    to: [ConstructionPhase]
+    from_space: decision
+    to_space: concept
+    source_ref: phase_ref
+    semantics: 생애주기 backbone 상의 단계(0~7). 상류→하류 정렬축.
+
+  - name: constrained_by
+    role: why
+    kind: factual
+    from: [DesignDecision]
+    to: [SiteContext]
+    from_space: decision
+    to_space: concept
+    source_ref: site_ref
+    semantics: 상류 설계결정이 반영했어야 할 현장여건(givens). 적절성 판정 대상.
+
+  - name: requires
+    role: norm
+    kind: factual
+    from: [WorkRecord, Decision]
+    to: [Decision]
+    from_space: resource
+    to_space: decision
+    source_ref: requires_prior
+    semantics: 이 작업·마일스톤 전에 선행돼야 할 검측·결정(Hold Point).
+
+  - name: caused_by
+    role: why
+    kind: factual
+    from: [Incident]
+    to: [WorkRecord, Decision, DesignDecision]
+    from_space: outcome
+    to_space: resource
+    source_ref: caused_by_refs
+    semantics: 사고가 비롯된 작업·결정. 추적의 출발점.
+
+  # ── verdict (saegim 평가기가 판정 후 부착) ──
+  - name: violates
+    role: verdict
+    kind: verdict
+    from: [WorkRecord, Decision, DesignDecision, Appointment]
+    to: [LegalRequirement]
+    from_space: resource
+    to_space: concept
+    produced_by: [conditions, appropriateness, prerequisites, documents, evaluate]
+    semantics: 그 노드가 어긴 법정요건. 엔진 판정 결과.
+
+  - name: responsible_for
+    role: verdict
+    kind: verdict
+    from: [Person, Appointment, Organization]
+    to: [Incident]
+    from_space: subject
+    to_space: outcome
+    produced_by: [trail, phase_trace]
+    semantics: 위반 노드를 수행/승인한 주체에서 사고로 이어지는 책임 귀속. 추적의 종착점(=책임추적 답).
+
+  - name: exhibits
+    role: what
+    kind: factual
+    from: [Incident]
+    to: [Defect]
+    from_space: outcome
+    to_space: concept
+    source_ref: defect_refs
+    semantics: 사고가 드러낸 결함(Defect). cause축 진입 — Defect.cause_category가 책임주체 시사(포렌식). prior-art OCSD/ASCE GFI.
+
+  - name: manifests_in
+    role: what
+    kind: factual
+    from: [Defect]
+    to: [BuildingComponent]
+    from_space: concept
+    to_space: concept
+    source_ref: component_ref
+    semantics: 결함이 발현된 부재. OCSD defect×element.
+
+  # ── 사건층(event layer) — PROV-O/SOSA/BCOM/EPCIS 정렬 ──
+  - name: supplied_by
+    role: who
+    kind: factual
+    from: [Batch]
+    to: [Organization]
+    from_space: resource
+    to_space: subject
+    source_ref: supplier_org_ref
+    semantics: 레미콘 배치의 공급자(EPCIS source party). 반입검수=책임이전(공급자→시공자)의 한쪽 끝.
+
+  - name: delivered_for
+    role: what
+    kind: factual
+    from: [Batch]
+    to: [BuildingComponent]
+    from_space: resource
+    to_space: concept
+    source_ref: pour_component_ref
+    semantics: 배치가 투입된 부재(BCOM DeliversConcreteFor). "어느 트럭이 어느 부재로" 역추적.
+
+  - name: sampled_from
+    role: what
+    kind: factual
+    from: [Sample]
+    to: [BuildingComponent]
+    from_space: resource
+    to_space: concept
+    source_ref: sampled_component_ref
+    semantics: 공시체의 채취 대상 부재(sosa:isSampleOf). 28일 deferred 결과를 부재에 연결.
+
+  # ── 책임 트랙 handover (custody 이전, EPCIS receiving / ISO 19650) ──
+  - name: custody_from
+    role: who
+    kind: factual
+    from: [CustodyTransfer]
+    to: [Organization]
+    from_space: decision
+    to_space: subject
+    source_ref: from_org_ref
+    semantics: 책임이전의 양도자(책임 넘기는 쪽). 반입검수=공급자.
+
+  - name: custody_to
+    role: who
+    kind: factual
+    from: [CustodyTransfer]
+    to: [Organization]
+    from_space: decision
+    to_space: subject
+    source_ref: to_org_ref
+    semantics: 책임이전의 인수자(책임 받는 쪽). 반입검수=시공자. 양자서명의 다른 끝.
+
+  - name: transfers
+    role: what
+    kind: factual
+    from: [CustodyTransfer]
+    to: [Batch]
+    from_space: decision
+    to_space: resource
+    source_ref: batch_ref
+    semantics: 책임이전 대상(레미콘 배치). custody가 이 배치에 대해 공급자→시공자로 넘어감.
+
+  # ── (B) type-level reify (export_opencrab_pack.py 가 생성, 타입 온톨로지 그래프) ──
+  - name: governed_by
+    role: norm
+    kind: type
+    from: [LegalRequirement]
+    to: [Law]
+    from_space: concept
+    to_space: concept
+    produced_by: [export_opencrab_pack]
+    semantics: 법정요건이 받는 소관 법(Law). 복합 regime 은 atomic Law 마다 1엣지.
+
+  - name: gated_by
+    role: when
+    kind: type
+    from: [LegalRequirement]
+    to: [FacilityClass]
+    from_space: concept
+    to_space: concept
+    produced_by: [export_opencrab_pack]
+    semantics: 요건이 적용되는 시설 클래스(건축물/토목시설) 게이트. '전체' 요건은 양쪽 모두.

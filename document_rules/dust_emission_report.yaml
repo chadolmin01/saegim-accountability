@@ -1,0 +1,15 @@
+rule_id: dust_emission_report__caca
+title: 비산먼지 발생사업 신고 의무
+dimension: 문서·보고
+regime: 대기환경보전법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 대기환경보전법, article: 제43조, related: 시행규칙 별표14, rule: "건축 연면적1000㎡↑·토목 1000㎡또는200m↑·해체 3000㎡↑ → 착공4일전 신고. 방진벽1.8m·세륜시설", source: "안산시+정부24 교차검증 2026-05"}
+document: 비산먼지발생사업신고서
+applies_to_facility_class: 전체   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {gross_floor_area_m2__gte: 1000}
+    - {all: [is_demolition, {gross_floor_area_m2__gte: 3000}]}
+submit_before: 착공4일전
+submit_to: 시·군·구청
+evaluation: {steps: ["대상이면 신고 의무. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "비산먼지 미신고·방진미조치는 대기환경보전법 위반·과태료"}

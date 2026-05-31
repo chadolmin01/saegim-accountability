@@ -1,0 +1,315 @@
+type: WorkRecord
+version: "0.1"
+space: resource
+description: "시공 행위 기록 — 시공일지의 typed 형태. 특정 작업(타설·굴착·양중 등)이 어떤 조건(온도·기상·자재시험값)에서, 어떤 조치를 적용해 수행됐는지. 조건 판정 rule(condition)이 이 기록을 대상으로 적법성을 판정한다."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 작업 기록 식별명.
+  work_kind:
+    type: string
+    required: true
+    nullable: false
+    description: 작업 종류.
+    enum: [콘크리트타설, 굴착, 양중, 비계설치, 거푸집설치, 거푸집해체, 철근배근, 철근이음, 다짐, 말뚝, 강구조, 포장, 건물해체, 숏크리트, 프리스트레싱, 용접, 고소작업, 밀폐공간작업, 방수, 단열, 마감, 설비설치, 활선작업, 정전작업, 시운전, 기타]
+  event_date:
+    type: date
+    required: true
+    nullable: false
+    description: 작업 일자 (DESIGN 원칙1).
+  location_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 작업 위치 (Location 참조).
+  component_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 대상 부재 (BuildingComponent 참조).
+  # --- 조건 (condition rule 판정 입력) ---
+  daily_avg_temp_c:
+    type: float
+    required: false
+    nullable: true
+    description: 작업일 일평균기온(℃). 한중/서중 콘크리트 판정.
+  daily_max_temp_c:
+    type: float
+    required: false
+    nullable: true
+    description: 작업일 일최고기온(℃).
+  spec_slump_mm:
+    type: float
+    required: false
+    nullable: true
+    description: 설계·배합 지정 슬럼프(mm). 측정 슬럼프와 대조(KS F 4009 허용오차).
+  pour_volume_m3:
+    type: float
+    required: false
+    nullable: true
+    description: 해당 타설 물량(㎥). 시험빈도 판정(KCS 120㎥/회).
+  strength_tests_count:
+    type: int
+    required: false
+    nullable: true
+    description: 실시한 압축강도 시험 횟수. pour_volume_m3 대비 빈도 충족 판정.
+  fill_layer:
+    type: string
+    required: false
+    nullable: true
+    description: 다짐 층 구분 — 다짐도/평판재하 합격기준 lookup.
+    enum: [노체, 노상, 보조기층, 동상방지층, 되메우기, 구조물뒷채움]
+  joint_type:
+    type: string
+    required: false
+    nullable: true
+    description: 철근 이음 방식 — 이음 검사 기준 분기.
+    enum: [가스압접, 기계적이음, 용접이음, 겹침이음]
+  pile_count:
+    type: int
+    required: false
+    nullable: true
+    description: 시공 말뚝 본수. 동재하 시험빈도(≥1%) 판정.
+  dynamic_test_count:
+    type: int
+    required: false
+    nullable: true
+    description: 실시한 동재하시험 본수.
+  pile_steel_grade:
+    type: string
+    required: false
+    nullable: true
+    description: 강관말뚝 강종 — 재료 인장강도 lookup.
+    enum: [SKK400, SKK490]
+  steel_grade:
+    type: string
+    required: false
+    nullable: true
+    description: 구조강재 강종 — 항복강도 lookup.
+    enum: [SS275, SS315, SS410, SM275, SM355]
+  road_class:
+    type: string
+    required: false
+    nullable: true
+    description: 포장 도로 등급 — 평탄성 PrI 기준 lookup.
+    enum: [일반, 교량접속, 시가지, 시가지교량]
+  insulation_grade:
+    type: string
+    required: false
+    nullable: true
+    description: 단열재 등급(KS L 9016) — 열전도율 상한 lookup.
+    enum: [가, 나, 다, 라]
+  climate_region:
+    type: string
+    required: false
+    nullable: true
+    description: 지역(에너지절약설계기준) — 외벽 열관류율 lookup.
+    enum: [중부1, 중부2, 남부, 제주]
+  apparent_temp_c:
+    type: float
+    required: false
+    nullable: true
+    description: 체감온도(℃). 폭염 작업중지 판정.
+  rainfall_mm:
+    type: float
+    required: false
+    nullable: true
+    description: 작업 중 강수량(mm).
+  wind_speed_ms:
+    type: float
+    required: false
+    nullable: true
+    description: 풍속(m/s, 10분평균). 양중·고소작업 중지 판정.
+  applied_measures:
+    type: list
+    required: false
+    nullable: true
+    description: 적용한 조치 목록 (예 [한중콘크리트_양생, 동결방지제]). condition rule 의 의무 충족 여부 판정.
+  test_values:
+    type: dict
+    required: false
+    nullable: true
+    description: "자재·시험값 (예 {slump_mm 195, air_pct 4.5, chloride_kg_m3 0.2, strength_mpa 27, oxygen_pct 20.5}). 재료·환경 판정."
+  is_confined_space:
+    type: bool
+    required: false
+    nullable: true
+    description: 밀폐공간 작업 여부 (산소·가스 측정 의무 판정).
+  component_category:
+    type: string
+    required: false
+    nullable: true
+    description: 대상 부재 유형 (거푸집 존치강도 등 부재별 기준 판정). enum 은 BuildingComponent 와 동일.
+  soil_type:
+    type: string
+    required: false
+    nullable: true
+    description: 굴착 지반 종류 (안전기울기 판정).
+    enum: [모래, 연암, 풍화암, 경암, 기타]
+  slope_ratio_horizontal:
+    type: float
+    required: false
+    nullable: true
+    description: "굴착 기울기의 가로값 (세로 1 : 가로 X 에서 X). 클수록 완만·안전."
+  weekly_work_hours:
+    type: float
+    required: false
+    nullable: true
+    description: 주간 총 근로시간 (주52시간 판정).
+  is_afternoon_peak:
+    type: bool
+    required: false
+    nullable: true
+    description: 무더위 시간대(14~17시) 여부 (폭염 옥외작업 중지 판정).
+  scaffold_post_spacing_ledger_m:
+    type: float
+    required: false
+    nullable: true
+    description: 비계기둥 띠장방향 간격(m).
+  scaffold_post_spacing_transverse_m:
+    type: float
+    required: false
+    nullable: true
+    description: 비계기둥 장선방향 간격(m).
+  shoring_height_m:
+    type: float
+    required: false
+    nullable: true
+    description: 동바리(파이프서포트) 높이(m). 수평연결재 의무 판정.
+  flammable_within_11m:
+    type: bool
+    required: false
+    nullable: true
+    description: 용접·용단 작업반경 11m 내 가연물 존재 (화재감시자 의무 판정).
+  uses_portable_electric_tool:
+    type: bool
+    required: false
+    nullable: true
+    description: 이동형·휴대형 전동기기 사용 (누전차단기 의무 판정).
+  work_height_m:
+    type: float
+    required: false
+    nullable: true
+    description: 작업 높이(m). 추락방지 의무 판정(2m↑).
+  guardrail_top_height_cm:
+    type: float
+    required: false
+    nullable: true
+    description: 안전난간 상부난간대 높이(cm). 90cm↑ 판정.
+  noise_db:
+    type: float
+    required: false
+    nullable: true
+    description: 공사장 소음 측정값 dB(A). 소음 규제기준 판정.
+  cover_thickness_mm:
+    type: float
+    required: false
+    nullable: true
+    description: 철근 피복두께 측정값(mm). 부재별 최소기준 판정.
+  rebar_spacing_dev_mm:
+    type: float
+    required: false
+    nullable: true
+    description: 철근 배근 간격 설계대비 편차 절대값(mm). ±20 판정.
+  rebar_grade:
+    type: string
+    required: false
+    nullable: true
+    description: 철근 강종 (SD400 등). 항복강도 합격 판정 키.
+  design_fck_mpa:
+    type: float
+    required: false
+    nullable: true
+    description: 설계기준 압축강도 fck(MPa). 도면/시방서에서. 강도 합격판정(0.85fck) 기준.
+  concrete_type:
+    type: string
+    required: false
+    nullable: true
+    description: "콘크리트 종류 (KCS 14 20 시리즈 — 종류별 기준 상이). 미입력 시 일반."
+    enum: [일반, 경량골재, 순환골재, 섬유보강, 폴리머시멘트, 팽창, 수밀, 유동화, 고유동, 고강도, 방사선차폐, 한중, 서중, 매스, 수중, 해양, 프리팩트, 숏크리트, 프리캐스트, 프리스트레스트, 외장노출, 합성구조]
+  aggregate_type:
+    type: string
+    required: false
+    nullable: true
+    description: 골재 구분 (재료 시험 lookup용).
+    enum: [굵은골재, 잔골재]
+  cement_type:
+    type: string
+    required: false
+    nullable: true
+    description: 시멘트 종류 (KS L 5201 — 강도/분말도 lookup용).
+    enum: ["1종", "2종", "3종", "4종", "5종"]
+  fly_ash_grade:
+    type: string
+    required: false
+    nullable: true
+    description: 플라이애시 종류 (KS L 5405).
+    enum: ["1종", "2종"]
+  slag_grade:
+    type: string
+    required: false
+    nullable: true
+    description: 고로슬래그 미분말 등급 (KS F 2563).
+    enum: ["1종", "2종", "3종"]
+  exposure_class:
+    type: string
+    required: false
+    nullable: true
+    description: 노출등급 (KDS 14 20 40 — 탄산화EC·동결EF·황산염EA·염해ES). durability 룰 lookup.
+    enum: [EC1, EC2, EC3, EC4, EF1, EF2, EF3, EF4, EA1, EA2, EA3, ES1, ES2, ES3, ES4]
+  member_type:
+    type: string
+    required: false
+    nullable: true
+    description: 부재 유형 (굵은골재 최대치수 Gmax lookup, KCS 14 20 10).
+    enum: [일반RC, 무근대단면, 노출, 고강도]
+  crack_control_level:
+    type: string
+    required: false
+    nullable: true
+    description: 매스콘크리트 온도균열 관리수준 (KCS 14 20 42).
+    enum: [균열방지, 균열제한]
+  uw_environment:
+    type: string
+    required: false
+    nullable: true
+    description: 수중콘크리트 환경 (W/B 상한 lookup, KCS 14 20 43).
+    enum: [담수철근, 해수철근]
+  curing_category:
+    type: string
+    required: false
+    nullable: true
+    description: 습윤양생 최소기간 lookup (시멘트종류×일평균기온, KCS 14 20 10 표3.4-1).
+    enum: [보통_15up, 보통_10up, 보통_5up, 슬래그FA_15up, 슬래그FA_10up, 슬래그FA_5up, 조강_15up, 조강_10up, 조강_5up]
+  admixture_type:
+    type: string
+    required: false
+    nullable: true
+    description: 화학혼화제 종류 (KS F 2560 표2 요구성능 lookup).
+    enum: [AE제, 감수제표준, 감수제지연, 감수제촉진, AE감수제표준, AE감수제지연, AE감수제촉진, 고성능AE표준, 고성능AE지연]
+  shotcrete_method:
+    type: string
+    required: false
+    nullable: true
+    description: 숏크리트 공법 (리바운드율 lookup, KCS 27 30 00).
+    enum: [건식, 습식]
+  shotcrete_grade:
+    type: string
+    required: false
+    nullable: true
+    description: 숏크리트 등급 (28일 강도 lookup, KCS 27 30 00).
+    enum: [일반, 고강도]
+  lightweight_class:
+    type: string
+    required: false
+    nullable: true
+    description: 경량골재 콘크리트 종별 (기건단위질량 lookup, KCS 14 20 20).
+    enum: ["1종", "2종"]
+  aggregate_weight_class:
+    type: string
+    required: false
+    nullable: true
+    description: 골재 중량구분 (고강도 정의 fck lookup, KCS 14 20 33).
+    enum: [보통, 경량]

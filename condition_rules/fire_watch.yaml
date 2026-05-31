@@ -1,0 +1,14 @@
+rule_id: fire_watch__osha
+title: 화기작업 화재감시자 배치 의무
+dimension: 작업환경
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제241조의2, rule: "용접·용단 작업반경 11m 이내 가연물 시 화재감시자 배치, 작업후 30분 감시", source: "hadaworks+안전보건규칙 교차검증 2026-05"}
+applies_to_work_kind: 용접
+applicable_when: {flammable_within_11m: true}
+requires:
+  measures_any: [화재감시자_배치]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "화재감시자 미배치 용접은 화재·폭발 중대재해 직접 원인"}

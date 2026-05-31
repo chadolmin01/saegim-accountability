@@ -1,0 +1,16 @@
+rule_id: waste_disposal_plan__cwra
+title: 건설폐기물 처리계획서 제출 의무
+dimension: 문서·보고
+regime: 건설폐기물재활용법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 건설폐기물의 재활용촉진에 관한 법률, article: 제17조, rule: "발생예상 5톤↑ 전체공사 착공 전 처리계획서 제출. 18종 분리배출. 완료 15일내 올바로 입력", source: "정부24+도봉구 교차검증 2026-05"}
+document: 건설폐기물처리계획서
+applies_to_facility_class: 전체   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {expected_waste_ton__gte: 5}
+    - {gross_floor_area_m2__gte: 1000}
+submit_before: 착공전
+submit_to: 시·군·구청
+evaluation: {steps: ["5톤↑이면 제출 의무. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "폐기물 처리계획 미제출·불법투기는 건폐법 위반"}
+pending: ["발생예상량(expected_waste_ton) 미입력 시 연면적 1000㎡로 대체 판정"]

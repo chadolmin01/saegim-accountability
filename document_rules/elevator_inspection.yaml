@@ -1,0 +1,15 @@
+rule_id: elevator_inspection__elsa
+title: 승강기 설치·정기검사 의무
+dimension: 문서·보고
+regime: 승강기안전관리법
+lifecycle_stage: 전체   # 승강기 설치검사=준공단계 + 정기검사=유지단계 → 양쪽 적용
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 승강기안전관리법, article: 제31조·제32조, rule: "설치검사(사용 전)+정기검사 연1회+자체점검 월1회. 25년경과 6개월, 정밀안전검사 15년후 3년마다", source: "승강기민원24+법령 교차검증 2026-05"}
+document: 승강기_검사증명
+applies_to_facility_class: 건축물   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - has_elevator
+submit_before: 설치직후+연1회
+submit_to: 승강기안전공단
+evaluation: {steps: ["승강기 설치 시 검사 의무. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "미검사 승강기 운행은 승강기안전관리법 위반. 추락·끼임 사고"}

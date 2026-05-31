@@ -1,0 +1,18 @@
+rule_id: pile_static_load__ksf2445
+title: 말뚝 정재하시험 (설계하중 2배)
+dimension: 공법
+battery_ref: pl_static
+regime: KS F 2445
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: 건설공사 품질관리 업무지침 별표2 / KS F 2445 (말뚝 정재하시험)
+  rule: "시험 최대하중 ≥ 설계하중 × 2배. 항복·극한지지력 확인"
+  source: "별표2 + KS F 2445 (sonnet 크롤 2026-05). 빈도(250본/회 등)는 LHCS 전문시방"
+applies_to_work_kind: 말뚝
+applicable_when: {test_values.test_load_kn__gte: 0}
+requires:
+  ratio_bound: {key: test_values.test_load_kn, of: test_values.design_load_kn, ratio: 2.0}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "정재하 미달·미실시는 기초 지지력 미확인 → 부등침하·전도. 별표2 위반"}

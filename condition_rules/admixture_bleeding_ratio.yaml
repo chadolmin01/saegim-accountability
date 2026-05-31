@@ -1,0 +1,23 @@
+# Condition Rule — 화학혼화제 블리딩양의 비 (KS F 2560:2019 표2)
+# 검증: KS F 2560:2019 원문(사용자 제공 표2, 2026-05). corpus 캐시.
+rule_id: admixture_bleeding_ratio__ksf2560
+title: 화학혼화제 블리딩양의 비 합격 (종류별)
+dimension: 재료
+regime: KS F 2560
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS F 2560:2019 표2(요구성능)
+  rule: "블리딩양의 비 — AE제 ≤75, 감수제 ≤100, AE감수제 ≤70, 고성능AE 표준 ≤60·지연 ≤70 (%)"
+  source: "KS F 2560:2019 원문 직접(사용자 스크린샷 2026-05) — corpus 캐시"
+  corpus_ref: corpus/KS_F_2560_화학혼화제.md
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.admixture_bleeding_ratio_pct__gte: 0}
+requires:
+  lookup_max:
+    key: test_values.admixture_bleeding_ratio_pct
+    by: admixture_type
+    max_table: {AE제: 75, 감수제표준: 100, 감수제지연: 100, 감수제촉진: 100, AE감수제표준: 70, AE감수제지연: 70, AE감수제촉진: 70, 고성능AE표준: 60, 고성능AE지연: 70}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "블리딩 과다 → 상부 강도저하·재료분리·표면결함. KS F 2560 위반"}

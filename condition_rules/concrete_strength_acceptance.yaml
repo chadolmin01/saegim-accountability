@@ -1,0 +1,15 @@
+rule_id: concrete_strength_acceptance__ksf4009
+title: 콘크리트 압축강도 합격 판정 (1회 0.85fck)
+dimension: 재료
+regime: KS F 4009
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {standard: KS F 4009 / KS F 2405, name: 압축강도 판정, rule: "1회 시험(공시체3개 평균) ≥ 설계기준강도(fck)의 0.85배, 연속3회 평균 ≥ fck", source: "krmcia+KATS 교차검증 2026-05"}
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.strength_mpa__gte: 0}
+requires:
+  ratio_bound: {key: test_values.strength_mpa, of: design_fck_mpa, ratio: 0.85}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "설계강도 미달 콘크리트는 구조내력 부족 → 붕괴 직접 원인. 시험성적서 조작 적발점"}
+pending: ["1회 0.85fck 만 판정. 연속3회 평균 fck 는 다회 시험 누적 필요(단일 WorkRecord 범위 밖)"]

@@ -1,0 +1,41 @@
+# Reference Rule — 안전보건총괄책임자 지정 (binary, 도급인 측)
+# 검증: 산업안전보건법 시행령 제52조. 관계수급인 포함 총공사금액 20억↑ 또는 상시근로자 100명↑.
+rule_id: safety_health_supervisor_overall__osha
+title: 안전보건총괄책임자 지정 기준
+role: 안전보건총괄책임자
+regime: 산업안전보건법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+requirement_shape: threshold_binary
+
+authority:
+  law: 산업안전보건법 시행령
+  article: 제52조
+  related: 법 제62조
+  revision: "재확인 필요 — pending"
+  source: "시행령 제52조 해설 교차검증 (2026-05)."
+
+parameters:
+  - {key: total_contract_amount_krw, label: 관계수급인 포함 총공사금액(원), type: integer, required: true}
+  - {key: total_workers, label: 관계수급인 포함 상시근로자수, type: integer, required: false}
+  - {key: assessment_date, label: 판정기준시점, type: date, required: true}
+  - {key: appointed_managers, label: 지정 안전보건총괄책임자, type: list, required: true,
+     item_fields: [person, start_date, end_date]}
+
+# 도급인(원청)이 지정. 건설업: 총공사금액 20억↑ 또는 근로자 100명↑.
+threshold:
+  trigger_when:
+    any:
+      - {total_contract_amount_krw__gte: 2000000000}   # 20억
+      - {total_workers__gte: 100}
+  required_count: 1
+  role_note: 도급인의 안전보건관리책임자가 겸임이 원칙. 수급인 안전조치 점검·작업혼재 위험방지.
+
+evaluation:
+  steps:
+    - "trigger_when 불충족 → not_required."
+    - "충족 시 required=1. effective >= 1 → compliant, else understaffed."
+  outputs: [compliant, understaffed, not_required]
+  audit_significance: 도급 혼재작업 사고 시 총괄책임 주체 부재 증거. 중대재해처벌법 도급인 책임 연계.
+
+pending: ["하청일 경우 비해당 — 도급단계(Organization.org_role) 연계 판정 필요"]

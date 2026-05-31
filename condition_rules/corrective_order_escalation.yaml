@@ -1,0 +1,17 @@
+rule_id: corrective_order_escalation__cmguide
+title: 시정지시 반복 미이행 시 공사중지 의무
+dimension: 공법
+battery_ref: cm_corrective
+regime: 건설사업관리 업무수행지침
+source_type: 고시·지침   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: 건설공사 사업관리방식 검토기준 및 업무수행지침 (국토부고시)
+  rule: "동일 공정에서 시정지시 3회 이상 미이행(또는 경고 2회 이상 미이행) 시 건설사업관리기술인은 부분중지. 부실우려·고의지연은 전면중지"
+  source: "업무수행지침 전문 PDF(281p) 직접 추출 verified 2026-05 — 시정지시 미이행 3회→부분중지 조문"
+applicable_when: {uncorrected_directive_count__gte: 3}
+requires:
+  measures_any: [공사부분중지, 공사전면중지]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "3회 시정 미이행에도 미중지·계속진행은 감리 권한 불행사 — 부실 방치. 사고 시 감리(건설사업관리기술인) 책임 직결"}

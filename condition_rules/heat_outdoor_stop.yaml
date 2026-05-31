@@ -1,0 +1,16 @@
+rule_id: heat_outdoor_stop__osha
+title: 체감온도 35℃ 무더위시간대 옥외작업 중지
+dimension: 기상·근로
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: prohibition
+authority: {law: 산업안전보건기준에 관한 규칙, rule: "체감온도 35℃↑ 14~17시 옥외작업 중지", revision: 2025-07-17, source: "정책브리핑 교차검증 2026-05"}
+applies_to_work_kind: 고소작업
+applicable_when:
+  all:
+    - {apparent_temp_c__gte: 35}
+    - {is_afternoon_peak: true}
+on_violation: "체감 35℃ 이상 무더위시간대(14~17시) 옥외작업 — 작업중지 위반"
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "폭염 옥외작업은 온열질환 중대재해 직접 원인"}

@@ -1,0 +1,19 @@
+rule_id: commencement_after_permit__bldg
+title: 착공 전 인허가(건축허가/실시계획인가) 선행 의무
+dimension: 시공순서·선행요건
+regime: 건축법 / 국토계획법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축(건축허가)·토목(실시계획인가) 공통 (단계2 착공준비)
+authority:
+  law: 건축법 제21조 / 국토의 계획 및 이용에 관한 법률 제88조
+  rule: "착공신고는 건축허가·신고(건축물) 또는 실시계획 인가(도시계획시설) 후에만 가능. 인허가 없는 착공 불가."
+  source: "건축법§21 + 국토계획법§88 교차검증 2026-05"
+applies_to_decision_kind: 착공신고   # 착공신고 결정이 트리거
+requires_prior:
+  - {kind: 인허가, result: 완료}
+evaluation:
+  steps:
+    - "착공신고 결정 시점 이전에 인허가(건축허가/실시계획인가, 완료)가 선행했는가."
+    - "누락 → violated (인허가 없는 착공 = 무단 착공)."
+  outputs: [compliant, violated, not_applicable]
+  audit_significance: "인허가 없는 착공은 건축법·국토계획법 위반. 무단 시공의 출발점이자 행정·형사 책임."

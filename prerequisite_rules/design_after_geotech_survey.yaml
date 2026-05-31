@@ -1,0 +1,21 @@
+rule_id: design_after_geotech_survey__citp
+title: 구조·기초 설계 전 지반조사 선행 의무
+dimension: 시공순서·선행요건
+regime: 건설기술진흥법 / KCS
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 단계1 조사·설계 (상류 선행)
+authority:
+  law: 건설기술진흥법 시행규칙
+  article: 별표7 현장특성분석(지반조건·지하수위)
+  standard: KCS 11 10 / 지반조사 기준(구조·기초 설계 입력)
+  rule: "구조·기초 설계는 지반조사 결과(지지력·지하수위·토질)에 근거해야 하며, 지반조사 없는 설계 결정은 현장여건 미반영."
+  source: "별표7 추출 + KCS 지반조사 교차검증 2026-05"
+applies_to_decision_kind: 구조설계   # 구조/기초 설계 결정이 트리거(DesignDecision)
+requires_prior:
+  - {kind: 지반조사, result: 완료}
+evaluation:
+  steps:
+    - "구조설계(또는 기초형식선택) 결정 시점 이전에 지반조사(완료)가 선행했는가."
+    - "누락 → violated (지반조사 없는 구조·기초 설계 = 상류 결정 부적절, 별표7 미흡)."
+  outputs: [compliant, violated, not_applicable]
+  audit_significance: "지반조사 없는 구조·기초 설계는 부동침하·지지력 부족의 상류 원인. 설계자 책임."

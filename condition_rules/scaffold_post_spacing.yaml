@@ -1,0 +1,16 @@
+rule_id: scaffold_post_spacing__osha
+title: 강관비계 기둥 간격 기준
+dimension: 공법
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제60조, rule: "비계기둥 띠장방향 1.85m 이하·장선방향 1.5m 이하, 띠장 수직간격 2.0m 이하", source: "law.go.kr 교차검증 2026-05"}
+applies_to_work_kind: 비계설치
+applicable_when: {scaffold_post_spacing_ledger_m__gte: 0}
+requires:
+  value_bounds:
+    - {key: scaffold_post_spacing_ledger_m, max: 1.85}
+    - {key: scaffold_post_spacing_transverse_m, max: 1.5}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "기둥간격 초과는 비계 좌굴·붕괴 직접 원인"}

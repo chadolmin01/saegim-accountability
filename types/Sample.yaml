@@ -1,0 +1,16 @@
+type: Sample
+version: "0.1"
+space: resource
+description: >
+  시료(공시체) 노드 — 사건층 시점분리. prior-art: SOSA sosa:Sample + phenomenonTime(채취 T1)/resultTime(시험 T2).
+  반입·타설 시점에 채취·봉인 기록(T1) → 28일 후 압축강도 결과(T2)가 같은 체인에 연결. 하나의 사건이 두 시점으로 이어지는 구조.
+properties:
+  sample_id:       {type: string, required: true,  nullable: false, description: 공시체 식별자.}
+  test_type:       {type: string, required: false, nullable: true,  description: 시험 종목 (압축강도·휨강도 등).}
+  sampling_date:   {type: date,   required: false, nullable: true,  description: 채취·봉인 시각 T1 (sosa:phenomenonTime).}
+  test_date:       {type: date,   required: false, nullable: true,  description: 시험 완료 시각 T2 (sosa:resultTime).}
+  age_days:        {type: integer, required: false, nullable: true, description: 재령(일) — 보통 28 (OWL-Time ProperInterval duration).}
+  result_value:    {type: float,  required: false, nullable: true,  description: 시험 결과값 (예 압축강도 MPa). 미정 시 null(채취만 기록·결과 대기). T2에 입력되면 deferred 합부판정 발동.}
+  design_fck_mpa:  {type: float,  required: false, nullable: true,  description: 합부판정 기준 설계기준강도(부재 fck). result_value를 0.85fck 등과 대조.}
+  performed_by_ref: {type: string, required: false, nullable: true, description: 결과 귀속 책임자(타설·품질관리자 — deferred 위반 시 responsible_for).}
+  sampled_component_ref: {type: string, required: false, nullable: true, description: 채취 대상 부재 (BuildingComponent — sosa:isSampleOf).}

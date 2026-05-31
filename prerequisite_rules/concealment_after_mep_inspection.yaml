@@ -1,0 +1,19 @@
+rule_id: concealment_after_mep_inspection__kcs
+title: 마감·은폐 전 설비(배관·배선)·방수 검측 선행 의무
+dimension: 시공순서·선행요건
+regime: KCS 표준시방서 / 건설사업관리(감리) 업무수행지침
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 단계5 마감·설비
+authority:
+  standard: KCS 31 기계설비 / KCS 31 65 전기설비 / KCS 41 방수
+  rule: "배관·배선·방수 등 은폐되는 공종은 마감(은폐)으로 덮기 전 검측(H)이 선행돼야 하며, 합격 없이 은폐 불가."
+  source: "감리 검측 ITP(H/W/R) + KCS 31·41 교차검증 2026-05"
+applies_to_work_kind: 마감
+requires_prior:
+  - {kind: 설비검측, checkpoint: 배관배선검측, result: 합격, point_type: H}
+evaluation:
+  steps:
+    - "마감(은폐) 작업 이전에 설비검측(합격)이 같은 부재/구간에 선행했는가."
+    - "누락·불합격·은폐 이후 검측 → violated (설비결함을 마감으로 은폐)."
+  outputs: [compliant, violated]
+  audit_significance: "검측 없이 설비 은폐는 누수·누전·결함의 은폐. 하자·화재의 잠복 원인."

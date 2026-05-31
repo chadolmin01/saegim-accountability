@@ -1,0 +1,15 @@
+rule_id: environmental_assessment__eia
+title: (소규모)환경영향평가 협의 의무
+dimension: 문서·보고
+regime: 환경영향평가법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 환경영향평가법, article: 제43조·제59조, related: 시행령 별표3·4, rule: "택지·도시개발 5만㎡↑(소규모) / 30만㎡↑(본평가). 승인·허가 전 환경부 협의", source: "법령 별표3·nepla 교차검증 2026-05"}
+document: 환경영향평가_협의서
+applies_to_facility_class: 전체   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {site_area_m2__gte: 50000}
+submit_before: 승인허가전
+submit_to: 환경부(협의)
+evaluation: {steps: ["부지 5만㎡↑이면 협의 의무. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "환경영향평가 미협의는 환경영향평가법 위반(사업 중지 가능)"}
+pending: ["사업 종류별 세부 규모(도로·산단·철도) 미세분"]

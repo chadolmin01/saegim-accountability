@@ -1,0 +1,13 @@
+rule_id: electrical_live_work_protection__osha
+title: 활선작업 감전방지 조치 의무
+dimension: 작업환경
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트 (단계5 마감·설비)
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제313~321조(충전전로 작업·전기작업), rule: "충전전로 활선작업: 절연용 보호구·방호구 착용, 접근한계거리 유지, 활선작업용 기구 사용, 감시인 배치 중 조치", source: "산안규칙 전기작업 + 안전점검일지(활선작업 점검표) 교차검증 2026-05"}
+applies_to_work_kind: 활선작업
+requires:
+  measures_any: [절연용보호구, 활선작업용기구, 접근한계거리유지, 감시인배치]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "활선 무방호 작업은 감전 중대재해 직접 원인. 산안규칙 위반"}

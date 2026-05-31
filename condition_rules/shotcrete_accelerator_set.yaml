@@ -1,0 +1,21 @@
+# Condition Rule — 숏크리트 급결제 응결시간 (KCS 27 30 00)
+# 검증: sonnet 2-vote 2026-05 (초결 ≤5분·종결 ≤15분).
+rule_id: shotcrete_accelerator_set__kcs273000
+title: 숏크리트 급결제 응결시간 합격
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 27 30 00(터널 숏크리트):2023
+  rule: "급결제 — 초결 ≤5분, 종결 ≤15분 (급속 지보)"
+  source: "KCS 27 30 00:2023 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 숏크리트
+applicable_when: {test_values.accel_initial_set_min__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.accel_initial_set_min, max: 5}
+    - {key: test_values.accel_final_set_min, max: 15}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "급결 지연 → 초기 지보 형성 실패·낙반. KCS 27 30 00 위반"}

@@ -1,0 +1,18 @@
+rule_id: rebar_bend_test__ksd3504
+title: 철근 굽힘시험 합격 (균열 없음)
+dimension: 재료
+battery_ref: rb_tensile
+regime: KS D 3504
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS D 3504 / KS B 0804 (굽힘시험방법)
+  rule: "굽힘각 SD300·400·500·S 180°, SD600·W 90°. 안쪽반지름 D16↓ 2.5d·D19↑ 3.0d. 합격=외면 균열 없음. 빈도 50톤/회"
+  source: "KS D 3504:2021 (sonnet 크롤 — 굽힘각 verified, 안쪽반지름 2019판 unverified)"
+applies_to_work_kind: 철근배근
+applicable_when: {test_values.bend_tested__eq: true}
+requires:
+  measures_all: [굽힘시험_균열없음]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "굽힘 균열은 철근 취성·연성부족 — 가공 시 파단·내진성능 저하. KS D 3504 위반"}

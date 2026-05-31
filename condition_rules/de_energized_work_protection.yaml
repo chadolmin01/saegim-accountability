@@ -1,0 +1,13 @@
+rule_id: de_energized_work_protection__osha
+title: 정전작업 안전조치 의무 (전로 차단·잠금·검전·접지)
+dimension: 작업환경
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트 (단계5 마감·설비)
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제319조(정전전로에서의 전기작업), rule: "전로 차단 후 ①전원확인 ②단로기 개방·확인 ③잠금장치·꼬리표 부착 ④잔류전하 방전 ⑤검전기 충전여부 확인 ⑥단락접지 — 6개 조치 모두 의무", source: "딥리서치 2026-05: 산안규칙 §319②(verified)"}
+applies_to_work_kind: 정전작업
+requires:
+  measures_all: [전원차단확인, 단로기개방확인, 잠금장치_꼬리표, 잔류전하방전, 검전확인, 단락접지]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "정전작업 6조치 누락은 오통전·잔류전하 감전의 직접 원인. 산안규칙 §319 위반"}

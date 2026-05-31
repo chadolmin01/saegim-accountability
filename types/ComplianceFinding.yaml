@@ -1,0 +1,56 @@
+type: ComplianceFinding
+version: "0.1"
+space: claim
+description: "법정 규칙 대조 판정 결과. 현장 데이터를 rules/*.yaml 에 대조하여 산출한 결정적 판정(assertion). RAG 가 아니라 actual>=required 계산의 결과이므로 추적·재현 가능하다."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 판정 식별명.
+  rule_id:
+    type: string
+    required: true
+    nullable: false
+    description: 적용한 규칙 (rules/*.yaml 의 rule_id). 예 safety_manager_staffing__osha.
+  target_ref:
+    type: string
+    required: true
+    nullable: false
+    description: 판정 대상 (보통 Project 참조).
+  assessment_date:
+    type: date
+    required: true
+    nullable: false
+    description: 판정 기준시점 (보통 Incident.event_date). 이 시점의 유효 상태로 판정.
+  verdict:
+    type: string
+    required: true
+    nullable: false
+    description: 판정 결과.
+    enum: [compliant, understaffed, unqualified, not_required]
+  required_count:
+    type: integer
+    required: false
+    nullable: true
+    description: 규칙이 산출한 요구 인원.
+  effective_count:
+    type: integer
+    required: false
+    nullable: true
+    description: 판정 시점 유효 선임 인원.
+  shortfall:
+    type: integer
+    required: false
+    nullable: true
+    description: 부족분 (required - effective). 0 이하면 충족.
+  triggered_by_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 판정을 촉발한 사건 (Incident 참조). 사후 audit 시.
+  rationale:
+    type: string
+    required: false
+    nullable: true
+    description: 판정 근거 요약 (어느 구간·완화 적용 여부·근거 법령).

@@ -1,0 +1,21 @@
+# Condition Rule — 강섬유 형상비 (KCS 14 20 22)
+# 검증: sonnet 2-vote 2026-05 (L/D 20~100, KCS+KCI).
+rule_id: fiber_aspect_ratio__kcs142022
+title: 강섬유보강 콘크리트 강섬유 형상비(L/D)
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 22(섬유보강 콘크리트)
+  rule: "강섬유 형상비(L/D) 20~100 범위. (혼입률·등가휨강도는 KCS 미규정 — 용도별 설계기준 위임)"
+  source: "KCS 14 20 22 + KCI (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.fiber_aspect_ratio__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.fiber_aspect_ratio, min: 20}
+    - {key: test_values.fiber_aspect_ratio, max: 100}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "형상비 범위 이탈 → 분산불량·부착저하 또는 뭉침. KCS 14 20 22 위반"}

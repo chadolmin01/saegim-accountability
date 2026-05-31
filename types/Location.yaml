@@ -1,0 +1,32 @@
+type: Location
+version: "0.1"
+space: concept
+status: dormant   # 트리/계층 미활성 — 평면 location_ref만 trail 매칭에 사용. 계층 공간추적은 실사고 견인 시 활성.
+description: "[DORMANT — 트리/계층 미활성] 장소 노드(건물>층>실/구역>부위, self-ref parent). 현재 활성 용도는 location_ref를 *평면 문자열 식별자*로 trail.py 가 사고↔결정 매칭에 쓰는 것뿐. 타입노드·parent_ref 트리·계층 공간추적(부위별 책임 slice)은 미인스턴스화·미순회·그래마 미등록. 활성화는 계층 공간추적을 요구하는 실사고(예: 다층 연쇄붕괴 '어느 층 작업이 연루?')가 끌 때만 — 그 전 투기적 트리 빌드 금지(목표 견인 없는 schema-first = 가짜)."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 위치 명칭 (예 \"A동\", \"3층\", \"3층 외벽\", \"P2 기둥\").
+  level:
+    type: string
+    required: true
+    nullable: false
+    description: 위치 계층 단계.
+    enum: [building, floor, space, element]
+  parent_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 상위 위치 (Location 참조). building 은 null. 트리 구성.
+  project_ref:
+    type: string
+    required: true
+    nullable: false
+    description: 소속 현장 (Project 참조).
+  floor_no:
+    type: integer
+    required: false
+    nullable: true
+    description: 층 번호 (지하는 음수). level=floor 일 때.

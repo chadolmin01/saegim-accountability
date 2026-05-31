@@ -1,0 +1,22 @@
+# Condition Rule — 해양콘크리트 최소 피복두께 (KDS 14 20 50)
+# 검증: sonnet 2-vote 2026-05 (ES1/2 50·ES3 70·ES4 80mm). 노출등급별.
+rule_id: marine_concrete_cover__kds142050
+title: 해양콘크리트 최소 피복두께 (노출등급별)
+dimension: 공법
+regime: KDS 설계기준
+source_type: 설계기준(KDS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KDS 14 20 50(피복두께) / KDS 14 20 40(노출등급)
+  rule: "현장치기 최소 피복 — ES1·ES2 50mm(벽·슬래브)/60mm(기타), ES3 70mm, ES4 80mm. 염해 부위별"
+  source: "KDS 14 20 50 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.cover_mm__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.cover_mm
+    by: exposure_class
+    min_table: {ES1: 50, ES2: 50, ES3: 70, ES4: 80}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "해양 피복 부족 → 염해 철근부식 조기화. KDS 14 20 50 위반"}

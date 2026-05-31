@@ -1,0 +1,13 @@
+# 지하12m·25층 현장 → 안전관리계획서·유해위험방지계획서·품질계획서 대상.
+# 안전관리계획서만 제출, 나머지 미제출 → 2건 위반.
+project:
+  name: OO메디컬타워 신축공사
+  excavation_depth_m: 12
+  floor_count: 25
+  building_height_m: 95
+  gross_floor_area_m2: 38000
+  total_contract_amount_krw: 85000000000
+  is_multiuse_building: true
+  is_special_use_building: true
+submitted_documents:
+  - {document: 안전관리계획서, submit_date: "2024-12-01"}

@@ -1,0 +1,35 @@
+# 검증 reference — 콘크리트·골재·시멘트 (KS 현행, e나라표준·KATS·제조사 교차검증 2026-05)
+spec_id: concrete_cement_aggregate_ks
+title: 콘크리트·골재·시멘트 합격기준
+authority: {standards: [KS F 4009, KS F 2405, KS F 2526, KS F 2502, KS L 5201, KS F 4030], source: "e나라표준+KATS+삼표/한라시멘트 교차검증 2026-05"}
+
+ready_mixed_concrete_ks_f4009:
+  revision: "2024-12-31"
+  slump_tolerance_mm: {25: 10, 50: 15, 65: 15, "80이상": 25}    # 지정값: ±허용
+  slump_flow_tolerance_mm: {500: 75, 600: 100, 700: 100}
+  air_pct: {보통: 4.5, 경량: 5.5, 포장: 4.5, 고강도: 3.5, tolerance: 1.5, note: "공기량 지정값은 KCS 14 20 10 참조(KS F 4009 본문 4%, 유료원문)"}
+  chloride_kg_m3_max: {default: 0.30, with_buyer_approval: 0.60}
+  strength_acceptance: {single_test_ratio: 0.85, three_test_avg_ratio: 1.0, note: "1회(공시체3개평균) ≥ 0.85fck, 연속3회 평균 ≥ fck"}
+  delivery_time_min: 90
+
+aggregate_ks_f2526:
+  absorption_pct_max: {잔골재: 5, 굵은골재: 3}
+  soundness_pct_max: {잔골재: 10, 굵은골재: 12}
+  clay_lump_pct_max: {굵은골재: 0.2, 잔골재: "미확보"}
+  pass_0_08mm_pct_max: {잔골재: 7, 굵은골재: 1}
+  abrasion_pct_max: {굵은골재: 40}
+  fineness_modulus: {잔골재: "통상 2.3~3.1 (공개원문 미확인)"}
+
+cement_ks_l5201:   # 분말도 cm²/g, 강도 MPa
+  "1종_보통": {blaine_min: 2800, set_initial_min_min: 60, str_3d: 12.5, str_7d: 22.5, str_28d: 42.5}
+  "2종_중용열": {blaine_min: 2800, str_3d: 7.5, str_7d: 15.0, str_28d: 32.5}
+  "3종_조강": {blaine_min: 3300, set_initial_min_min: 45, str_3d: 20.0, str_7d: 32.5, str_28d: 47.5}
+  "5종_내황산염": {blaine_min: 2800, str_3d: 10.0, str_7d: 20.0, str_28d: 40.0}
+  autoclave_expansion_pct_max: 0.8
+
+phc_pile_ks_f4030:
+  concrete_strength_mpa_min: 78.5
+  effective_prestress_mpa: {A종: 3.92, B종: 7.85, C종: 9.81}
+  diameter_mm: {min: 300, max: 1200}
+
+pending: ["KS F 4009 공기량 허용오차·KS D 7002 PC강선 강도·골재 점토덩어리(잔골재)·FM범위 = 유료원문/공개미확인"]

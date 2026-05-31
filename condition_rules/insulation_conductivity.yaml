@@ -1,0 +1,21 @@
+rule_id: insulation_conductivity__ksl9016
+title: 단열재 열전도율 등급 합격
+dimension: 재료
+battery_ref: in_conductivity
+regime: KS L 9016
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 건축물
+rule_family: condition
+mode: obligation
+authority:
+  standard: 건축물 에너지절약설계기준 별표2 / KS L 9016 (열전도율 측정)
+  rule: "열전도율(W/m·K, 20±5℃) 등급 상한 — 가 ≤0.034·나 ≤0.040·다 ≤0.046·라 ≤0.051"
+  source: "에너지절약설계기준 별표2 + KS L 9016:2022 (sonnet 크롤 verified 2026-05)"
+applies_to_work_kind: 단열
+applicable_when: {test_values.conductivity_w_mk__gte: 0}
+requires:
+  lookup_max:
+    key: test_values.conductivity_w_mk
+    by: insulation_grade
+    max_table: {가: 0.034, 나: 0.040, 다: 0.046, 라: 0.051}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "열전도율 등급 미달은 단열성능 미확보 → 결로·에너지 손실. 에너지절약기준 위반"}

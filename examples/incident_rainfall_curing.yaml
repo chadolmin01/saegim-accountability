@@ -1,0 +1,40 @@
+# 사고 시나리오 — "강수 많은 지역 + 외부 양생 선택" (사용자가 든 예시)
+# 사고: 슬래브 콘크리트 강도미달·균열. 추적: 사고 → 실행(강우중 무조치 타설) → 상류 결정(양생계획 강우 미반영) → 현장여건(다우).
+project:
+  name: OO 신축현장 (다우지역)
+site_context:
+  name: OO 현장
+  phase_ref: p1_survey
+  region_annual_rainfall_mm: 1600     # 다우지역
+  region_rainy_season_work: true      # 장마철에 외부 콘크리트 공정 배치
+  groundwater_level_m: 3.0            # 지하수위 지표 3m
+  planned_excavation_depth_m: 8.0     # 굴착 8m → 저면이 수위 아래(차수 필요)
+  soil_type: 점토
+design_decisions:
+  - name: 콘크리트 양생계획
+    kind: 양생계획
+    event_date: "2026-04-10"
+    performed_by_ref: 설계자_김
+    approved_by_ref: 감리_박
+    phase_ref: p1_survey
+    chosen_value: 외부 자연양생
+    planned_mitigations: []           # ✗ 강우 보양 대책 없음
+  - name: 굴착 차수배수설계
+    kind: 차수배수설계
+    event_date: "2026-04-10"
+    performed_by_ref: 설계자_김
+    phase_ref: p1_survey
+    chosen_value: 자립식 흙막이
+    planned_mitigations: []           # ✗ 차수 대책 없음 (지하수위 3m < 굴착 8m)
+work_records:
+  - name: 3층 슬래브 타설
+    work_kind: 콘크리트타설
+    event_date: "2026-07-20"          # 장마철
+    rainfall_mm: 15
+    applied_measures: []              # ✗ 강우 무조치
+    design_fck_mpa: 24
+    test_values: {strength_mpa: 18}   # 0.85×24=20.4 미달
+incident:
+  name: 슬래브 콘크리트 강도미달·균열
+  event_date: "2026-08-15"
+  phase_ref: p4_frame

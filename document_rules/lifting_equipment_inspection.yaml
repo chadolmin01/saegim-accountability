@@ -1,0 +1,14 @@
+rule_id: lifting_equipment_inspection__osha
+title: 양중기 안전검사(건설현장 6개월) 의무
+dimension: 문서·보고
+regime: 산업안전보건법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 산업안전보건법, article: 시행규칙 제126조, rule: "크레인(2톤↑)·건설용리프트(0.5톤↑)·곤돌라: 설치 3년내 최초+건설현장 6개월마다 안전검사. 이동식크레인·고소작업대는 차량등록 2년주기", source: "KOSHA MIIS+산안법 시행규칙 교차검증 2026-05"}
+document: 양중기_안전검사증명
+applies_to_facility_class: 전체   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - uses_fixed_lifting_equipment
+submit_before: 설치후3년내+6개월마다
+submit_to: 안전검사기관(KOSHA 등)
+evaluation: {steps: ["설치형 양중기 사용 시 안전검사 의무. submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "미검사 양중기 사용은 산안법 위반. 크레인 전도·붕괴 중대재해 연관"}

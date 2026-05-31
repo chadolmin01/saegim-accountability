@@ -1,0 +1,20 @@
+# Condition Rule — 수중불분리성 콘크리트 슬럼프플로 (KCS 14 20 43)
+# 검증: sonnet 2-vote 2026-05 (슬럼프플로 ≥600mm, fck 35 기준).
+rule_id: underwater_antiwashout_slump_flow__kcs142043
+title: 수중불분리성 콘크리트 슬럼프플로 합격
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 43(수중콘크리트)
+  rule: "수중불분리성 콘크리트 슬럼프플로 ≥600mm. 수중 재료분리 저항"
+  source: "KCS 14 20 43 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.uw_slump_flow_mm__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.uw_slump_flow_mm, min: 600}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "수중 슬럼프플로 미달 → 충전성 부족·재료분리. KCS 14 20 43 위반"}

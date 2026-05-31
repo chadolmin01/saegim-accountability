@@ -1,0 +1,20 @@
+# Condition Rule — 숏크리트 부착강도(암반) (KCS 27 30 00)
+# 검증: sonnet 2-vote 2026-05 (암반 ≥0.5 MPa, KCS 27 + LHCS 14 20 51).
+rule_id: shotcrete_bond_strength__kcs273000
+title: 숏크리트 부착강도(암반) 합격
+dimension: 공법
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 27 30 00(터널 숏크리트):2023 / LHCS 14 20 51
+  rule: "암반 대상 부착강도 ≥0.5 MPa(28일)"
+  source: "KCS 27 30 00:2023 + LHCS 14 20 51 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 숏크리트
+applicable_when: {test_values.bond_strength_mpa__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.bond_strength_mpa, min: 0.5}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "부착강도 부족 → 숏크리트 박리·낙하. KCS 27 30 00 위반"}

@@ -1,0 +1,25 @@
+type: ConstructionPhase
+version: "0.1"
+space: concept
+description: "시공 생애주기 단계 — 책임추적의 backbone(1급 축). 모든 결정·작업·문서·배치 노드가 phase_ref로 단계에 매달린다. 사고추적 = 이 단계를 0→7로 걸으며 '어느 단계 어느 요소에서 끊겼나'를 찾는 것. 빈 단계(상류 0~1)가 곧 온톨로지 사각지대."
+properties:
+  phase_id:
+    type: string
+    required: true
+    nullable: false
+    description: 단계 식별자 (p0_plan ~ p7_maintain).
+  order:
+    type: int
+    required: true
+    nullable: false
+    description: 순서 0~7. 사고추적 시 상류→하류 정렬 기준.
+  name:
+    type: string
+    required: true
+    nullable: false
+    enum: [기획·입지, 조사·설계, 착공준비, 토공·기초, 골조·구체, 마감·설비, 준공·검수, 유지관리]
+  key_givens:
+    type: string
+    required: false
+    nullable: true
+    description: 그 단계에서 주어지거나 결정되는 핵심 요소(결정·조건·선행·배치·문서).

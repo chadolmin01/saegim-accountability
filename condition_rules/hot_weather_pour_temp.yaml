@@ -1,0 +1,15 @@
+rule_id: hot_weather_pour_temp__kcs
+title: 서중콘크리트 타설온도 상한
+dimension: 온도·기상
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {standard: KCS 14 20 44, name: 서중콘크리트, rule: "타설 시 콘크리트 온도 35℃ 이하", source: "gigumi 교차검증 2026-05"}
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.pour_temp_c__gte: 0}
+requires:
+  value_bounds:
+    - {key: test_values.pour_temp_c, max: 35}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "타설온도 35℃ 초과는 급결·콜드조인트·강도저하"}

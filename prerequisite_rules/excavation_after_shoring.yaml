@@ -1,0 +1,20 @@
+rule_id: excavation_after_shoring__kcs
+title: 굴착 전 흙막이(지보공) 설치·검측 선행 의무
+dimension: 시공순서·선행요건
+regime: KCS 표준시방서 / 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트 (단계3 토공·기초)
+authority:
+  standard: KCS 11 10 15 흙막이공
+  law: 산업안전보건기준에 관한 규칙 제340조(흙막이 지보공)
+  rule: "지반 굴착 전 흙막이 지보공을 설치하고 그 설치상태를 검측(H)해야 하며, 검측 합격 없이 본굴착 진행 불가."
+  source: "KCS 11 10 15 + 안전보건규칙 §338~§340 교차검증 2026-05"
+applies_to_work_kind: 굴착
+requires_prior:
+  - {kind: 시공검측, checkpoint: 흙막이설치검측, result: 합격, point_type: H}
+evaluation:
+  steps:
+    - "work.event_date 이전에 흙막이설치검측(시공검측·합격)이 같은 부재/구간에 선행했는가."
+    - "누락·불합격·굴착 이후 검측 → violated (흙막이 미확인 굴착 = 붕괴 직접원인)."
+  outputs: [compliant, violated]
+  audit_significance: "흙막이 검측 없이 굴착은 토사·지반 붕괴의 직접 원인. 산안법·KCS 위반."

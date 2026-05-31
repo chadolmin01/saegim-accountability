@@ -1,0 +1,19 @@
+# Condition Rule — 숏크리트 28일 압축강도 (KCS 27 30 00)
+# 검증: sonnet 2-vote 2026-05 (일반21·고강도35 MPa).
+rule_id: shotcrete_strength_28d__kcs273000
+title: 숏크리트 28일 압축강도 합격 (등급별)
+dimension: 재료
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 27 30 00(터널 숏크리트):2023
+  rule: "28일 압축강도 — 일반 ≥21 MPa, 고강도 ≥35 MPa"
+  source: "KCS 27 30 00:2023 (sonnet 2-vote 교차검증 2026-05)"
+applies_to_work_kind: 숏크리트
+applicable_when: {test_values.strength_mpa__gte: 0}
+requires:
+  lookup_bounds: {key: test_values.strength_mpa, by: shotcrete_grade, min_table: {일반: 21, 고강도: 35}}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "숏크리트 강도 미달 → 터널 지보 내력 부족. KCS 27 30 00 위반"}

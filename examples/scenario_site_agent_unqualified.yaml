@@ -1,0 +1,18 @@
+# 현장대리인 qualification — 350억 현장(기술사/기능장/기사10년/특급3년 요구)에 기사 경력 4년만 배치 → 자격 미달.
+rule: rules/site_agent_placement.yaml
+project:
+  name: OO업무시설 신축
+  facility_kind: building
+  estimated_amount_krw: 35000000000     # 350억 → 300~500억 구간
+  construction_start_date: "2025-01-01"
+  construction_end_date: "2027-06-30"
+appointed_managers:
+  - person: 김현장
+    license: 기사
+    experience_years: 4              # 기사+10년 요구인데 4년 → 미달
+    grade: 중급                       # 특급+3년도 아님
+    start_date: "2025-01-01"
+    end_date: null
+incident:
+  name: 슬래브 처짐 하자
+  event_date: "2026-10-01"

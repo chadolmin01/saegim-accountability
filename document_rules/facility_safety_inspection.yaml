@@ -1,0 +1,18 @@
+rule_id: facility_safety_inspection__sfma
+title: 시설물 정기안전점검 의무 (시특법)
+dimension: 문서·보고
+regime: 시설물안전법
+lifecycle_stage: 유지관리   # 단계 게이트 — 유지단계 룰(시공 시나리오엔 비적용)
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 시설물의 안전 및 유지관리에 관한 특별법, article: 시행령 별표3, rule: "1종(21층↑/5만㎡↑)·2종(16층↑공동주택/5천㎡↑)·3종 정기안전점검 반기1회, 정밀안전점검 3~4년, 정밀안전진단(1종) 5~6년", source: "easylaw+국토부고시 교차검증 2026-05"}
+document: 정기안전점검결과서
+applies_to_facility_class: 전체   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {floor_count__gte: 16}
+    - {gross_floor_area_m2__gte: 5000}
+    - is_facility_grade_1_or_2
+submit_before: 반기1회(사용중)
+submit_to: 시설물통합정보관리시스템(FMS)
+evaluation: {steps: ["1·2종 시설물이면 정기안전점검 의무(사용단계). submitted_documents 확인."], outputs: [compliant, violated, not_required], audit_significance: "정기안전점검 미실시는 시특법 위반. 노후 시설물 붕괴 예방 실패"}
+pending: ["등급별 주기(A반기/D·E분기)·정밀진단 세분 미반영, 사용단계 점검이라 시공 책임추적과 부분 중첩"]

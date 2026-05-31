@@ -1,0 +1,19 @@
+rule_id: quality_management_plan__citp
+title: 품질관리계획서/품질시험계획서 제출 의무
+dimension: 문서·보고
+regime: 건설기술진흥법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+authority: {law: 건설기술진흥법, article: 제55조, related: 시행령 제89조, rule: "품질관리계획: 건사관 500억↑ 또는 다중이용 3만㎡↑. 품질시험계획: 토목5억↑/건축660㎡↑/전문2억↑. 착공 전 제출", source: "know-how-space+law.go.kr 교차검증 2026-05"}
+document: 품질관리계획서
+applies_to_facility_class: 전체   # 건축/토목 게이트: 건축물=건축물 부재 포함 현장만, 전체=모든 건설공사
+required_when:
+  any:
+    - {total_contract_amount_krw__gte: 50000000000}
+    - {all: [is_multiuse_building, {gross_floor_area_m2__gte: 30000}]}
+    - {gross_floor_area_m2__gte: 660}
+submit_before: 착공
+submit_to: 발주자(민간은 인허가기관 사본)
+evaluation:
+  steps: ["required_when 충족 시 제출 의무."]
+  outputs: [compliant, violated, not_required]
+  audit_significance: "품질관리계획 미제출·부실은 건진법 위반. 품질하자 책임."

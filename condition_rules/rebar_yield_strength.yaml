@@ -1,0 +1,18 @@
+rule_id: rebar_yield_strength__ksd3504
+title: 철근 항복강도 강종별 합격 기준
+dimension: 재료
+regime: KS D 3504
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {standard: KS D 3504, name: 철근콘크리트용 봉강, rule: "SD300≥300·SD400≥400·SD500≥500·SD600≥600 MPa 항복강도(현행 2016개정). 상세 reference: material_specs/steel_rebar_ks.yaml", source: "e나라표준+철강금속신문 권위 재검증 2026-05 (구버전 인장560 폐기)"}
+applies_to_work_kind: 철근배근
+applicable_when: {test_values.yield_strength_mpa__gte: 0}
+requires:
+  lookup_bounds:
+    key: test_values.yield_strength_mpa
+    by: rebar_grade
+    min_table: {SD300: 300, SD400: 400, SD500: 500, SD600: 600, SD400W: 400, SD500W: 500, SD400S: 400, SD500S: 500}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "항복강도 미달 철근은 구조내력 부족 → 붕괴 직접 원인. 시험성적서 위변조 적발점"}
+pending: ["인장강도(항복×배수)·연신율·항복상한·내진 항복비는 material_specs reference 에 있으나 본 rule 은 항복하한만 판정"]

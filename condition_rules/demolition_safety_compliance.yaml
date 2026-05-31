@@ -1,0 +1,31 @@
+# Condition Rule — 해체작업자 안전조치 의무 (해체공사)
+# 검증: 건축물관리법 제32조의2(해체작업자의 의무), law.go.kr 원문 확인 2026-05.
+#   제1호 "승인된 해체계획서에 따라 해체공사를 시행"
+#   제2호 "화재·붕괴 예방, 교통안전 및 통행 확보, 추락 방지 등의 안전조치를 이행"
+rule_id: demolition_safety_compliance__bam
+title: 해체작업자 안전조치 의무 (해체계획서 준수·붕괴예방·통행확보)
+dimension: 작업조건 적법성
+regime: 건축물관리법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 건축물   # 건축물 해체에 적용
+rule_family: condition
+mode: obligation
+
+authority:
+  law: 건축물관리법 제32조의2(해체작업자의 의무)
+  rule: "해체작업자는 ①승인된 해체계획서에 따라 해체공사를 시행하고 ②화재·붕괴 예방·교통안전 및 통행 확보·추락 방지 등 안전조치를 이행하여야 한다"
+  source: "건축물관리법 §32의2 (law.go.kr 원문, verified 2026-05) + 광주 학동 철거붕괴 사고조사위 결론(계획 미준수·과재하 붕괴·통행통제 미흡) 대조"
+  verified_scope: "KCS 41 85 01/02·해체계획서 작성기준(고시 2022-446)·감리업무매뉴얼(2024) 확인(2026-05): 적재하중·구조검토·살수에 정량 한도 없음 — 현장별 구조계산서에 위임. 따라서 의무(measures) 차원이 정답, 정량 banded 룰은 불가(추측 금지). 절차의무 근거 작성기준 제13조②4호(작용하중 구조안전성 검토)"
+
+applies_to_work_kind: 건물해체
+
+# applicable_when 없음 → 건물해체 작업이면 항상 의무 발생
+requires:
+  measures_all: [해체계획서_준수, 붕괴예방_과재하방지, 교통안전_통행확보]
+
+evaluation:
+  steps:
+    - "work_kind 가 건물해체 아니면 not_applicable."
+    - "requires.measures_all 의 3개 조치가 모두 applied_measures 에 있으면 compliant, 하나라도 없으면 violated."
+  outputs: [compliant, violated, not_applicable]
+  audit_significance: "해체계획서 미준수·과재하(내부 성토)·통행 미통제는 해체 중 전도 붕괴의 직접·기여 원인(학동). 건축물관리법 §32의2 위반."

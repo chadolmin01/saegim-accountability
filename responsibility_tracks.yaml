@@ -1,0 +1,18 @@
+# 책임 트랙 — custody/handover 경계로 끊은 책임주체 전환 (사건층).
+# prior-art: GS1 EPCIS bizStep(shipping/receiving) · ISO 19650 PIM→AIM handover · PROV-O custody.
+# 핵심: 트랙 경계 = 책임주체가 바뀌는 지점(handover) = 분쟁이 가장 빈번한 책임 귀속 마디.
+#       경계마다 양자(양도자 attestation + 인수자 자격검증)를 자격검증과 함께 기록 → "누구 책임" 다툼 제거.
+# 이건 시공 lifecycle(phases.yaml p0~p7)과 직교하는 *custody* 축. 콘크리트 사건이 이 트랙을 따라 흐름.
+tracks:
+  - {id: t1_batch,   order: 1, name: 배합·출하,      custodian: 공급자(레미콘사),        end_event: 출하,        records: [배합번호, 송장, 출하시각]}
+  - {id: t2_transit, order: 2, name: 운송,           custodian: 공급자,                  end_event: 게이트통과,  records: [도착시각, 경과시간_90분한도]}
+  - {id: t3_accept,  order: 3, name: 반입검수,       custodian: 시공자·감리(인수),       end_event: 반입검수판정, records: [슬럼프·공기·염화물·온도 측정, 노출등급 합부, 공시체 채취], handover: true}
+  - {id: t4_place,   order: 4, name: 타설·양생,       custodian: 시공자(현장대리인)+감리,  end_event: 타설완료,    records: [부재-트럭 연결, 서중·한중 양생, 공시체 28일 대기]}
+  - {id: t5_service, order: 5, name: 준공후·사후관리, custodian: 관리주체(발주처/관리기관), end_event: -,           records: [정기점검, 정밀안전진단(시특법 §11·§12), 보수], handover: true}
+
+# handover 경계 (책임이전 마디) — 양자서명
+handover_boundaries:
+  - {at: 반입검수, from: 공급자(레미콘사), to: 시공자, model: 양자서명, note: "양도자=출하 배합 attestation, 인수자=검수자 자격검증(OmniONE). custody 공급자→시공자."}
+  - {at: 준공인수, from: 시공자,           to: 관리주체, model: ISO19650_PIM→AIM, note: "시특법 유지관리 책임 이전. p7 유지단계 연결."}
+
+# 모델: CustodyTransfer 노드(decision space, ≈prov:Activity/EPCIS receiving) + custody_from/custody_to(양자) + transfers(대상 Batch) + performed_by(검수자 자격).

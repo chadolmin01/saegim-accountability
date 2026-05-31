@@ -1,0 +1,62 @@
+type: SiteContext
+version: "0.1"
+space: concept
+description: "현장의 주어진 조건(givens) — 결정보다 먼저 존재하며 결정을 제약한다. 지역 기후(강수·기온·적설·지진구역)와 지반(지하수위·토질·연약지반·지지력)·지형. 적절성 룰이 'DesignDecision이 이 SiteContext를 반영했나'를 판정하는 기준. 단계0~1의 사각지대를 메우는 핵심 타입."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 현장/부지 식별명.
+  phase_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 조사·설계 단계에서 확정되는 것이 일반적 (p0_plan/p1_survey).
+  # --- 기후 givens ---
+  region_annual_rainfall_mm:
+    type: float
+    required: false
+    nullable: true
+    description: 지역 연강수량(mm). 우기 공정·외부양생 적절성 판정.
+  region_rainy_season_work:
+    type: bool
+    required: false
+    nullable: true
+    description: 우기(장마)에 외부 콘크리트/토공 공정이 배치됐는가.
+  region_winter_work:
+    type: bool
+    required: false
+    nullable: true
+    description: 동절기에 콘크리트 공정이 배치됐는가(한중 대비).
+  seismic_zone:
+    type: string
+    required: false
+    nullable: true
+    description: 지진구역 (I/II) — 내진설계 적절성.
+  # --- 지반 givens ---
+  groundwater_level_m:
+    type: float
+    required: false
+    nullable: true
+    description: 지하수위(지표 기준 m). 굴착저면보다 높으면 차수·배수 의무.
+  planned_excavation_depth_m:
+    type: float
+    required: false
+    nullable: true
+    description: 계획 굴착 심도(m). groundwater_level_m와 비교.
+  soil_type:
+    type: string
+    required: false
+    nullable: true
+    description: 토질 (점토/실트/모래/자갈/풍화암/연암/경암 등).
+  is_soft_ground:
+    type: bool
+    required: false
+    nullable: true
+    description: 연약지반 여부 — 지반개량·기초형식 적절성.
+  adjacent_structures:
+    type: string
+    required: false
+    nullable: true
+    description: 인접 시설물(보호·계측 대상).

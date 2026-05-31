@@ -1,0 +1,22 @@
+rule_id: proof_rolling__roadspec
+title: 프루프롤링 소성변형 한도 (층별)
+dimension: 공법
+battery_ref: ec_proof
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: 도로공사 표준시방서 / KCS 44 (포장 토공)
+  rule: "프루프롤링 소성변형 — 노상 ≤5mm·보조기층/기층 ≤3mm. 타이어롤러 복륜하중 5톤↑(또는 덤프 15톤 만재), 전구간 3회 이상 주행"
+  source: "도로공사 시방서 (sonnet 크롤 partial-verified 2026-05). KCS 조문번호 원문 대조 권장"
+applies_to_work_kind: 다짐
+applicable_when: {test_values.rut_depth_mm__gte: 0}
+requires:
+  lookup_max:
+    key: test_values.rut_depth_mm
+    by: fill_layer
+    max_table: {노상: 5, 보조기층: 3, 동상방지층: 3}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "프루프롤링 과다 변형은 다짐 불량·연약부 잔존 — 포장 침하. 도로시방서 위반"}
+pending: ["노상5/보조기층3mm KCS 원문 fully-verified"]

@@ -1,0 +1,29 @@
+type: Person
+version: "0.1"
+space: subject
+description: "개인 행위자. 역할은 영구 속성이 아니라 Appointment(선임)로 부여되므로, Person 은 신원과 보유 자격만 갖는다 (한 사람이 현장마다 다른 역할 가능)."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 성명.
+  qualifications:
+    type: list
+    required: false
+    nullable: true
+    description: |
+      보유 자격 목록. 각 항목은 자격명 + 등급(+취득일).
+      예: ["건설안전기술사", "토목시공기술사 특급"].
+      배치규칙의 자격 조건(별표4 등) 충족 판정에 사용.
+  qualification_grade:
+    type: string
+    required: false
+    nullable: true
+    description: 대표 건설기술인 등급 (배치규칙 등급 판정용).
+    enum: [trainee, intermediate, senior, master]
+  affiliation_org:
+    type: string
+    required: false
+    nullable: true
+    description: 현 소속 조직 식별자 (Organization 참조). 상세는 belongs_to 관계로.

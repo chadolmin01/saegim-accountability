@@ -1,0 +1,29 @@
+# Org Rule — 불법 재하도급 (하수급인의 재하도급 원칙 금지)
+# 검증: corpus/건설산업기본법_제29조_하도급제한.md (CaseNote·법제처 교차검증 2026-05, law.go.kr 최종대조 pending)
+rule_id: illegal_subcontracting__cibl
+title: 불법 재하도급 (하수급인의 재하도급 원칙 금지)
+dimension: 도급책임
+regime: 건설산업기본법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: org
+
+authority:
+  law: 건설산업기본법 제29조제3항(재하도급 제한)·제96조제4호(벌칙)
+  rule: "하수급인은 하도급받은 건설공사를 다른 사람에게 다시 하도급할 수 없다. 예외는 종합→전문(발주자 서면승낙) 또는 전문 일부(수급인 서면승낙+국토부령 요건)에 한정. 위반 시 3년 이하 징역 또는 3천만원 이하 벌금."
+  source: "건설산업기본법 §29③·§96제4호 (CaseNote·법제처 교차검증 2026-05). 재취득 가능 — 캐시 대신 인용"
+  pending: "조·호·목 세부번호 표기는 law.go.kr 503으로 최종 미대조"
+
+# 재하도급 조직(subcontract_tier>=2 또는 org_role 재하도급)에 적용
+applies_to_org_role: [재하도급]
+trigger:
+  illegal_when: {subcontract_tier__gte: 2}   # 서면승낙 예외(written_consent=true) 없으면 위반
+exception_field: written_consent             # =true 면 §29③ 단서 예외 적법(입력 신뢰)
+
+evaluation:
+  steps:
+    - "org_role 재하도급(또는 subcontract_tier>=2) 아니면 not_applicable."
+    - "written_consent=true(서면승낙 예외 명시) 면 compliant — 단 요건 세부는 입력 신뢰."
+    - "예외 입력 없으면 §29③ 본문 위반(violated)."
+  outputs: [compliant, violated, not_applicable]
+  audit_significance: "불법 다단계 재하도급은 공사비 삭감(학동 3.3㎡당 28만→4만원)→안전 저하의 구조적 원인. 건산법§29③ 위반, §96 처벌."

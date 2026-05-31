@@ -1,0 +1,18 @@
+rule_id: waterproof_ponding__kcs414001
+title: 방수 담수(누수)시험 합격
+dimension: 공법
+battery_ref: wp_ponding
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 건축물
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 41 40 01:2021 §3.7.4(5)
+  rule: "방수층 끝 미감김 높이까지 담수 48시간 누수 없음(필요시 치켜올림 높이 48시간 추가). 누수 없음=합격"
+  source: "KCS 41 40 01:2021 (sonnet 크롤 verified 2026-05, 2개 출처 일치)"
+applies_to_work_kind: 방수
+applicable_when: {test_values.ponding_tested__eq: true}
+requires:
+  measures_all: [담수시험_누수없음]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "담수시험 미실시·누수는 하자(누수)의 직접 원인. KCS 41 40 01 위반"}

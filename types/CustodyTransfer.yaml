@@ -1,0 +1,14 @@
+type: CustodyTransfer
+version: "0.1"
+space: decision
+description: >
+  책임이전(custody handover) 사건 — 트랙 경계에서 책임주체가 바뀌는 마디. ≈prov:Activity / EPCIS receiving / ISO 19650 handover.
+  양자서명: custody_from(양도자) + custody_to(인수자) + performed_by(검수자, 자격 시점검증). 분쟁이 가장 빈번한 책임 귀속 핵심 노드.
+properties:
+  transfer_point: {type: string, required: true,  nullable: false, description: "이전 지점 (반입검수·준공인수 등).", enum: [반입검수, 준공인수]}
+  transfer_time:  {type: string, required: false, nullable: true,  description: 이전 시각.}
+  from_org_ref:   {type: string, required: false, nullable: true,  description: 양도자 조직 (Organization 참조 — 책임 넘기는 쪽).}
+  to_org_ref:     {type: string, required: false, nullable: true,  description: 인수자 조직 (Organization 참조 — 책임 받는 쪽).}
+  batch_ref:      {type: string, required: false, nullable: true,  description: 이전 대상 배치 (Batch 참조).}
+  performed_by_ref: {type: string, required: false, nullable: true, description: 검수·인수 수행자 (Person — 자격 시점검증 대상).}
+  result:         {type: string, required: false, nullable: true,  description: "인수 결과 (인수·반송).", enum: [인수, 반송]}

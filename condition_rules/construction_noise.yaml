@@ -1,0 +1,16 @@
+rule_id: construction_noise__nvca
+title: 공사장 생활소음 규제기준
+dimension: 환경
+regime: 소음진동관리법
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {law: 소음진동관리법, article: 제21조, related: 시행규칙 별표8, rule: "주거지역 공사장 소음 주간(07~18) 65dB·야간(22~05) 50dB 이하", source: "easylaw 교차검증 2026-05"}
+applies_to_work_kind: 기타
+applicable_when: {noise_db__gte: 0}
+requires:
+  value_bounds:
+    - {key: noise_db, max: 65}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "소음 규제기준 초과는 소음진동관리법 위반·민원·작업중지명령"}
+pending: ["주간65/야간50, 지역별(주거/기타) 세분 미반영 — 주거 주간 65 기준만"]

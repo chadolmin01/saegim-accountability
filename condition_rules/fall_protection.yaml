@@ -1,0 +1,14 @@
+rule_id: fall_protection__osha
+title: 추락방지 조치 의무 (2m 이상 작업)
+dimension: 공법
+regime: 산업안전보건기준에 관한 규칙
+source_type: 법령   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+rule_family: condition
+mode: obligation
+authority: {law: 산업안전보건기준에 관한 규칙, article: 제42~44조, rule: "2m↑ 추락위험 작업: 작업발판·안전난간·추락방호망 또는 안전대. 사다리 2m↑ 안전모+안전대", source: "lbox 산안규칙 제42조 교차검증 2026-05"}
+applies_to_work_kind: 고소작업
+applicable_when: {work_height_m__gte: 2}
+requires:
+  measures_any: [작업발판, 안전난간, 추락방호망, 안전대]
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "추락방지 미조치 2m↑ 작업은 건설 사망사고 1위 원인(추락). 산안규칙 위반"}

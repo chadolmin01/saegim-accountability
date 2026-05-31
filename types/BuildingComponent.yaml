@@ -1,0 +1,31 @@
+type: BuildingComponent
+version: "0.1"
+space: concept
+description: "부재 인스턴스 — '이 위치의 이 부재' (장소 × 공종 교차점). 책임추적의 실제 단위. 예 '3층 외벽의 2026-09-15 타설 콘크리트'. 결정(검측·자재반입)이 이 인스턴스를 target 한다."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 부재 인스턴스 식별명.
+  location_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 설치 위치 (Location 참조). Location 트리는 dormant — 평면 ref만 사용, 필수 아님.
+  component_category:
+    type: string
+    required: false
+    nullable: true
+    description: 부재 유형.
+    enum: [기둥, 보, 슬래브, 기초, 벽체, 외벽, 계단, 지붕, 기타]
+  event_date:
+    type: date
+    required: false
+    nullable: true
+    description: 시공/타설 일자 (DESIGN 원칙1 — 시점). 사고 시점과 대조하여 어느 시공분이 관련됐는지 추적.
+  material_summary:
+    type: string
+    required: false
+    nullable: true
+    description: 자재 요약 (예 \"콘크리트 24-21-150, 철근 SD400\").

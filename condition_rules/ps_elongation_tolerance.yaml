@@ -1,0 +1,21 @@
+# Condition Rule — PS 긴장 신장량 허용오차 (KCS 14 20 53)
+# 검증: sonnet 2-vote 2026-05 (현행 ±5%; 구 시방서 ±10%).
+rule_id: ps_elongation_tolerance__kcs142053
+title: 프리스트레싱 신장량 허용오차
+dimension: 공법
+regime: KCS 표준시방서
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KCS 14 20 53 / LHCS 14 20 53:2020
+  rule: "긴장 신장량 = 계산값 대비 ±5% 이내 (초과 시 즉시 중지·검토)"
+  source: "KCS 14 20 53 현행 (sonnet 2-vote 교차검증 2026-05). 구 시방서 ±10%→현행 ±5%"
+applies_to_work_kind: 프리스트레싱
+applicable_when: {test_values.elongation_deviation_pct__gte: -100}
+requires:
+  value_bounds:
+    - {key: test_values.elongation_deviation_pct, min: -5}
+    - {key: test_values.elongation_deviation_pct, max: 5}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "신장량 편차 과다 → 긴장력 불확실·구조 안전성 의문. KCS 14 20 53 위반"}

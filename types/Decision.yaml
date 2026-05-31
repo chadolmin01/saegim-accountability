@@ -1,0 +1,68 @@
+type: Decision
+version: "0.1"
+space: decision
+description: "규제 도메인 의사결정 — 검측·자재반입·안전점검·단계승인·설계변경 등. 책임추적의 anchor. 시점(event_date)·수행자·대상 부재/위치·결과·근거를 갖는다. 사고 시 '이 부재에 누가 무엇을 언제 결정했나 + 그때 유효 선임이었나'를 회수."
+properties:
+  name:
+    type: string
+    required: true
+    nullable: false
+    description: 결정 식별명.
+  kind:
+    type: string
+    required: true
+    nullable: false
+    description: 결정 종류.
+    enum: [시공검측, 자재반입검수, 안전점검, 단계승인, 설계변경승인, 기성검사, 준공검사, 작업허가, 설비검측, 시운전검사, 지반조사, 착공신고, 인허가]
+  event_date:
+    type: date
+    required: true
+    nullable: false
+    description: 결정 일자 (DESIGN 원칙1 — 1급 시점). 검측서·검수일보·점검표 등 원천 문서에 항상 존재.
+  performed_by_ref:
+    type: string
+    required: true
+    nullable: false
+    description: 결정 수행자 (Person 참조).
+  via_role:
+    type: string
+    required: false
+    nullable: true
+    description: 수행 당시의 역할 (Appointment.role). 그 역할로 결정할 권한·유효선임 검증의 연결점.
+  checkpoint:
+    type: string
+    required: false
+    nullable: true
+    description: 검측 정지점/항목 식별 (예 철근배근검측·거푸집검측·타설입회). 선행요건(Hold Point) 판정의 매칭 키.
+  point_type:
+    type: string
+    required: false
+    nullable: true
+    description: 검사점 성격 (ITP).
+    enum: [H, W, R]
+  target_component_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 대상 부재 인스턴스 (BuildingComponent 참조).
+  target_location_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 대상 위치 (Location 참조). 부재 미특정 시 위치 단위.
+  result:
+    type: string
+    required: false
+    nullable: true
+    description: 결정 결과.
+    enum: [합격, 불합격, 조건부합격, 시정요구, 보류, 승인, 반려]
+  legal_basis:
+    type: string
+    required: false
+    nullable: true
+    description: 근거 법령·기준 (예 \"KCS 14 20 40\", \"건진법 §39\").
+  based_on_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 근거 문서 (시공계획서·시험성적서 등).

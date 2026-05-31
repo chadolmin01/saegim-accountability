@@ -1,0 +1,30 @@
+type: Defect
+version: "0.1"
+space: concept
+description: >
+  결함 노드 — 사고가 드러낸 물리적 결함(균열·강도미달·콜드조인트·부착력소실 등).
+  prior-art 정렬: OCSD(Defect×Inspection×Diagnosis×Repair×Element) + 포렌식 원인분류(ASCE GFI/ASTM E678).
+  cause축의 진입점 — Incident →exhibits→ Defect →(cause_category)→ 책임주체. 콘크리트 vertical에서 신설.
+properties:
+  defect_type:
+    type: string
+    required: true
+    nullable: false
+    description: 결함 유형 (균열·강도미달·콜드조인트·곰보·재료분리·부착력소실·중성화·염해·AAR 등).
+  mechanism:
+    type: string
+    required: false
+    nullable: true
+    description: 열화/파괴 메커니즘 (결함 taxonomy 표준 — fib MC2010·ACI 364·IS 456).
+    enum: [physical, chemical, mechanical, construction]
+  cause_category:
+    type: string
+    required: false
+    nullable: true
+    description: "포렌식 4범주(ASCE GFI 2nd/ASTM E678) — 전형 책임주체로 매핑: Design→설계자, Material→제조사/공급, Construction→시공자, Maintenance→유지관리자."
+    enum: [Design, Material, Construction, Maintenance]
+  component_ref:
+    type: string
+    required: false
+    nullable: true
+    description: 결함이 발현된 부재 (BuildingComponent 참조 — OCSD defect×element).

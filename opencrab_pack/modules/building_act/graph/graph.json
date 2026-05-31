@@ -1,0 +1,661 @@
+{
+ "nodes": [
+  {
+   "space": "concept",
+   "node_type": "FacilityClass",
+   "node_id": "geonchukmul",
+   "properties": {
+    "class_id": "geonchukmul",
+    "name": "건축물",
+    "discriminator": "토지정착 + 지붕 + (기둥 또는 벽) 충족 (건축법 §2①2)",
+    "legal_basis": "건축법 제2조제1항제2호",
+    "governed_regime": "건축법"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "asbestos_survey__osha",
+   "properties": {
+    "requirement_id": "asbestos_survey__osha",
+    "document": "기관석면조사서",
+    "dimension": "문서제출",
+    "topic": "문서·보고",
+    "regime": "산업안전보건법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "일반건축물 연면적 50㎡↑ & 해체부분 50㎡↑ 기관석면조사. 주택 200㎡↑",
+    "threshold_fields": "gross_floor_area_m2, is_demolition",
+    "submit_before": "해체전",
+    "submit_to": "석면조사기관(결과보존)",
+    "legal_basis": "산업안전보건법 제119조"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "Law",
+   "node_id": "law_fcfb871c2f",
+   "properties": {
+    "law_id": "law_fcfb871c2f",
+    "name": "산업안전보건법",
+    "scope": "건설공사공통",
+    "authority_basis": "건산법 §2: 건설공사 = 토목+건축+산업설비+조경+환경시설 → 토목 현장에도 적용"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "building_fire_facility__fire",
+   "properties": {
+    "requirement_id": "building_fire_facility__fire",
+    "document": "소방시설_준공",
+    "dimension": "문서제출",
+    "topic": "문서·보고",
+    "regime": "소방시설법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "스프링클러 6층↑ 또는 연면적5000㎡↑, 옥내소화전 3000㎡↑, 자동화재탐지 600㎡↑",
+    "threshold_fields": "floor_count, gross_floor_area_m2",
+    "submit_before": "사용승인전",
+    "submit_to": "소방서(완공검사)",
+    "legal_basis": "소방시설 설치 및 관리에 관한 법률 시행령 별표4"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "Law",
+   "node_id": "law_96b350ff8c",
+   "properties": {
+    "law_id": "law_96b350ff8c",
+    "name": "소방시설법",
+    "scope": "건축물전용",
+    "authority_basis": ""
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "construction_commencement__bldg",
+   "properties": {
+    "requirement_id": "construction_commencement__bldg",
+    "document": "착공신고서",
+    "dimension": "문서제출",
+    "topic": "문서·보고",
+    "regime": "건축법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "건축허가·신고 대상 공사 착수 전 허가권자에게 착공신고",
+    "threshold_fields": "floor_count, is_building_permit_target",
+    "submit_before": "착공",
+    "submit_to": "허가권자(시장·군수·구청장)",
+    "legal_basis": "건축법 제21조 시행규칙 별지 제13호"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "Law",
+   "node_id": "law_c1e8cbcccd",
+   "properties": {
+    "law_id": "law_c1e8cbcccd",
+    "name": "건축법",
+    "scope": "건축물전용",
+    "authority_basis": ""
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "demolition_plan__bmgt",
+   "properties": {
+    "requirement_id": "demolition_plan__bmgt",
+    "document": "해체계획서",
+    "dimension": "문서제출",
+    "topic": "문서·보고",
+    "regime": "건축물관리법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "연면적500㎡↑ 또는 높이12m↑ 또는 3층초과 → 해체 허가+해체감리 배치. 미만은 신고. 해체계획서 공통 제출",
+    "threshold_fields": "is_demolition",
+    "submit_before": "해체착수전",
+    "submit_to": "허가권자(허가대상은 해체감리 지정)",
+    "legal_basis": "건축물관리법 제30조·제31조"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "Law",
+   "node_id": "law_01a9c43c39",
+   "properties": {
+    "law_id": "law_01a9c43c39",
+    "name": "건축물관리법",
+    "scope": "건축물전용",
+    "authority_basis": ""
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "elevator_inspection__elsa",
+   "properties": {
+    "requirement_id": "elevator_inspection__elsa",
+    "document": "승강기_검사증명",
+    "dimension": "문서제출",
+    "topic": "문서·보고",
+    "regime": "승강기안전관리법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "설치검사(사용 전)+정기검사 연1회+자체점검 월1회. 25년경과 6개월, 정밀안전검사 15년후 3년마다",
+    "threshold_fields": "has_elevator",
+    "submit_before": "설치직후+연1회",
+    "submit_to": "승강기안전공단",
+    "legal_basis": "승강기안전관리법 제31조·제32조"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "Law",
+   "node_id": "law_1d1574b427",
+   "properties": {
+    "law_id": "law_1d1574b427",
+    "name": "승강기안전관리법",
+    "scope": "건축물전용",
+    "authority_basis": ""
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "structural_safety_confirmation__bldg",
+   "properties": {
+    "requirement_id": "structural_safety_confirmation__bldg",
+    "document": "구조안전확인서",
+    "dimension": "문서제출",
+    "topic": "문서·보고",
+    "regime": "건축법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "2층↑ 또는 연면적200㎡↑ 또는 높이13m↑ 또는 처마9m↑ 또는 경간10m↑ → 착공신고 시 구조안전확인서. 내진설계 동일범위",
+    "threshold_fields": "building_height_m, floor_count, gross_floor_area_m2",
+    "submit_before": "착공신고시",
+    "submit_to": "허가권자",
+    "legal_basis": "건축법 제48조·시행령 제32조"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "temp_fire_facility__fire",
+   "properties": {
+    "requirement_id": "temp_fire_facility__fire",
+    "document": "임시소방시설",
+    "dimension": "문서제출",
+    "topic": "문서·보고",
+    "regime": "소방시설법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "연면적 3000㎡↑ 간이소화장치, 400㎡↑ 비상경보, 화재위험작업(용접등) 방화포. 2023.7 7종 확대",
+    "threshold_fields": "gross_floor_area_m2, has_fire_risk_work",
+    "submit_before": "화재위험작업전·상시",
+    "submit_to": "현장설치",
+    "legal_basis": "화재의 예방 및 안전관리에 관한 법률/소방시설법 시행령 제18조·별표8"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "usage_approval__bldg",
+   "properties": {
+    "requirement_id": "usage_approval__bldg",
+    "document": "사용승인서",
+    "dimension": "문서제출",
+    "topic": "문서·보고",
+    "regime": "건축법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "공사완료 후 사용승인 신청·교부 전 사용금지. 임시사용승인 2년 이내. 위반 2년↓ 또는 1억↓",
+    "threshold_fields": "is_building_permit_target, is_in_use",
+    "submit_before": "사용개시전",
+    "submit_to": "허가권자",
+    "legal_basis": "건축법 제22조"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "demolition_safety_compliance__bam",
+   "properties": {
+    "requirement_id": "demolition_safety_compliance__bam",
+    "document": null,
+    "dimension": "작업조건",
+    "topic": "작업조건 적법성",
+    "regime": "건축물관리법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "해체작업자는 ①승인된 해체계획서에 따라 해체공사를 시행하고 ②화재·붕괴 예방·교통안전 및 통행 확보·추락 방지 등 안전조치를 이행하여야 한다",
+    "threshold_fields": "",
+    "submit_before": null,
+    "submit_to": null,
+    "legal_basis": "건축물관리법 제32조의2(해체작업자의 의무)"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "insulation_conductivity__ksl9016",
+   "properties": {
+    "requirement_id": "insulation_conductivity__ksl9016",
+    "document": null,
+    "dimension": "작업조건",
+    "topic": "재료",
+    "regime": "KS L 9016",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "열전도율(W/m·K, 20±5℃) 등급 상한 — 가 ≤0.034·나 ≤0.040·다 ≤0.046·라 ≤0.051",
+    "threshold_fields": "test_values.conductivity_w_mk",
+    "submit_before": null,
+    "submit_to": null,
+    "legal_basis": "건축물 에너지절약설계기준 별표2 / KS L 9016 (열전도율 측정)"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "Law",
+   "node_id": "law_d986e8e64b",
+   "properties": {
+    "law_id": "law_d986e8e64b",
+    "name": "KS L 9016",
+    "scope": "건설공사공통",
+    "authority_basis": "건산법 §2: 건설공사 = 토목+건축+산업설비+조경+환경시설 → 토목 현장에도 적용"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "thermal_transmittance_wall__energy",
+   "properties": {
+    "requirement_id": "thermal_transmittance_wall__energy",
+    "document": null,
+    "dimension": "작업조건",
+    "topic": "재료",
+    "regime": "건축물 에너지절약설계기준",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "거실 외벽(외기직접) 열관류율 U(W/㎡K) 상한 — 중부1 0.17·중부2 0.24·남부 0.32·제주 0.41 (공동주택 외 기준)",
+    "threshold_fields": "test_values.u_value_w_m2k",
+    "submit_before": null,
+    "submit_to": null,
+    "legal_basis": "건축물 에너지절약설계기준 별표1 (국토부고시)"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "Law",
+   "node_id": "law_965513f984",
+   "properties": {
+    "law_id": "law_965513f984",
+    "name": "건축물 에너지절약설계기준",
+    "scope": "건설공사공통",
+    "authority_basis": "건산법 §2: 건설공사 = 토목+건축+산업설비+조경+환경시설 → 토목 현장에도 적용"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "waterproof_ponding__kcs414001",
+   "properties": {
+    "requirement_id": "waterproof_ponding__kcs414001",
+    "document": null,
+    "dimension": "작업조건",
+    "topic": "공법",
+    "regime": "KCS 표준시방서",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "방수층 끝 미감김 높이까지 담수 48시간 누수 없음(필요시 치켜올림 높이 48시간 추가). 누수 없음=합격",
+    "threshold_fields": "test_values.ponding_tested",
+    "submit_before": null,
+    "submit_to": null,
+    "legal_basis": "KCS 41 40 01:2021 §3.7.4(5)"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "Law",
+   "node_id": "law_fa78e6730a",
+   "properties": {
+    "law_id": "law_fa78e6730a",
+    "name": "KCS 표준시방서",
+    "scope": "건설공사공통",
+    "authority_basis": "건산법 §2: 건설공사 = 토목+건축+산업설비+조경+환경시설 → 토목 현장에도 적용"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "usage_approval_after_completion__bldg",
+   "properties": {
+    "requirement_id": "usage_approval_after_completion__bldg",
+    "document": null,
+    "dimension": "선행요건",
+    "topic": "시공순서·선행요건",
+    "regime": "건축법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "건축물 사용승인 신청 전 공사감리자의 감리완료보고서가 선행돼야 하며, 미완료 시 사용승인 불가.",
+    "threshold_fields": "",
+    "submit_before": null,
+    "submit_to": null,
+    "legal_basis": "건축법 제22조(사용승인) · 제25조(공사감리)"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "building_supervisor_placement__bldg",
+   "properties": {
+    "requirement_id": "building_supervisor_placement__bldg",
+    "document": null,
+    "dimension": "문서제출",
+    "topic": "",
+    "regime": "건축법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "",
+    "threshold_fields": "",
+    "submit_before": null,
+    "submit_to": null,
+    "legal_basis": "건축법 시행령 제19조 (공사감리) 법제처 유권해석 2016.10.13 (15-0712) — 분야별 건축사보 각 1명; 건축공사감리세부기준(국토부고시 2024-377호)"
+   }
+  },
+  {
+   "space": "concept",
+   "node_type": "LegalRequirement",
+   "node_id": "structural_engineer_collaboration__bldg",
+   "properties": {
+    "requirement_id": "structural_engineer_collaboration__bldg",
+    "document": null,
+    "dimension": "문서제출",
+    "topic": "",
+    "regime": "건축법",
+    "facility_subtype": "",
+    "applies_to_facility_class": "건축물",
+    "trigger_summary": "",
+    "threshold_fields": "",
+    "submit_before": null,
+    "submit_to": null,
+    "legal_basis": "건축법 제67조(관계전문기술자) · 시행령 제91조의3제1항"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "asbestos_survey__osha",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_fcfb871c2f"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "asbestos_survey__osha",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "building_fire_facility__fire",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_96b350ff8c"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "building_fire_facility__fire",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "construction_commencement__bldg",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_c1e8cbcccd"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "construction_commencement__bldg",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "demolition_plan__bmgt",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_01a9c43c39"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "demolition_plan__bmgt",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "elevator_inspection__elsa",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_1d1574b427"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "elevator_inspection__elsa",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "structural_safety_confirmation__bldg",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_c1e8cbcccd"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "structural_safety_confirmation__bldg",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "temp_fire_facility__fire",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_96b350ff8c"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "temp_fire_facility__fire",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "usage_approval__bldg",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_c1e8cbcccd"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "usage_approval__bldg",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "demolition_safety_compliance__bam",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_01a9c43c39"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "demolition_safety_compliance__bam",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "insulation_conductivity__ksl9016",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_d986e8e64b"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "insulation_conductivity__ksl9016",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "thermal_transmittance_wall__energy",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_965513f984"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "thermal_transmittance_wall__energy",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "waterproof_ponding__kcs414001",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_fa78e6730a"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "waterproof_ponding__kcs414001",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "usage_approval_after_completion__bldg",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_c1e8cbcccd"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "usage_approval_after_completion__bldg",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "building_supervisor_placement__bldg",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_c1e8cbcccd"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "building_supervisor_placement__bldg",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "structural_engineer_collaboration__bldg",
+   "relation": "governed_by",
+   "to_space": "concept",
+   "to_type": "Law",
+   "to_id": "law_c1e8cbcccd"
+  },
+  {
+   "from_space": "concept",
+   "from_type": "LegalRequirement",
+   "from_id": "structural_engineer_collaboration__bldg",
+   "relation": "gated_by",
+   "to_space": "concept",
+   "to_type": "FacilityClass",
+   "to_id": "geonchukmul"
+  }
+ ]
+}

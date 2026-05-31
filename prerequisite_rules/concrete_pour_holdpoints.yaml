@@ -1,0 +1,21 @@
+rule_id: concrete_pour_holdpoints__kcs
+title: 콘크리트 타설 전 정지점(Hold Point) 검측 선행 의무
+dimension: 시공순서·선행요건
+regime: KCS 표준시방서 / 사업관리방식 업무수행지침
+source_type: 표준시방(KCS)   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체   # 건축/토목 게이트
+authority:
+  standard: KCS 14 20 11/12
+  rule: "콘크리트 타설 전 철근배근 검측·거푸집 검측이 정지점(H). 감리 합격 없이 타설 진행 불가."
+  source: "검측 ITP H/W/R + KCS 14 20 11·12 교차검증 2026-05 (국토부고시 2024-879호)"
+applies_to_work_kind: 콘크리트타설
+# 이 작업(타설) 전에 아래 검측이 모두 '합격'으로 선행돼야 함
+requires_prior:
+  - {kind: 시공검측, checkpoint: 철근배근검측, result: 합격, point_type: H}
+  - {kind: 시공검측, checkpoint: 거푸집검측, result: 합격, point_type: H}
+evaluation:
+  steps:
+    - "대상 부재(component_ref)에 대해, work.event_date 이전에 requires_prior 각 항목과 kind·checkpoint 일치 + result=합격 인 Decision 이 존재하는가."
+    - "누락 또는 타설 이후 검측 또는 불합격 → violated (정지점 미통과 타설)."
+  outputs: [compliant, violated]
+  audit_significance: "정지점 미통과 타설은 배근·거푸집 결함을 콘크리트로 덮음 → 구조결함의 은폐·직접 원인. KCS 위반."

@@ -1,0 +1,23 @@
+# Condition Rule — 화학혼화제 길이변화비 (KS F 2560:2019 표2)
+# 검증: KS F 2560:2019 원문(사용자 제공 표2, 2026-05). corpus 캐시.
+rule_id: admixture_length_change__ksf2560
+title: 화학혼화제 길이변화비 합격 (종류별)
+dimension: 재료
+regime: KS F 2560
+source_type: KS   # regime 파생 정규화 (binding 강도; 1단계 불일치탐지용)
+applies_to_facility_class: 전체
+rule_family: condition
+mode: obligation
+authority:
+  standard: KS F 2560:2019 표2(요구성능)
+  rule: "길이변화비 — 대부분 ≤120, 고성능AE감수제 ≤110 (%)"
+  source: "KS F 2560:2019 원문 직접(사용자 스크린샷 2026-05) — corpus 캐시"
+  corpus_ref: corpus/KS_F_2560_화학혼화제.md
+applies_to_work_kind: 콘크리트타설
+applicable_when: {test_values.admixture_length_change_pct__gte: 0}
+requires:
+  lookup_max:
+    key: test_values.admixture_length_change_pct
+    by: admixture_type
+    max_table: {AE제: 120, 감수제표준: 120, 감수제지연: 120, 감수제촉진: 120, AE감수제표준: 120, AE감수제지연: 120, AE감수제촉진: 120, 고성능AE표준: 110, 고성능AE지연: 110}
+evaluation: {outputs: [compliant, violated, not_applicable], audit_significance: "길이변화 과다 → 건조수축 균열. KS F 2560 위반"}

@@ -1,0 +1,17 @@
+name: civil_accountability
+version: "0.1.0"
+description: >
+  한국 건설 책임추적 법정요건 지식그래프. saegim 판정엔진의 법 지식을
+  OpenCRAB 9-space 타입드 그래프로 환원(reify)한 팩.
+  핵심 축: 법(Law) → 법정요건(LegalRequirement) → 시설분류 게이트(FacilityClass).
+  건축법 §2 건축물 판별(지붕+기둥/벽+토지정착)로 건축법 축과 건설공사 공통 축을 분기.
+  임계값·트리거는 노드 property(데이터)로 담고, 실제 판정(임계 비교·3-값·시점)은 saegim 런타임이 수행.
+  출처: saegim document_rules/condition_rules/staffing (법령 권위 출처 교차검증).
+types:
+  - Law
+  - LegalRequirement
+  - FacilityClass
+spaces:
+  - concept
+  - resource
+  - decision
